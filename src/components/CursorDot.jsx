@@ -37,7 +37,7 @@ function CursorDot() {
                 width: 12,
                 height: 12,
                 borderRadius: "50%",
-                backgroundColor: "#1d4ed8",
+                backgroundColor: "black",
                 duration: 0.4,
                 ease: "power3.out",
                 overwrite: "auto"

@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText'; // Premium Plugin
 import { useGSAP } from '@gsap/react';
+import StringPluck from '../components/StringPluck';
 
 // Register all required plugins
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -66,13 +67,13 @@ const Tagline = () => {
                 {/* Main Headline (Cleaned up, SplitText handles the rest) */}
                 <h1
                     ref={headlineRef}
-                    className="text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-medium mb-20 md:mb-32"
+                    className="text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-medium mb-20 md:mb-24"
                 >
                     {headlineText}
                 </h1>
 
                 {/* Horizontal Divider */}
-                <hr className="border-neutral-300 mb-10 md:mb-12" />
+                <StringPluck/>
 
                 {/* Bottom Content Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">

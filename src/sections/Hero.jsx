@@ -6,56 +6,45 @@ import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-function Hero({loading}) {
-  // 1. Added a container ref for safe GSAP scoping
+function Hero({ loading }) {
   const containerRef = useRef(null)
   const headingRef = useRef(null)
-  // 2. Added a ref for the paragraph
   const paragraphRef = useRef(null)
 
   useGSAP(() => {
-    // Split into words
-    const split = SplitText.create(headingRef.current, {
-      type: 'words',
-      wordsClass: 'hero-word'
+    // 1. Create splits (we store them in variables so we can kill them later)
+    const splitHeading = new SplitText(headingRef.current, {
+      type: 'words, chars',
+      charsClass: 'hero-char'
     });
 
-    const words = split.words;
+    const splitParagraph = new SplitText(paragraphRef.current, {
+      type: 'words',
+      wordsClass: 'word'
+    });
 
-    // Initial state
-    gsap.set(words, {
+    const chars = splitHeading.chars;
+    const words = splitParagraph.words;
+
+    // Initial states
+    gsap.set(chars, {
       display: 'inline-block',
       transformOrigin: 'bottom center',
       scaleY: 0.3,
       color: '#e5e7eb',
       opacity: 0.1,
-      willChange: 'transform, color, opacity'
+      // Removed color from willChange to save GPU memory
+      willChange: 'transform, opacity'
     });
 
-    // Paragraph split
-    const pSplit = SplitText.create(paragraphRef.current, {
-      type: 'words',
-      wordsClass: 'word'
-    });
-
-    // Wrap each word in a mask
-    pSplit.words.forEach((word) => {
-      const wrapper = document.createElement('div');
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.display = 'inline-block';
-      word.parentNode.insertBefore(wrapper, word);
-      wrapper.appendChild(word);
-    });
-
-    // Initial state
-    gsap.set(pSplit.words, {
+    // 2. Modern wrapper-free text reveal state using clipPath
+    gsap.set(words, {
       yPercent: 120,
+      clipPath: 'inset(0% 0% 100% 0%)', // Hides the element from the bottom up
       willChange: 'transform'
     });
-    
-    // 🛑 GUARD CLAUSE: If loader is still active, don't run the animations
-    if (loading) return;
 
+    if (loading) return;
 
     // Master timeline
     const tl = gsap.timeline({
@@ -66,37 +55,40 @@ function Hero({loading}) {
       }
     });
 
-    tl.to(words, {
+    tl.to(chars, {
       opacity: 1,
       duration: 2,
-      stagger: 0.07,
+      stagger: 0.01,
       ease: 'power4.out',
     }, 0);
 
-    // PHASE 2 — scanner activation
-    for (let i = 0; i < words.length; i += 3) {
-      const group = words.slice(i, i + 3);
+    const waveSpeed = 0.01;
+    const bandWidth = 0.5;
+    const animSpeed = 0.8;
+
+    for (let i = 0; i < chars.length; i += 3) {
+      const group = chars.slice(i, i + 3);
 
       tl.to(group, {
         color: '#eeff00',
         y: -12,
         scaleY: 1,
-        duration: 0.5,
-        stagger: 0.05
-      }, i * 0.08);
+        duration: animSpeed,
+        stagger: 0.02
+      }, i * waveSpeed);
 
       tl.to(group, {
         color: '#000',
         y: 0,
-        duration: 0.5,
-        stagger: 0.05
-      }, i * 0.08 + 0.25);
+        duration: animSpeed,
+        stagger: 0.02
+      }, (i * waveSpeed) + bandWidth);
     }
 
-
-    // Animate
-    gsap.to(pSplit.words, {
+    // 3. Reveal words using clipPath and transform simultaneously
+    gsap.to(words, {
       yPercent: 0,
+      clipPath: 'inset(0% 0% -20% 0%)', // Reveal completely (with buffer for descenders like 'g' or 'p')
       duration: 1,
       stagger: 0.03,
       ease: 'power3.out',
@@ -107,9 +99,15 @@ function Hero({loading}) {
       }
     });
 
+    // 4. CRITICAL CLEANUP: Revert splits when the component unmounts or re-renders
+    return () => {
+      splitHeading.revert();
+      splitParagraph.revert();
+    };
+
   }, {
     scope: containerRef,
-    dependencies: [loading] // 🟢 Tell GSAP to re-run when loading changes
+    dependencies: [loading]
   });
 
   return (
