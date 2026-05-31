@@ -118,6 +118,7 @@ const Tagline = () => {
 
                 </div>
             </div>
+            <StringPluck/>
         </section>
     );
 };

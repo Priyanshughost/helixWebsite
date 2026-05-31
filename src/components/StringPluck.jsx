@@ -60,8 +60,8 @@ export default function StringPluck() {
       bounceTween = gsap.to(controlPoint, {
         x: VB_WIDTH / 2,
         y: 0,
-        duration: 1.2,
-        ease: "elastic.out(1, 0.2)",
+        duration: 1,
+        ease: "elastic.out(2, 0.1)",
         onUpdate: draw
       });
     };
@@ -88,8 +88,8 @@ export default function StringPluck() {
           bounceTween = gsap.to(controlPoint, {
             x: VB_WIDTH / 2,
             y: 0,
-            duration: 1.2,
-            ease: "elastic.out(1, 0.2)",
+            duration: 1,
+            ease: "elastic.out(2, 0.1)",
             onUpdate: draw
           });
 
@@ -143,7 +143,7 @@ export default function StringPluck() {
         ref={svgRef}
         viewBox="0 0 1200 200"
         preserveAspectRatio="none"
-        className="w-[90%] h-32 mx-auto overflow-visible cursor-crosshair touch-none"
+        className="w-full h-32 mx-auto overflow-visible cursor-crosshair touch-none"
       >
         <path
           ref={pathRef}
