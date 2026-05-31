@@ -138,7 +138,7 @@ export default function StringPluck() {
   }, []);
 
   return (
-    <div className="w-full pt-8 pb-16">
+    <div className="w-full pt-8 pb-12">
       <svg
         ref={svgRef}
         viewBox="0 0 1200 200"

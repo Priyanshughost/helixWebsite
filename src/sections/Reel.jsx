@@ -39,7 +39,7 @@ function Reel() {
                 {
                     // Starts clipped with rounded corners
                     clipPath: "inset(25% 20% 0% 20% round 30px)",
-                    yPercent: 10,
+                    yPercent: 20,
                 },
                 {
                     // Animates to full width/height, rounding interpolates down to 0px
@@ -48,10 +48,10 @@ function Reel() {
                     duration: 2.5,
                     ease: "expo.out",
                     scrollTrigger: {
-                        // markers: true,
                         trigger: containerRef.current,
-                        start: isMobile ? "top 80%" : "top 95%",
-                        once: true
+                        start: isMobile ? "top 75%" : "top 95%",
+                        once: true,
+                        markers: true
                     }
                 }
             );
@@ -68,6 +68,7 @@ function Reel() {
                         start: 'top bottom',
                         end: 'bottom top',
                         scrub: 1.5,
+                        // markers: true
                     },
                 }
             );

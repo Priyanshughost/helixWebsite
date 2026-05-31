@@ -60,14 +60,14 @@ const Tagline = () => {
     return (
         <section
             ref={containerRef}
-            className="min-h-screen bg-white text-neutral-900 py-12 md:py-38 px-6 sm:px-12 lg:px-20 flex flex-col justify-center selection:bg-neutral-900 selection:text-white"
+            className="min-h-screen bg-white text-neutral-900 pt-16 md:pt-32 px-6 sm:px-12 lg:px-20 flex flex-col justify-center selection:bg-neutral-900 selection:text-white"
         >
             <div className="max-w-7xl mx-auto w-full">
 
                 {/* Main Headline (Cleaned up, SplitText handles the rest) */}
                 <h1
                     ref={headlineRef}
-                    className="text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-medium mb-20 md:mb-24"
+                    className="text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-medium mb-0 md:mb-24"
                 >
                     {headlineText}
                 </h1>

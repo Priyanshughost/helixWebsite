@@ -60,7 +60,7 @@ function Footer() {
                     {/* Left Column */}
                     <div className="flex flex-col justify-between w-full md:w-1/2">
                         <h2 className="text-[clamp(2rem,3.5vw,4rem)] font-normal tracking-tight mb-15">
-                            We Build once. <span className="text-[#e5d9c5]">And DOMINATE forever.</span>
+                            We Build once<br/> <span className="text-[#e5d9c5]">And DOMINATE forever.</span>
                         </h2>
 
                         <div className="mb-15 text-base leading-snug">
