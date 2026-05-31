@@ -74,7 +74,7 @@ export default function Loader({ onComplete }) {
             <div className="overflow-hidden">
                 <div
                     ref={textWrapperRef}
-                    className="relative text-center text-[5vw] font-extralight"
+                    className="relative text-center text-[min(2rem,5vw)] font-extralight"
                 >
                     <span className="text-white opacity-20 whitespace-nowrap">
                         Helix - The Tech Club of RVSCET

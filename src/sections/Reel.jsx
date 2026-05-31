@@ -49,9 +49,9 @@ function Reel() {
                     ease: "expo.out",
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: isMobile ? "top 75%" : "top 95%",
+                        start: isMobile ? "top 80%" : "top 95%",
                         once: true,
-                        markers: true
+                        // markers: true
                     }
                 }
             );

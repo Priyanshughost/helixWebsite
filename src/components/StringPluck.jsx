@@ -18,10 +18,22 @@ export default function StringPluck() {
 
     let isGrabbed = false;
     const controlPoint = { x: VB_WIDTH / 2, y: 0 };
-    let bounceTween = null; 
-    let prevMouseY = null; 
+    let bounceTween = null;
+    let prevMouseY = null;
 
-    // 1. Setup Document-Relative Variables (The Lag Fix)
+    // --- NEW: MatchMedia Setup ---
+    let stretchMultiplier = 2; // Default fallback
+    let mm = gsap.matchMedia();
+
+    mm.add({
+      isMobile: "(max-width: 768px)",
+      isDesktop: "(min-width: 769px)"
+    }, (context) => {
+      let { isMobile } = context.conditions;
+      // Set to 0.2 for mobile/tablets, 2 for desktop
+      stretchMultiplier = isMobile ? 0.2 : 2;
+    });
+
     let docLeft = 0;
     let docTop = 0;
     let svgWidth = 0;
@@ -37,14 +49,14 @@ export default function StringPluck() {
 
     updateRect();
     window.addEventListener("resize", updateRect);
-    // NOTICE: No scroll event listener here!
 
     const setPath = gsap.quickSetter(path, "attr");
 
     const draw = () => {
       const cx = controlPoint.x.toFixed(1);
-      const cy = (VB_CENTER_Y + controlPoint.y * 2).toFixed(1);
-      
+      // --- NEW: Apply the responsive multiplier here ---
+      const cy = (VB_CENTER_Y + controlPoint.y * stretchMultiplier).toFixed(1);
+
       setPath({
         d: `M 0 ${VB_CENTER_Y} Q ${cx} ${cy} ${VB_WIDTH} ${VB_CENTER_Y}`
       });
@@ -56,7 +68,7 @@ export default function StringPluck() {
     const releaseString = () => {
       if (!isGrabbed) return;
       isGrabbed = false;
-      
+
       bounceTween = gsap.to(controlPoint, {
         x: VB_WIDTH / 2,
         y: 0,
@@ -67,18 +79,16 @@ export default function StringPluck() {
     };
 
     const handleMove = (e) => {
-      // 2. Using pageX/pageY so we don't have to recalculate layout on scroll
       const mouseX = ((e.pageX - docLeft) / svgWidth) * VB_WIDTH;
       const mouseY = ((e.pageY - docTop) / svgHeight) * VB_HEIGHT;
       const distanceY = mouseY - VB_CENTER_Y;
 
-      // 3. Your awesome fast-swipe detection logic
       if (!isGrabbed && prevMouseY !== null) {
         const crossedDown = prevMouseY < VB_CENTER_Y && mouseY > VB_CENTER_Y;
         const crossedUp = prevMouseY > VB_CENTER_Y && mouseY < VB_CENTER_Y;
 
         if (crossedDown || crossedUp) {
-          const swipeVelocity = mouseY - prevMouseY; 
+          const swipeVelocity = mouseY - prevMouseY;
 
           if (bounceTween) bounceTween.kill();
 
@@ -94,11 +104,10 @@ export default function StringPluck() {
           });
 
           prevMouseY = mouseY;
-          return; 
+          return;
         }
       }
 
-      // Standard grab and drag logic for slower movements
       if (isGrabbed) {
         if (Math.abs(distanceY) > THRESHOLD) {
           releaseString();
@@ -118,19 +127,21 @@ export default function StringPluck() {
 
     const handleLeave = () => {
       releaseString();
-      prevMouseY = null; 
+      prevMouseY = null;
     };
 
     svg.addEventListener("pointermove", handleMove);
     svg.addEventListener("pointerleave", handleLeave);
-    
+
     draw();
 
     return () => {
+      // --- NEW: Revert the matchMedia context on unmount to prevent memory leaks ---
+      mm.revert();
       window.removeEventListener("resize", updateRect);
       svg.removeEventListener("pointermove", handleMove);
       svg.removeEventListener("pointerleave", handleLeave);
-      
+
       if (bounceTween) bounceTween.kill();
       xTo.tween.kill();
       yTo.tween.kill();
