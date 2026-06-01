@@ -82,11 +82,17 @@ function CursorDot() {
         function update() {
             const lerp = 0.1;
             const visibilityLerp = 0.15;
-            const tiltLerp = 0.1; // NEW: Controls how buttery smooth the tilt is
+            const tiltLerp = 0.1;
 
             current.x += (mouse.x - current.x) * lerp;
             current.y += (mouse.y - current.y) * lerp;
             currentVisibility += (targetVisibility - currentVisibility) * visibilityLerp;
+
+            // --- THE THRESHOLD FIX ---
+            // Prevent floating-point underflow by snapping to 0 or 1
+            if (currentVisibility < 0.001) currentVisibility = 0;
+            if (currentVisibility > 0.999) currentVisibility = 1;
+            // -------------------------
 
             const deltaX = mouse.x - current.x;
             const deltaY = mouse.y - current.y;

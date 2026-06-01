@@ -112,7 +112,7 @@ function Navbar({ loading }) {
   return (
     <nav
       ref={navRef}
-      className="fixed top-6 w-full z-110 overflow-hidden"
+      className="fixed top-6 w-full z-110 overflow-hidden pointer-events-none"
     >
 
       <div

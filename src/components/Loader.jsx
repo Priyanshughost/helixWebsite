@@ -74,7 +74,7 @@ export default function Loader({ onComplete }) {
             <div className="overflow-hidden">
                 <div
                     ref={textWrapperRef}
-                    className="relative text-center text-[min(2rem,5vw)] font-extralight"
+                    className="relative text-center text-[min(2rem,5vw)] font-extralight will-change-transform"
                 >
                     <span className="text-white opacity-20 whitespace-nowrap">
                         Helix - The Tech Club of RVSCET
@@ -85,6 +85,7 @@ export default function Loader({ onComplete }) {
                         className="absolute left-0 top-0 text-white whitespace-nowrap font-extralight"
                         style={{
                             clipPath: "inset(0 100% 0 0)",
+                            willChange: "clip-path"
                         }}
                     >
                         Helix - The Tech Club of RVSCET

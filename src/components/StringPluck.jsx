@@ -1,6 +1,44 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
+// ==========================================
+// 1. GLOBAL WEB AUDIO ENGINE (Zero Latency)
+// Defined outside the component so it only initializes once per page load.
+// ==========================================
+let audioCtx = null;
+let bufferDown = null;
+let bufferUp = null;
+
+const initAudio = async () => {
+  if (audioCtx) return;
+
+  // Fallback for older Safari versions
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  audioCtx = new AudioContext();
+
+  const loadSound = async (url) => {
+    try {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      return await audioCtx.decodeAudioData(arrayBuffer);
+    } catch (e) {
+      console.error("Audio failed to load:", e);
+      return null;
+    }
+  };
+
+  // Pre-load and decode the audio files into memory
+  [bufferDown, bufferUp] = await Promise.all([
+    loadSound("/mixkit-guitar-stroke-down-slow-2339.wav"),
+    loadSound("/mixkit-guitar-stroke-up-slow-2338.wav")
+  ]);
+};
+
+// Fire initialization immediately (it's async, so it won't block rendering)
+if (typeof window !== "undefined") {
+  initAudio();
+}
+
 export default function StringPluck() {
   const svgRef = useRef(null);
   const pathRef = useRef(null);
@@ -21,19 +59,57 @@ export default function StringPluck() {
     let bounceTween = null;
     let prevMouseY = null;
 
-    // --- NEW: MatchMedia Setup ---
-    let stretchMultiplier = 2; // Default fallback
-    let mm = gsap.matchMedia();
+    // =========================
+    // AUDIO PLAYBACK LOGIC
+    // =========================
+    const playPluck = (direction, strength = 1) => {
+      if (!audioCtx) return;
 
-    mm.add({
-      isMobile: "(max-width: 768px)",
-      isDesktop: "(min-width: 769px)"
-    }, (context) => {
-      let { isMobile } = context.conditions;
-      // Set to 0.2 for mobile/tablets, 2 for desktop
-      stretchMultiplier = isMobile ? 0.2 : 2;
-    });
+      // Browser policy check: Resume audio context if user hasn't interacted yet
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
 
+      const buffer = direction === "down" ? bufferDown : bufferUp;
+      if (!buffer) return;
+
+      // Create an audio source node (extremely cheap, designed to be thrown away)
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+
+      // Create a gain node for volume control
+      const gainNode = audioCtx.createGain();
+
+      // Normalize volume based on pluck strength (0.1 to 1.0)
+      const normalized = Math.min(Math.abs(strength) / 150, 1);
+      gainNode.gain.value = 0.1 + normalized * 0.9;
+
+      // Connect nodes and play
+      source.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      source.start(0);
+    };
+
+    // =========================
+    // RESPONSIVE LOGIC
+    // =========================
+    let stretchMultiplier = 2;
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        isMobile: "(max-width: 768px)",
+        isDesktop: "(min-width: 769px)",
+      },
+      (context) => {
+        const { isMobile } = context.conditions;
+        stretchMultiplier = isMobile ? 0.2 : 2;
+      }
+    );
+
+    // =========================
+    // DRAWING LOGIC
+    // =========================
     let docLeft = 0;
     let docTop = 0;
     let svgWidth = 0;
@@ -54,11 +130,10 @@ export default function StringPluck() {
 
     const draw = () => {
       const cx = controlPoint.x.toFixed(1);
-      // --- NEW: Apply the responsive multiplier here ---
       const cy = (VB_CENTER_Y + controlPoint.y * stretchMultiplier).toFixed(1);
 
       setPath({
-        d: `M 0 ${VB_CENTER_Y} Q ${cx} ${cy} ${VB_WIDTH} ${VB_CENTER_Y}`
+        d: `M 0 ${VB_CENTER_Y} Q ${cx} ${cy} ${VB_WIDTH} ${VB_CENTER_Y}`,
       });
     };
 
@@ -67,6 +142,8 @@ export default function StringPluck() {
 
     const releaseString = () => {
       if (!isGrabbed) return;
+
+      playPluck(controlPoint.y > 0 ? "down" : "up", controlPoint.y);
       isGrabbed = false;
 
       bounceTween = gsap.to(controlPoint, {
@@ -74,7 +151,7 @@ export default function StringPluck() {
         y: 0,
         duration: 1,
         ease: "elastic.out(2, 0.1)",
-        onUpdate: draw
+        onUpdate: draw,
       });
     };
 
@@ -83,24 +160,26 @@ export default function StringPluck() {
       const mouseY = ((e.pageY - docTop) / svgHeight) * VB_HEIGHT;
       const distanceY = mouseY - VB_CENTER_Y;
 
+      // Swipe Detection
       if (!isGrabbed && prevMouseY !== null) {
         const crossedDown = prevMouseY < VB_CENTER_Y && mouseY > VB_CENTER_Y;
         const crossedUp = prevMouseY > VB_CENTER_Y && mouseY < VB_CENTER_Y;
 
         if (crossedDown || crossedUp) {
           const swipeVelocity = mouseY - prevMouseY;
-
           if (bounceTween) bounceTween.kill();
 
           controlPoint.x = mouseX;
           controlPoint.y = Math.max(Math.min(swipeVelocity * 1.5, THRESHOLD), -THRESHOLD);
+
+          playPluck(crossedDown ? "down" : "up", swipeVelocity);
 
           bounceTween = gsap.to(controlPoint, {
             x: VB_WIDTH / 2,
             y: 0,
             duration: 1,
             ease: "elastic.out(2, 0.1)",
-            onUpdate: draw
+            onUpdate: draw,
           });
 
           prevMouseY = mouseY;
@@ -108,6 +187,7 @@ export default function StringPluck() {
         }
       }
 
+      // Drag & Release Mode
       if (isGrabbed) {
         if (Math.abs(distanceY) > THRESHOLD) {
           releaseString();
@@ -136,12 +216,10 @@ export default function StringPluck() {
     draw();
 
     return () => {
-      // --- NEW: Revert the matchMedia context on unmount to prevent memory leaks ---
       mm.revert();
       window.removeEventListener("resize", updateRect);
       svg.removeEventListener("pointermove", handleMove);
       svg.removeEventListener("pointerleave", handleLeave);
-
       if (bounceTween) bounceTween.kill();
       xTo.tween.kill();
       yTo.tween.kill();
