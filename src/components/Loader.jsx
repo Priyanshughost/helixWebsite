@@ -9,17 +9,17 @@ export default function Loader({ onComplete }) {
     const sweepRef = useRef(null);
     const lenis = useLenis();
 
-    // useEffect(() => {
-    //     // 1. Lock scrolling when the loader mounts
-    //     document.body.style.overflow = 'hidden';
-    //     if (lenis) lenis.stop();
+    useEffect(() => {
+        // 1. Lock scrolling when the loader mounts
+        document.body.style.overflow = 'hidden';
+        if (lenis) lenis.stop();
 
-    //     // 2. Unlock scrolling when the loader unmounts
-    //     return () => {
-    //         document.body.style.overflow = '';
-    //         if (lenis) lenis.start();
-    //     };
-    // }, [lenis]);
+        // 2. Unlock scrolling when the loader unmounts
+        return () => {
+            document.body.style.overflow = '';
+            if (lenis) lenis.start();
+        };
+    }, [lenis]);
 
     useGSAP(() => {
         const tl = gsap.timeline({
