@@ -104,7 +104,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
             gsap.set(card, {
                 x, y,
-                rotation: gsap.utils.random(-45, 45),
+                rotation: 0,
                 scale: gsap.utils.random(0.6, 1),
                 opacity: 0,
                 transformPerspective: 800,
@@ -505,7 +505,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                     </div>
                 </div>
 
-                <div className="absolute bottom-[25%] left-1/2 -translate-x-1/2 w-full h-auto pointer-events-none z-40 overflow-hidden">
+                <div className="absolute bottom-[25%] left-1/2 -translate-x-1/2 w-full leading-normal h-auto pointer-events-none z-40 overflow-hidden">
                     {previewContent && (
                         <div ref={titleContainerRef} className="w-full text-center text-[36px] font-semibold tracking-[-0.05rem] text-[#1f1f1f] font-sans">
                             {previewContent.title}
