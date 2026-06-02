@@ -91,32 +91,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         });
     }, []);
 
-    const positions = [];
-
-    function getRandomPosition(rect) {
-        let x, y;
-        let valid = false;
-
-        while (!valid) {
-            x =
-                gsap.utils.random(0, window.innerWidth - rect.width) -
-                window.innerWidth / 2;
-
-            y =
-                gsap.utils.random(0, window.innerHeight - rect.height) -
-                window.innerHeight / 2;
-
-            valid = positions.every((p) => {
-                const dx = p.x - x;
-                const dy = p.y - y;
-                return Math.hypot(dx, dy) > 120;
-            });
-        }
-
-        positions.push({ x, y });
-
-        return { x, y };
-    }
     // 3. INTRO ANIMATIONS (Upgraded to useGSAP)
     useGSAP(() => {
         const st = stateRef.current;
@@ -124,16 +98,17 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
         cardsRef.current.forEach((card) => {
             if (!card) return;
-
             const rect = card.getBoundingClientRect();
-            const { x, y } = getRandomPosition(rect);
+            const x = gsap.utils.random(-window.innerWidth / 2 + rect.width, window.innerWidth / 2 - rect.width);
+            const y = gsap.utils.random(-window.innerHeight / 2 + rect.height, window.innerHeight / 2 - rect.height);
 
             gsap.set(card, {
-                x,
-                y,
-                // rotation: gsap.utils.random(-180, 180),
-                scale: gsap.utils.random(0.5, 1.2),
+                x, y,
+                rotation: gsap.utils.random(-45, 45),
+                scale: gsap.utils.random(0.6, 1),
                 opacity: 0,
+                transformPerspective: 800,
+                transformOrigin: 'center center',
             });
         });
 
@@ -511,7 +486,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                 <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight whitespace-nowrap m-0 leading-normal block text-center">
                     <span ref={text1SpanRef} className="inline-block">Gallery</span>
                 </h1>
-                <p className='text-xl sm:text-2xl md:text-3xl font-light text-center'>Click on images to View</p>
             </div>
 
             <div className="relative w-full h-full overflow-visible">

@@ -4,8 +4,9 @@ import { useOutletContext } from 'react-router-dom';
 import Reel from '../sections/Reel';
 import Tagline from '../sections/Tagline';
 import About from '../sections/About';
-import ImageGallery from '../components/ImageGallery/ImageGallery';
-import collection from '../components/ImageGallery/collection.js';
+import ImageGallery from '../sections/ImageGallery/ImageGallery';
+import collection from '../sections/ImageGallery/collection';
+import EventSection from '../sections/Events/EventSection';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -16,6 +17,7 @@ function Home() {
       <Tagline/>
       <About/>
       <ImageGallery items={collection}/>
+      <EventSection/>
     </>
   )
 }
