@@ -1,11 +1,25 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react"; // Added useEffect import
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useLenis } from 'lenis/react';
 
 export default function Loader({ onComplete }) {
     const loaderRef = useRef(null);
     const textWrapperRef = useRef(null);
     const sweepRef = useRef(null);
+    const lenis = useLenis();
+
+    useEffect(() => {
+        // 1. Lock scrolling when the loader mounts
+        document.body.style.overflow = 'hidden';
+        if (lenis) lenis.stop();
+
+        // 2. Unlock scrolling when the loader unmounts
+        return () => {
+            document.body.style.overflow = '';
+            if (lenis) lenis.start();
+        };
+    }, [lenis]);
 
     useGSAP(() => {
         const tl = gsap.timeline({
