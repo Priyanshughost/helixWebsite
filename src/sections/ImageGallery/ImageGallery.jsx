@@ -40,8 +40,9 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         isMobile: typeof window !== 'undefined' ? window.innerWidth < 1000 : false,
     });
 
-    // 1. PERFORMANCE: Cache card centers to prevent layout thrashing on mousemove
     const cardCentersRef = useRef([]);
+    const mousePosRef = useRef({ x: -1000, y: -1000 });
+    const containerBaseYRef = useRef(0);
 
     const numItems = items.length;
     const dynamicRadius = Math.max(config.baseRadius, (numItems * 45) / (2 * Math.PI));
@@ -59,7 +60,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         });
     }, [items, numItems, dynamicRadius]);
 
-    // 2. PERFORMANCE: Lazy initialize the cards state so it doesn't run on every render
     const cardsStateRef = useRef(null);
     if (!cardsStateRef.current) {
         cardsStateRef.current = galleryData.map((data) => ({
@@ -73,25 +73,25 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
     const settersRef = useRef([]);
 
-    // Safety cleanup for body scroll
     useEffect(() => {
         return () => {
             document.body.style.overflow = '';
-            if (lenis) lenis.start(); // <-- Add this
+            if (lenis) lenis.start();
         };
     }, [lenis]);
 
-    // Helper to calculate card centers without causing layout thrashing
     const updateCardCenters = useCallback(() => {
+        if (mainWrapperRef.current) {
+            containerBaseYRef.current = mainWrapperRef.current.getBoundingClientRect().top;
+        }
+
         cardCentersRef.current = cardsRef.current.map(card => {
             if (!card) return { x: 0, y: 0 };
             const rect = card.getBoundingClientRect();
-            // Store the "base" center of the card
             return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
         });
     }, []);
 
-    // 3. INTRO ANIMATIONS (Upgraded to useGSAP)
     useGSAP(() => {
         const st = stateRef.current;
         gsap.set(headingWrapperRef.current, { opacity: 0, scale: 0.8 });
@@ -134,19 +134,53 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                 anticipatePin: 1,
                 onUpdate: (self) => {
                     if (self.progress > 0.85) {
-                        // Once the circle forms, cache the screen positions for the mouse interaction!
                         if (!st.hasIntroCompleted) {
                             st.hasIntroCompleted = true;
+
+                            // 1. SCROLL DOWN FIX: Kill reset tweens if the user rapidly scrolls back down
+                            gsap.killTweensOf(cardsRef.current, "rotationY");
+                            if (galleryContainerRef.current) {
+                                gsap.killTweensOf(galleryContainerRef.current);
+                            }
+
                             updateCardCenters();
                         }
                     } else {
-                        st.hasIntroCompleted = false;
-                        cardsStateRef.current.forEach(cs => {
-                            cs.currentX = 0; cs.targetX = 0;
-                            cs.currentY = 0; cs.targetY = 0;
-                            cs.currentRotation = 0; cs.targetRotation = 0;
-                            cs.currentScale = 1; cs.targetScale = 1;
-                        });
+                        if (st.hasIntroCompleted) {
+                            // 2. SCROLL UP FIX: Transitioning from Circle back to Band
+                            st.hasIntroCompleted = false;
+
+                            // Hard reset all targets in the logic state
+                            cardsStateRef.current.forEach(cs => {
+                                cs.currentX = 0; cs.targetX = 0;
+                                cs.currentY = 0; cs.targetY = 0;
+                                cs.currentRotation = 0; cs.targetRotation = 0;
+                                cs.currentScale = 1; cs.targetScale = 1;
+                            });
+
+                            st.parallax.currentX = 0; st.parallax.targetX = 0;
+                            st.parallax.currentY = 0; st.parallax.targetY = 0;
+                            st.parallax.currentZ = 0; st.parallax.targetZ = 0;
+
+                            // 3. Smoothly reset the 3D properties that the timeline doesn't track
+                            gsap.to(cardsRef.current, {
+                                rotationY: 0,
+                                duration: 0.5,
+                                ease: "power2.out",
+                                overwrite: "auto"
+                            });
+
+                            if (galleryContainerRef.current) {
+                                gsap.to(galleryContainerRef.current, {
+                                    rotateX: 0,
+                                    rotateY: 0,
+                                    rotation: 0,
+                                    duration: 0.5,
+                                    ease: "power2.out",
+                                    overwrite: "auto"
+                                });
+                            }
+                        }
                     }
                 }
             }
@@ -182,8 +216,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
     }, { scope: mainWrapperRef, dependencies: [galleryData, numItems, updateCardCenters] });
 
-
-    // HIGH-PERFORMANCE GSAP TICKER
     useGSAP(() => {
         settersRef.current = cardsRef.current.map((card) => {
             if (!card) return null;
@@ -232,8 +264,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         return () => gsap.ticker.remove(tick);
     }, [galleryData, config.lerpFactor]);
 
-
-    // RESPONSIVE DESIGN
     useGSAP(() => {
         let mm = gsap.matchMedia();
 
@@ -252,39 +282,46 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             gsap.to(galleryRef.current, { scale: 1, duration: 0.5, ease: 'power2.out' });
         });
 
-        // Update cached centers when resizing
         window.addEventListener('resize', updateCardCenters);
         return () => window.removeEventListener('resize', updateCardCenters);
     }, [updateCardCenters]);
 
-    // OPTIMIZED MOUSE MOVE 
-    const handleMouseMove = useCallback((e) => {
+    const calculateHover = useCallback(() => {
         const st = stateRef.current;
         if (!st.hasIntroCompleted || st.isPreviewing || st.isTransitioning || st.isMobile) return;
 
+        const { x: clientX, y: clientY } = mousePosRef.current;
+
+        if (clientX === -1000) return;
+
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2;
-        const percentX = (e.clientX - centerX) / centerX;
-        const percentY = (e.clientY - centerY) / centerY;
+        const percentX = (clientX - centerX) / centerX;
+        const percentY = (clientY - centerY) / centerY;
 
         st.parallax.targetY = percentX * 15;
         st.parallax.targetX = -percentY * 15;
         st.parallax.targetZ = (percentX + percentY) * 5;
 
-        // Use cached coordinates instead of getBoundingClientRect()!
+        let yOffset = 0;
+        if (mainWrapperRef.current) {
+            const currentTop = mainWrapperRef.current.getBoundingClientRect().top;
+            yOffset = currentTop - containerBaseYRef.current;
+        }
+
         cardsStateRef.current.forEach((cardState, index) => {
             const cachedCenter = cardCentersRef.current[index];
             if (!cachedCenter) return;
 
-            const dx = e.clientX - cachedCenter.x;
-            const dy = e.clientY - cachedCenter.y;
+            const dynamicCenterY = cachedCenter.y + yOffset;
 
-            // Using squared distances avoids the CPU-heavy Math.sqrt() calculation
+            const dx = clientX - cachedCenter.x;
+            const dy = clientY - dynamicCenterY;
             const distSquared = dx * dx + dy * dy;
             const sensitivitySquared = config.sensitivity * config.sensitivity;
 
             if (distSquared < sensitivitySquared) {
-                const distance = Math.sqrt(distSquared); // Only calculate if inside threshold
+                const distance = Math.sqrt(distSquared);
                 const flipFactor = Math.max(0, 1 - distance / config.effectFalloff);
                 const moveAmount = config.cardMoveAmount * flipFactor;
 
@@ -301,13 +338,21 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         });
     }, [config]);
 
+    const handleMouseMove = useCallback((e) => {
+        mousePosRef.current = { x: e.clientX, y: e.clientY };
+        calculateHover();
+    }, [calculateHover]);
+
     useEffect(() => {
         window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [handleMouseMove]);
+        window.addEventListener('scroll', calculateHover, { passive: true });
 
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('scroll', calculateHover);
+        };
+    }, [handleMouseMove, calculateHover]);
 
-    // PREVIEW TIMELINES
     const { contextSafe } = useGSAP({ scope: mainWrapperRef });
 
     const togglePreview = contextSafe((index) => {
@@ -373,7 +418,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         }, 0);
     });
 
-    // 4. MEMORY LEAK FIX: Revert SplitText when preview unmounts
     useEffect(() => {
         if (previewContent && titleContainerRef.current) {
             titleSplitRef.current = new SplitText(titleContainerRef.current, {
@@ -422,7 +466,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                 if (lenis) lenis.start();
                 setPreviewContent(null);
                 Object.assign(st.parallax, { targetX: 0, targetY: 0, targetZ: 0, currentX: 0, currentY: 0, currentZ: 0 });
-                // Refresh our caches once everything is settled back in place!
                 updateCardCenters();
             },
         });
@@ -474,7 +517,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
     return (
         <div ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-[110svh] overflow-hidden relative select-none bg-white">
 
-            {/* 5. CONDITIONAL MOUNT FIX: Using CSS to hide instead of removing from DOM */}
             <div
                 ref={headingWrapperRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-opacity duration-300"

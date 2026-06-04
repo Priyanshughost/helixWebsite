@@ -10,5 +10,11 @@ export const eventList = [
     { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1780004189175-202169141544?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNHx8fGVufDB8fHx8fA%3D%3D" },
     { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1776890879955-eeee501b4c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D" },
     { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1780375107678-1552b7682958?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1779464433199-ca57ba28339b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1779560451321-b0c23fb128ac?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxOXx8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://plus.unsplash.com/premium_photo-1760389465478-57c5ab901636?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyMHx8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1780004189175-202169141544?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNHx8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1776890879955-eeee501b4c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D" },
+    { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1780375107678-1552b7682958?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D" },
     { title: "Shadow Profile", img: "https://images.unsplash.com/photo-1780362508068-feb6f59e8044?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzN3x8fGVufDB8fHx8fA%3D%3D" },
 ]
