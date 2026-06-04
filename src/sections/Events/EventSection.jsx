@@ -9,41 +9,49 @@ gsap.registerPlugin(ScrollTrigger);
 function EventSection() {
     const sectionRef = useRef(null);
     const cylinderRef = useRef(null);
+    const parallaxWrapperRef = useRef(null); // Added ref for the parallax tilt
 
-    useGSAP(
-        () => {
-            const section = sectionRef.current;
-            const cylinder = cylinderRef.current;
-            if (!section || !cylinder) return;
+    useGSAP(() => {
+        const section = sectionRef.current;
+        const cylinder = cylinderRef.current;
+        const parallaxWrapper = parallaxWrapperRef.current;
 
-            const cards = gsap.utils.toArray(".cylinder-card");
-            const numCards = cards.length;
+        if (!section || !cylinder) return;
 
-            let mm = gsap.matchMedia();
+        // --- 1. SCROLL ANIMATION LOGIC ---
+        const cards = gsap.utils.toArray(".cylinder-card");
+        const numCards = cards.length;
 
-            mm.add({
+        const mm = gsap.matchMedia();
+
+        mm.add(
+            {
                 isMobile: "(max-width: 768px)",
-                isDesktop: "(min-width: 769px)"
-            }, (context) => {
-                let { isMobile } = context.conditions
+                isDesktop: "(min-width: 769px)",
+            },
+            (context) => {
+                const { isMobile } = context.conditions;
 
                 const cardsPerLoop = isMobile ? 8 : 12;
                 const angle = 360 / cardsPerLoop;
                 const yStep = isMobile ? 50 : 40;
                 const gap = isMobile ? 10 : 20;
 
-                const cardWidth = cards[0].offsetWidth;
-                const radius = Math.round((cardWidth + gap) / 2 / Math.tan(Math.PI / cardsPerLoop));
+                const cardWidth = cards[0]?.offsetWidth || 180;
 
-                // 1. Position each card in the spiral
+                const radius = Math.round(
+                    ((cardWidth + gap) / 2) /
+                    Math.tan(Math.PI / cardsPerLoop)
+                );
+
                 cards.forEach((card, i) => {
                     gsap.set(card, {
                         transform: `translateY(${i * yStep}px) rotateY(${i * angle}deg) translateZ(${radius}px)`,
-                        transformOrigin: "50% 50%"
+                        transformOrigin: "50% 50%",
+                        force3D: true,
                     });
                 });
 
-                // 2. Exact mathematical sync for centering
                 const totalYMovement = -((numCards - 1) * yStep);
                 const totalRotation = (numCards - 1) * angle;
 
@@ -51,6 +59,7 @@ function EventSection() {
                     y: totalYMovement,
                     rotationY: -totalRotation,
                     ease: "none",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: section,
                         pin: true,
@@ -58,60 +67,177 @@ function EventSection() {
                         start: "top top",
                         end: () => `+=${numCards * 250}`,
                         invalidateOnRefresh: true,
+                        anticipatePin: 1,
                     },
                 });
-            }),
-                { scope: sectionRef }
-        });
+            }
+        );
+
+        // --- 2. CAMERA TILT PARALLAX LOGIC ---
+        let handleMouseMove;
+
+        if (parallaxWrapper) {
+            // Using quickTo for highly performant, jank-free mouse tracking
+            const xTo = gsap.quickTo(parallaxWrapper, "rotationY", { ease: "power3", duration: 0.6 });
+            const yTo = gsap.quickTo(parallaxWrapper, "rotationX", { ease: "power3", duration: 0.6 });
+
+            handleMouseMove = (e) => {
+                const { innerWidth, innerHeight } = window;
+                // Normalize coordinates to [-1, 1]
+                const x = (e.clientX / innerWidth) * 2 - 1;
+                const y = (e.clientY / innerHeight) * 2 - 1;
+
+                // Multiply by max tilt angle (12 degrees here)
+                xTo(x * 5);
+                yTo(-(y * 5));
+            };
+
+            window.addEventListener("mousemove", handleMouseMove);
+        }
+
+        // --- 3. CLEANUP ---
+        return () => {
+            mm.revert(); // Revert ScrollTrigger matchMedia
+            if (handleMouseMove) {
+                window.removeEventListener("mousemove", handleMouseMove); // Cleanup mouse listener
+            }
+        };
+    }, { scope: sectionRef });
 
     return (
         <section
             ref={sectionRef}
-            // Added `relative` to correctly contain the absolutely positioned text
-            className="relative w-full h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden flex items-center justify-center perspective-[1500px]"
+            className="
+                relative
+                w-full
+                h-screen
+                bg-zinc-900
+                text-white
+                overflow-hidden
+                flex
+                items-center
+                justify-center
+                perspective-distant
+            "
         >
-            {/* --- CENTER TEXT --- */}
-            {/* pointer-events-none ensures it doesn't block card hover states */}
-            {/* translateZ(0) forces it into the same 3D rendering context as the cylinder */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-[translateZ(0px)]">
-                <h1 className="text-4xl md:text-7xl tracking-tight font-black text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 uppercase text-center drop-shadow-2xl">
-                    Events<br />By Helix
+            {/* CENTER TEXT */}
+            <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                style={{
+                    transform: "translate3d(0,0,0)",
+                    willChange: "transform",
+                }}
+            >
+                <h1 className="text-4xl md:text-7xl font-black tracking-tight uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 drop-shadow-2xl">
+                    Events
+                    <br />
+                    By Helix
                 </h1>
             </div>
 
+            {/* PARALLAX WRAPPER */}
+            {/* This takes the mouse tilt, leaving cylinderRef free for ScrollTrigger */}
             <div
-                ref={cylinderRef}
-                className="relative w-35 md:w-45 aspect-3/4 transform-3d"
+                ref={parallaxWrapperRef}
+                className="relative flex items-center justify-center transform-3d will-change-transform"
+                style={{ transformStyle: "preserve-3d" }}
             >
-                {eventList.map((event, index) => (
-                    <div
-                        key={index}
-                        className="absolute inset-0 cylinder-card group transform-3d"
-                    >
-                        <div className="w-full h-full relative transform transition-transform group-hover:scale-105 duration-500 transform-3d">
+                <div
+                    ref={cylinderRef}
+                    className="relative w-35 md:w-45 aspect-3/4 transform-3d will-change-transform"
+                    style={{
+                        transformStyle: "preserve-3d",
+                    }}
+                >
+                    {eventList.map((event, index) => (
+                        <div
+                            key={index}
+                            className="absolute inset-0 cylinder-card group will-change-transform"
+                            style={{
+                                transformStyle: "preserve-3d",
+                                contain: "layout paint style",
+                            }}
+                        >
+                            <div
+                                className="
+                                    relative
+                                    w-full
+                                    h-full
+                                    transform-3d
+                                    transition-transform
+                                    duration-300
+                                    group-hover:scale-[1.02]
+                                "
+                            >
+                                {/* FRONT */}
+                                <div
+                                    className="
+                                        absolute
+                                        inset-0
+                                        overflow-hidden
+                                        rounded-md
+                                        bg-gray-900
+                                        border
+                                        border-white/10
+                                        shadow-xl
+                                        backface-hidden
+                                    "
+                                >
+                                    <img
+                                        src={event.img}
+                                        alt={event.title}
+                                        loading="lazy"
+                                        decoding="async"
+                                        draggable="false"
+                                        className="
+                                            w-full
+                                            h-full
+                                            object-cover
+                                            opacity-80
+                                            group-hover:opacity-100
+                                            transition-opacity
+                                            duration-300
+                                        "
+                                    />
+                                </div>
 
-                            {/* --- FRONT FACE --- */}
-                            <div className="absolute inset-0 overflow-hidden bg-gray-900 rounded-md shadow-xl border border-white/10 backface-hidden">
-                                <img
-                                    src={event.img}
-                                    alt={event.title}
-                                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                />
+                                {/* BACK */}
+                                <div
+                                    className="
+                                        absolute
+                                        inset-0
+                                        overflow-hidden
+                                        rounded-md
+                                        bg-gray-900
+                                        border
+                                        border-white/10
+                                        shadow-xl
+                                        backface-hidden
+                                    "
+                                    style={{
+                                        transform: "rotateY(180deg)",
+                                    }}
+                                >
+                                    <div className="absolute inset-0 bg-black/75 z-10 pointer-events-none" />
+
+                                    <img
+                                        src={event.img}
+                                        alt={event.title}
+                                        loading="lazy"
+                                        decoding="async"
+                                        draggable="false"
+                                        className="
+                                            w-full
+                                            h-full
+                                            object-cover
+                                            opacity-25
+                                        "
+                                    />
+                                </div>
                             </div>
-
-                            {/* --- BACK FACE (Dimmed) --- */}
-                            <div className="absolute inset-0 overflow-hidden bg-gray-900 rounded-md shadow-xl border border-white/10 backface-hidden transform-[rotateY(180deg)]">
-                                <div className="absolute inset-0 bg-black/75 z-10 pointer-events-none"></div>
-                                <img
-                                    src={event.img}
-                                    alt={event.title}
-                                    className="w-full h-full object-cover opacity-40 grayscale-50"
-                                />
-                            </div>
-
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </section>
     );

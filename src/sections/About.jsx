@@ -25,11 +25,7 @@ const AboutSection = () => {
         split1Ref.current = split1;
         split2Ref.current = split2;
 
-        // Set initial states
         gsap.set(split2.chars, { yPercent: 120 });
-
-        // OPTIMIZATION: Set the physical width of the line once on load, 
-        // so we can safely animate scaleX instead of width later.
         gsap.set(lineRef.current, { width: text1SpanRef.current.offsetWidth });
 
         gsap.fromTo(split1.chars,
@@ -83,7 +79,6 @@ const AboutSection = () => {
         gsap.to(split1Ref.current.chars, { yPercent: -120, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
         gsap.to(split2Ref.current.chars, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
 
-        // OPTIMIZATION: Calculate the scale multiplier instead of animating physical width
         if (text1SpanRef.current && text2SpanRef.current && lineRef.current) {
             const targetScale = text2SpanRef.current.offsetWidth / text1SpanRef.current.offsetWidth;
             gsap.to(lineRef.current, { scaleX: targetScale, duration: 0.6, ease: 'power3.inOut', overwrite: 'auto' });
@@ -96,7 +91,6 @@ const AboutSection = () => {
         gsap.to(split1Ref.current.chars, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
         gsap.to(split2Ref.current.chars, { yPercent: 120, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
 
-        // OPTIMIZATION: Return scaleX to 1 (100% of its original set width)
         if (lineRef.current) {
             gsap.to(lineRef.current, { scaleX: 1, duration: 0.6, ease: 'power3.inOut', overwrite: 'auto' });
         }
@@ -123,35 +117,41 @@ const AboutSection = () => {
 
                     <div
                         ref={lineRef}
-                        // origin-center is critical here so it scales symmetrically from the middle
                         className="absolute bottom-0 h-[1.5px] md:h-0.5 bg-black origin-center will-change-transform"
-                        // Removed the inline width override so the GSAP initial setup applies cleanly
                         style={{ left: 0, right: 0, margin: '0 auto' }}
                     />
                 </div>
             </div>
 
-            {/* Rest of the component remains unchanged */}
             <div className="max-w-400 mx-auto w-full">
-                <div ref={descriptionContainerRef} className="relative mb-16 md:mb-24 lg:mb-32 pr-0 lg:pr-10">
-                    <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-[4rem] leading-[1.05] tracking-tight font-normal text-black/20">
-                        We are a collective of seasoned creatives,
-                        strategists, growth marketers, and technologists,
-                        dedicated to transforming ambitious visions into
-                        category leaders.
-                    </h2>
-                    <h2
-                        ref={revealTextRef}
-                        className="absolute top-0 left-0 w-full text-3xl sm:text-4xl md:text-6xl lg:text-[4rem] leading-[1.05] tracking-tight font-normal text-black"
-                        style={{ clipPath: 'inset(-20% 100% -20% -20%)' }}
-                        aria-hidden="true"
-                    >
-                        We are a collective of seasoned creatives,
-                        strategists, growth marketers, and technologists,
-                        dedicated to transforming ambitious visions into
-                        category leaders.
-                    </h2>
+
+                {/* --- FIX APPLIED HERE --- */}
+                {/* Outer wrapper handles the spacing and padding safely */}
+                <div className="mb-16 md:mb-24 lg:mb-32 pr-0 lg:pr-10">
+
+                    {/* Inner wrapper is strictly for layout overlay (relative positioning without padding) */}
+                    <div ref={descriptionContainerRef} className="relative w-full">
+                        {/* Note: You can remove 'border border-red-600' when you're done debugging */}
+                        <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-normal text-black/20">
+                            We are a collective of seasoned creatives,
+                            strategists, growth marketers, and technologists,
+                            dedicated to transforming ambitious visions into
+                            category leaders.
+                        </h2>
+                        <h2
+                            ref={revealTextRef}
+                            className="absolute top-0 left-0 w-full text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] font-normal tracking-tight text-black"
+                            style={{ clipPath: 'inset(-20% 100% -20% -20%)' }}
+                            aria-hidden="true"
+                        >
+                            We are a collective of seasoned creatives,
+                            strategists, growth marketers, and technologists,
+                            dedicated to transforming ambitious visions into
+                            category leaders.
+                        </h2>
+                    </div>
                 </div>
+                {/* ------------------------ */}
 
                 <hr className="border-t border-gray-300 mb-8 md:mb-12 w-full" />
 

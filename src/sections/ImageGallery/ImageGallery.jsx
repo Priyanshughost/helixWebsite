@@ -50,11 +50,16 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
     const galleryData = useMemo(() => {
         return items.map((item, i) => {
             const angle = (i / numItems) * Math.PI * 2;
+            const cylAngle = (i / numItems) * Math.PI * 2 - Math.PI;
+
             return {
                 id: i,
                 angle,
                 x: dynamicRadius * Math.cos(angle),
                 y: dynamicRadius * Math.sin(angle),
+                cylX: dynamicRadius * Math.sin(cylAngle),
+                cylZ: dynamicRadius * Math.cos(cylAngle) - dynamicRadius,
+                cylRotationY: (cylAngle * 180) / Math.PI,
                 item,
             };
         });
@@ -103,11 +108,11 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             const y = gsap.utils.random(-window.innerHeight / 2 + rect.height, window.innerHeight / 2 - rect.height);
 
             gsap.set(card, {
-                x, y,
+                x, y, z: 0,
                 rotation: 0,
                 scale: gsap.utils.random(0.6, 1),
                 opacity: 0,
-                transformPerspective: 800,
+                transformPerspective: 1500,
                 transformOrigin: 'center center',
             });
         });
@@ -128,7 +133,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             scrollTrigger: {
                 trigger: mainWrapperRef.current,
                 start: "top top",
-                end: "+=1500",
+                end: "+=2500",
                 scrub: 1,
                 pin: true,
                 anticipatePin: 1,
@@ -136,21 +141,16 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                     if (self.progress > 0.85) {
                         if (!st.hasIntroCompleted) {
                             st.hasIntroCompleted = true;
-
-                            // 1. SCROLL DOWN FIX: Kill reset tweens if the user rapidly scrolls back down
-                            gsap.killTweensOf(cardsRef.current, "rotationY");
+                            gsap.killTweensOf(cardsRef.current, "rotationY,rotationX,z");
                             if (galleryContainerRef.current) {
                                 gsap.killTweensOf(galleryContainerRef.current);
                             }
-
                             updateCardCenters();
                         }
                     } else {
                         if (st.hasIntroCompleted) {
-                            // 2. SCROLL UP FIX: Transitioning from Circle back to Band
                             st.hasIntroCompleted = false;
 
-                            // Hard reset all targets in the logic state
                             cardsStateRef.current.forEach(cs => {
                                 cs.currentX = 0; cs.targetX = 0;
                                 cs.currentY = 0; cs.targetY = 0;
@@ -162,9 +162,10 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                             st.parallax.currentY = 0; st.parallax.targetY = 0;
                             st.parallax.currentZ = 0; st.parallax.targetZ = 0;
 
-                            // 3. Smoothly reset the 3D properties that the timeline doesn't track
                             gsap.to(cardsRef.current, {
                                 rotationY: 0,
+                                rotationX: 0,
+                                z: 0,
                                 duration: 0.5,
                                 ease: "power2.out",
                                 overwrite: "auto"
@@ -190,27 +191,30 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
         tl.to(cardsRef.current, {
             x: (i) => (i - numItems / 2) * bandSpacing,
-            y: 0,
-            scale: 1,
-            duration: 2,
-            ease: "power2.inOut",
-            stagger: { amount: 0.5, from: "edges" }
+            y: 0, z: 0, rotation: 0, rotationX: 0, rotationY: 0, scale: 1,
+            duration: 2, ease: "power2.inOut", stagger: { amount: 0.5, from: "edges" }
         }, "band");
+
+        tl.to(cardsRef.current, {
+            x: (i) => galleryData[i].cylX,
+            y: 0,
+            z: (i) => galleryData[i].cylZ,
+            rotationY: (i) => galleryData[i].cylRotationY,
+            rotationX: 0, rotation: 0,
+            duration: 2.5, ease: "power3.inOut",
+        }, "cylinder");
 
         tl.to(cardsRef.current, {
             x: (i) => galleryData[i].x,
             y: (i) => galleryData[i].y,
+            z: 0, rotationY: 0, rotationX: 0,
             rotation: (i) => (galleryData[i].angle * 180) / Math.PI + 90,
-            duration: 2,
-            ease: "power3.inOut",
+            duration: 2.5, ease: "power3.inOut",
         }, "circle");
 
         tl.to(headingWrapperRef.current, {
-            opacity: 1,
-            scale: 1,
-            duration: 1.5,
-            ease: "power3.out"
-        }, "circle+=1.2");
+            opacity: 1, scale: 1, duration: 1.5, ease: "power3.out"
+        }, "circle+=1.5");
 
         tl.set({}, {}, "+=1");
 
@@ -229,7 +233,8 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
         const tick = () => {
             const st = stateRef.current;
-            if (!st.hasIntroCompleted || st.isPreviewing || st.isTransitioning) return;
+            // OPTIMIZATION: Early exit kills the math loop instantly on mobile devices or during transitions
+            if (!st.hasIntroCompleted || st.isPreviewing || st.isTransitioning || st.isMobile) return;
 
             const p = st.parallax;
             p.currentX += (p.targetX - p.currentX) * config.lerpFactor;
@@ -282,16 +287,29 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             gsap.to(galleryRef.current, { scale: 1, duration: 0.5, ease: 'power2.out' });
         });
 
-        window.addEventListener('resize', updateCardCenters);
-        return () => window.removeEventListener('resize', updateCardCenters);
+    }, []);
+
+    // OPTIMIZATION: Debounced resize listener to prevent layout thrashing
+    useEffect(() => {
+        let resizeTimer;
+        const debouncedResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(updateCardCenters, 200);
+        };
+
+        window.addEventListener('resize', debouncedResize);
+        return () => {
+            window.removeEventListener('resize', debouncedResize);
+            clearTimeout(resizeTimer);
+        };
     }, [updateCardCenters]);
 
     const calculateHover = useCallback(() => {
         const st = stateRef.current;
+        // OPTIMIZATION: Double-check mobile exit
         if (!st.hasIntroCompleted || st.isPreviewing || st.isTransitioning || st.isMobile) return;
 
         const { x: clientX, y: clientY } = mousePosRef.current;
-
         if (clientX === -1000) return;
 
         const centerX = window.innerWidth / 2;
@@ -314,7 +332,6 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             if (!cachedCenter) return;
 
             const dynamicCenterY = cachedCenter.y + yOffset;
-
             const dx = clientX - cachedCenter.x;
             const dy = clientY - dynamicCenterY;
             const distSquared = dx * dx + dy * dy;
@@ -343,7 +360,10 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         calculateHover();
     }, [calculateHover]);
 
+    // OPTIMIZATION: Only bind mouse/scroll tracking if NOT on mobile
     useEffect(() => {
+        if (stateRef.current.isMobile) return;
+
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('scroll', calculateHover, { passive: true });
 
@@ -386,7 +406,9 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             tl.to(card, {
                 x: galleryData[i].x,
                 y: galleryData[i].y,
+                z: 0,
                 rotationY: 0,
+                rotationX: 0,
                 scale: 1,
                 duration: 1.25,
                 ease: 'power4.out',
@@ -471,21 +493,11 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
         });
 
         if (titleSplitRef.current) {
-            tl.to(titleSplitRef.current.words, {
-                y: '125%',
-                duration: 0.75,
-                stagger: 0.1,
-                ease: 'power4.out',
-            }, 0);
+            tl.to(titleSplitRef.current.words, { y: '125%', duration: 0.75, stagger: 0.1, ease: 'power4.out' }, 0);
         }
 
         if (exitTitle.current) {
-            tl.to(exitTitle.current.words, {
-                y: '125%',
-                duration: 0.75,
-                stagger: 0.1,
-                ease: 'power4.out',
-            }, 0);
+            tl.to(exitTitle.current.words, { y: '125%', duration: 0.75, stagger: 0.1, ease: 'power4.out' }, 0);
         }
 
         const viewportWidth = window.innerWidth;
@@ -493,11 +505,8 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
 
         tl.to(galleryRef.current, {
             scale: targetScale,
-            y: 0,
-            x: 0,
-            rotation: 0,
-            duration: 2.5,
-            ease: 'power4.inOut',
+            y: 0, x: 0, rotation: 0,
+            duration: 2.5, ease: 'power4.inOut',
         }, 0.5);
     });
 
@@ -509,14 +518,17 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
     };
 
     const handleDocumentClick = () => {
-        if (stateRef.current.isPreviewing && !stateRef.current.isTransitioning) {
+        const st = stateRef.current;
+
+        if (st.isTransitioning) return;
+
+        if (st.isPreviewing) {
             resetGallery();
         }
     };
 
     return (
         <div ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-[110svh] overflow-hidden relative select-none bg-white">
-
             <div
                 ref={headingWrapperRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-opacity duration-300"
@@ -531,17 +543,26 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             </div>
 
             <div className="relative w-full h-full overflow-visible">
-                <div ref={galleryContainerRef} className="relative w-full h-full flex justify-center items-center transform-3d perspective-[2000px] will-change-transform">
-                    <div ref={galleryRef} className="relative w-full h-full flex justify-center items-center origin-center will-change-transform">
+                <div
+                    ref={galleryContainerRef}
+                    className="relative w-full h-full flex justify-center items-center transform-3d perspective-[2000px] will-change-transform"
+                    style={{ transformStyle: 'preserve-3d' }}
+                >
+                    <div
+                        ref={galleryRef}
+                        className="relative w-full h-full flex justify-center items-center origin-center will-change-transform"
+                        style={{ transformStyle: 'preserve-3d' }}
+                    >
                         {galleryData.map((data, i) => (
                             <div
                                 key={data.id}
                                 title={data.item.title}
                                 ref={(el) => (cardsRef.current[i] = el)}
                                 onClick={(e) => handleCardClick(i, e)}
-                                className="absolute w-11.25 h-15 rounded-sm origin-center will-change-transform transform-3d backface-visible overflow-hidden cursor-pointer opacity-0"
+                                className="absolute w-11.25 h-15 rounded-sm origin-center will-change-transform overflow-hidden cursor-pointer opacity-0"
+                                style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'visible' }}
                             >
-                                <img src={data.item.img} alt={data.item.title} className="w-full h-full object-cover backface-hidden" />
+                                <img src={data.item.img} alt={data.item.title} className="w-full h-full object-cover" loading="lazy" style={{ backfaceVisibility: 'visible' }} />
                             </div>
                         ))}
                     </div>

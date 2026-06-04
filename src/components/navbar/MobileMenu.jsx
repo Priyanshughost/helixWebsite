@@ -73,10 +73,10 @@ function MobileMenu({ lenisRef, loading }) {
                 lastScroll = current
             },
         })
-    }, { 
+    }, {
         scope: navRef,
         dependencies: [loading]
-     })
+    })
 
     // TIMELINE CREATION
     useGSAP(() => {
@@ -101,6 +101,13 @@ function MobileMenu({ lenisRef, loading }) {
         });
 
         tl.current
+        tl.current
+            .to(navInnerRef.current, {
+                backgroundColor: "rgba(255,255,255,0)",
+                borderColor: "rgba(255,255,255,0)",
+                duration: 0.35,
+                ease: "power2.out",
+            }, 0)
             .to(overlayRef.current, {
                 autoAlpha: 1,
                 pointerEvents: "auto",
@@ -144,10 +151,10 @@ function MobileMenu({ lenisRef, loading }) {
             gsap.set(overlayRef.current, {
                 display: "flex",
             });
-            gsap.set(navInnerRef.current, {
-                background: "transparent",
-                borderColor: "transparent"
-            })
+            // gsap.set(navInnerRef.current, {
+            //     background: "transparent",
+            //     borderColor: "transparent"
+            // })
 
             tl.current.play();
             lenisRef.current?.lenis?.stop()
@@ -161,10 +168,10 @@ function MobileMenu({ lenisRef, loading }) {
                 gsap.set(overlayRef.current, {
                     display: "none",
                 });
-                gsap.set(navInnerRef.current, {
-                    background: "white",
-                    borderColor: "#d4d4d8",
-                })
+                // gsap.set(navInnerRef.current, {
+                //     background: "white",
+                //     borderColor: "#d4d4d8",
+                // })
 
             });
             lenisRef.current?.lenis?.start()
@@ -177,7 +184,10 @@ function MobileMenu({ lenisRef, loading }) {
             {/* MOBILE NAVBAR */}
             <nav ref={navRef} className="fixed top-2 w-full z-105">
 
-                <div ref={navInnerRef} className="will-change-transform max-w-[95%] mx-auto flex items-center justify-between px-4 border border-zinc-300 rounded-3xl bg-white">
+                <div
+                    ref={navInnerRef}
+                    className="max-w-[95%] mx-auto flex items-center justify-between px-4 border border-zinc-300 rounded-3xl bg-white"
+                >
 
                     {/* LOGO */}
                     <div className="overflow-hidden">
