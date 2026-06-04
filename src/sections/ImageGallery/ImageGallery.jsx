@@ -110,7 +110,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
             gsap.set(card, {
                 x, y, z: 0,
                 rotation: 0,
-                scale: gsap.utils.random(0.6, 1),
+                scale: gsap.utils.random(1, 1.5),
                 opacity: 0,
                 transformPerspective: 1500,
                 transformOrigin: 'center center',
@@ -528,7 +528,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
     };
 
     return (
-        <div ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-[110svh] overflow-hidden relative select-none bg-white">
+        <div ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-screen overflow-hidden relative select-none bg-black">
             <div
                 ref={headingWrapperRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-opacity duration-300"
@@ -537,7 +537,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
                     pointerEvents: previewContent ? 'none' : 'auto'
                 }}
             >
-                <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight whitespace-nowrap m-0 leading-normal block text-center">
+                <h1 className="text-4xl md:text-7xl font-black tracking-tight uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 drop-shadow-2xl">
                     <span ref={text1SpanRef} className="inline-block">Gallery</span>
                 </h1>
             </div>

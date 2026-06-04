@@ -7,6 +7,7 @@ import About from '../sections/About';
 import ImageGallery from '../sections/ImageGallery/ImageGallery';
 import collection from '../sections/ImageGallery/collection';
 import EventSection from '../sections/Events/EventSection';
+import Fader from '../components/Fader';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -16,6 +17,7 @@ function Home() {
       <Reel />
       <Tagline/>
       <About/>
+      <Fader />
       <ImageGallery items={collection}/>
       <EventSection/>
     </>

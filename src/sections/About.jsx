@@ -99,7 +99,7 @@ const AboutSection = () => {
     return (
         <div ref={containerRef} className="w-full min-h-screen bg-white text-black font-sans px-4 sm:px-6 md:px-12 lg:px-20 py-0 md:py-12 overflow-x-hidden">
 
-            <div ref={headingTriggerRef} className="flex justify-center items-center mb-20 md:mb-28 lg:mb-38 pt-0 md:pt-0">
+            <div ref={headingTriggerRef} className="flex justify-start items-center mb-20 md:mb-28 lg:mb-38 pt-0 md:pt-0">
                 <div
                     className="relative inline-flex flex-col items-center cursor-pointer"
                     onMouseEnter={handleMouseEnter}

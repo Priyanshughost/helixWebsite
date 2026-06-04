@@ -49,7 +49,7 @@ function Footer() {
     }, []);
 
     return (
-        <div className="bg-black text-white font-sans min-h-screen flex flex-col justify-end antialiased overflow-hidden">
+        <div className="bg-black text-white font-sans h-screen flex flex-col justify-end antialiased overflow-hidden">
             <footer
                 ref={footerRef}
                 className="pt-[4vw] pb-0 flex flex-col gap-10 justify-between h-auto"

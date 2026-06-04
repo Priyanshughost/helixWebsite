@@ -32,9 +32,9 @@ function EventSection() {
             (context) => {
                 const { isMobile } = context.conditions;
 
-                const cardsPerLoop = isMobile ? 8 : 12;
+                const cardsPerLoop = isMobile ? 8 : 14;
                 const angle = 360 / cardsPerLoop;
-                const yStep = isMobile ? 50 : 40;
+                const yStep = isMobile ? 50 : 30;
                 const gap = isMobile ? 10 : 20;
 
                 const cardWidth = cards[0]?.offsetWidth || 180;
@@ -111,7 +111,7 @@ function EventSection() {
                 relative
                 w-full
                 h-screen
-                bg-zinc-900
+                bg-black
                 text-white
                 overflow-hidden
                 flex
@@ -122,16 +122,17 @@ function EventSection() {
         >
             {/* CENTER TEXT */}
             <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                className="absolute flex flex-col w-max items-center justify-center pointer-events-none"
                 style={{
                     transform: "translate3d(0,0,0)",
                     willChange: "transform",
                 }}
             >
-                <h1 className="text-4xl md:text-7xl font-black tracking-tight uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 drop-shadow-2xl">
-                    Events
-                    <br />
-                    By Helix
+                <h1 className="py-20 text-[5vw] font-black tracking-wide uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 drop-shadow-2xl">
+                    Events Organized By
+                </h1>
+                <h1 className="text-[25vw] font-black tracking-widest uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white via-blue-500 via-30% to-black to-80% drop-shadow-2xl">
+                    HELIX
                 </h1>
             </div>
 
