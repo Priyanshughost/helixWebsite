@@ -240,7 +240,7 @@ function MobileMenu({ lenisRef, loading }) {
             {/* FULLSCREEN OVERLAY */}
             <div
                 ref={overlayRef}
-                className="fixed inset-0 z-100 flex flex-col justify-between pt-20 to-[#a7bdff] bg-linear-to-t from-[#426ae1] will-change-[clip-path]"
+                className="fixed inset-0 z-100 flex flex-col justify-between pt-20 to-blue-100 to-100% bg-linear-to-t via-blue-500 via-40% from-black from-1% will-change-[clip-path]"
             >
 
                 {/* TOP CONTENT */}
@@ -276,7 +276,7 @@ function MobileMenu({ lenisRef, loading }) {
 
                 {/* FOOTER */}
                 <div
-                    className="px-4 pb-6 flex flex-col text-[1.2rem] tracking-[-0.04em] leading-[1.15]"
+                    className="px-4 pb-6 flex flex-col text-blue-100 text-[1.2rem] tracking-[-0.04em] leading-[1.15]"
                 >
 
                     <div className="overflow-hidden">
