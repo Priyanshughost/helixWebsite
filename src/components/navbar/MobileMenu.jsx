@@ -240,7 +240,7 @@ function MobileMenu({ lenisRef, loading }) {
             {/* FULLSCREEN OVERLAY */}
             <div
                 ref={overlayRef}
-                className="fixed inset-0 z-100 flex flex-col justify-between pt-20 to-blue-100 to-100% bg-linear-to-t via-blue-500 via-40% from-black from-1% will-change-[clip-path]"
+                className="fixed inset-0 z-100 flex flex-col justify-between pt-20 to-blue-100 to-95% bg-linear-to-t via-blue-500 via-40% from-black from-[-5%] will-change-[clip-path]"
             >
 
                 {/* TOP CONTENT */}

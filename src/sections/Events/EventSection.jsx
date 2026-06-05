@@ -128,7 +128,7 @@ function EventSection() {
                     willChange: "transform",
                 }}
             >
-                <h1 className="text-[5vw] tracking-wider uppercase text-center font-light text-white">
+                <h1 className="text-[3vw] tracking-wider uppercase text-center font-extralight text-white">
                     Events Organized By
                 </h1>
                 <h1 className="text-[25vw] font-semibold tracking-widest uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white via-blue-500 via-20% to-black to-70% drop-shadow-2xl">

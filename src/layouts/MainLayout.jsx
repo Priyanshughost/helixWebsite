@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import MobileMenu from "../components/navbar/MobileMenu.jsx";
 import Navbar from "../components/navbar/Navbar.jsx";
 import { Outlet } from "react-router-dom";
-import Footer from "../components/Footer.jsx";
 import ReactLenis from "lenis/react";
+import Footer from "../sections/Footer.jsx";
 
 function MainLayout({ loading }) {
     const lenisRef = useRef()

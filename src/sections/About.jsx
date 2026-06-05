@@ -106,18 +106,18 @@ const AboutSection = () => {
                     onMouseLeave={handleMouseLeave}
                 >
                     <div className="relative overflow-hidden mb-3 md:mb-6 w-full flex justify-center">
-                        <h1 className="relative text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] block w-full text-center">
+                        <h1 className="relative text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] block w-full text-left">
                             <span ref={text1SpanRef} className="inline-block">Get to know us</span>
                         </h1>
 
-                        <h1 className="absolute top-0 left-0 text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] w-full text-center block">
+                        <h1 className="absolute top-0 left-0 text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] w-full text-left block">
                             <span ref={text2SpanRef} className="inline-block">About Us</span>
                         </h1>
                     </div>
 
                     <div
                         ref={lineRef}
-                        className="absolute bottom-0 h-[1.5px] md:h-0.5 bg-black origin-center will-change-transform"
+                        className="absolute bottom-0 h-[1.5px] md:h-0.5 bg-black origin-left will-change-transform"
                         style={{ left: 0, right: 0, margin: '0 auto' }}
                     />
                 </div>

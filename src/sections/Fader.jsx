@@ -68,7 +68,7 @@ const Fader = () => {
     return (
         <div
             ref={containerRef}
-            className='w-full h-screen to-white to-100% bg-linear-to-t via-blue-500 via-65% from-black from-20% pointer-events-none text-[100vh] overflow-hidden'
+            className='w-full h-screen to-white to-100% bg-linear-to-t via-blue-500 via-65% from-black from-20% pointer-events-none overflow-hidden'
             aria-hidden="true"
             style={{ position: 'relative' }}
         >
@@ -84,7 +84,7 @@ const Fader = () => {
                         // Sized slightly smaller than part 2
                         style={{ fontSize: 'clamp(1.5rem, 3vw, 3.5rem)' }}
                     >
-                        We don't follow the Tech Standard,
+                        We don't follow the Tech Standards,
                     </div>
                 </div>
 
@@ -105,7 +105,7 @@ const Fader = () => {
             {/* Part 3: The massive sliding text */}
             <div
                 ref={part3Ref}
-                className="inline-block text-black/70 whitespace-nowrap will-change-transform absolute top-1/2 -translate-y-1/2 left-0"
+                className="inline-block text-[70vh] md:text-[100vh] text-black/70 whitespace-nowrap will-change-transform absolute top-1/2 -translate-y-1/2 left-0"
             >
                 STANDARD.
             </div>

@@ -7,8 +7,9 @@ import About from '../sections/About';
 import ImageGallery from '../sections/ImageGallery/ImageGallery';
 import collection from '../sections/ImageGallery/collection';
 import EventSection from '../sections/Events/EventSection';
-import Fader from '../components/Fader';
-import Fader2 from '../components/Fader2';
+import Fader from '../sections/Fader';
+import Fader2 from '../sections/Fader2';
+import TeamsV2 from '../sections/TeamsV2';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -20,8 +21,9 @@ function Home() {
       <About/>
       <Fader />
       <ImageGallery items={collection}/>
-      <Fader2/>
+      <Fader2 />
       <EventSection/>
+      <TeamsV2/>
     </>
   )
 }

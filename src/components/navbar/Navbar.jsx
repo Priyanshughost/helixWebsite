@@ -161,7 +161,7 @@ function Navbar({ loading }) {
 
             <div
               key={index}
-              className="relative overflow-hidden"
+              className="relative overflow-hidden w-max"
             >
 
               <Link
