@@ -8,6 +8,7 @@ import ImageGallery from '../sections/ImageGallery/ImageGallery';
 import collection from '../sections/ImageGallery/collection';
 import EventSection from '../sections/Events/EventSection';
 import Fader from '../components/Fader';
+import Fader2 from '../components/Fader2';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -19,6 +20,7 @@ function Home() {
       <About/>
       <Fader />
       <ImageGallery items={collection}/>
+      <Fader2/>
       <EventSection/>
     </>
   )

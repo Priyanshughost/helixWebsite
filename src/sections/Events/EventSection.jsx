@@ -122,16 +122,16 @@ function EventSection() {
         >
             {/* CENTER TEXT */}
             <div
-                className="absolute flex flex-col w-max items-center justify-center pointer-events-none"
+                className="absolute flex flex-col justify-start w-max items-start pointer-events-none"
                 style={{
                     transform: "translate3d(0,0,0)",
                     willChange: "transform",
                 }}
             >
-                <h1 className="py-20 text-[5vw] font-black tracking-wide uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 drop-shadow-2xl">
+                <h1 className="text-[5vw] tracking-wider uppercase text-center font-light text-white">
                     Events Organized By
                 </h1>
-                <h1 className="text-[25vw] font-black tracking-widest uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white via-blue-500 via-30% to-black to-80% drop-shadow-2xl">
+                <h1 className="text-[25vw] font-semibold tracking-widest uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white via-blue-500 via-20% to-black to-70% drop-shadow-2xl">
                     HELIX
                 </h1>
             </div>

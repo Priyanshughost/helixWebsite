@@ -7,35 +7,46 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Fader = () => {
     const containerRef = useRef(null);
-    const hugeTextRef = useRef(null);
-    const smallTextRef = useRef(null);
+    const part1Ref = useRef(null);
+    const part2Ref = useRef(null);
+    const part3Ref = useRef(null);
 
     useGSAP(() => {
-        // Calculate the total distance the text needs to move to slide fully off-screen
-        const distance = hugeTextRef.current.scrollWidth - window.innerWidth;
+        const distance = part3Ref.current.scrollWidth - window.innerWidth;
 
-        // Use a timeline to sequence the animations seamlessly as the user scrolls
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
-                start: "top top", // Animation and pinning start exactly when the section hits the top
-                end: "+=200%",    // Extended scroll distance to comfortably fit all 3 animations
-                pin: true,        // Locks the section in place
-                scrub: 1,         // Ties the timeline smoothly to the scrollbar
+                start: "top top",
+                end: "+=250%", // Enough distance to handle all animations
+                pin: true,
+                scrub: 1,
             }
         });
 
-        // Phase 1: Reveal "We don't follow the tech curve." from the bottom
-        tl.fromTo(smallTextRef.current,
-            { yPercent: 100 },
-            {
-                yPercent: 0,
-                duration: 1,
-                ease: "none"
-            }
-        )
+        // Phase 1: Reveal both phrases on the same line simultaneously
+        // We use the GSAP label "startReveal" so they fire at the exact same time
+        tl.add("startReveal")
+            .fromTo(part1Ref.current,
+                { yPercent: -100 }, // Comes down from the TOP
+                {
+                    yPercent: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                },
+                "startReveal"
+            )
+            .fromTo(part2Ref.current,
+                { yPercent: 100 }, // Comes up from the BOTTOM
+                {
+                    yPercent: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                },
+                "startReveal"
+            )
             // Phase 2: The huge text fades in
-            .fromTo(hugeTextRef.current,
+            .fromTo(part3Ref.current,
                 { opacity: 0 },
                 {
                     opacity: 1,
@@ -44,44 +55,59 @@ const Fader = () => {
                 }
             )
             // Phase 3: The huge text slides left
-            .to(hugeTextRef.current,
+            .to(part3Ref.current,
                 {
                     x: -distance,
-                    duration: 2, // Given a slightly longer duration so the slide feels smooth
+                    duration: 2.5,
                     ease: "none"
                 }
-            )
-            // .to({},{},"+=1")
+            );
 
     }, { scope: containerRef });
 
     return (
         <div
             ref={containerRef}
-            // Your exact, untouched CSS classes
-            className='w-full h-screen bg-linear-to-b from-black/0 from-1% via-blue-500 via-30% to-black to-90% pointer-events-none text-[100vh] overflow-hidden'
+            className='w-full h-screen to-white to-100% bg-linear-to-t via-blue-500 via-65% from-black from-20% pointer-events-none text-[100vh] overflow-hidden'
             aria-hidden="true"
-            // Applied relative positioning via style so absolute children align to this container without altering your CSS string
             style={{ position: 'relative' }}
         >
-            {/* The Setup for Phase 1: Overflow-hidden wrapper to mask the text reveal */}
-            <div className="absolute top-[25%] left-0 w-full flex justify-center overflow-hidden z-10">
-                <div
-                    ref={smallTextRef}
-                    // This overrides the text-[100vh] inherited from the parent specifically for this sentence
-                    className="text-3xl md:text-5xl lg:text-7xl font-medium text-white tracking-tight will-change-transform"
-                    style={{ fontSize: 'clamp(2rem, 4vw, 5rem)' }}
-                >
-                    We don't follow the tech curve.
+            {/* The First Line: Flex container to hold both phrases side-by-side */}
+            {/* items-baseline ensures the text lines up cleanly even with different font sizes */}
+            <div className="absolute top-[25%] left-0 w-full flex flex-wrap justify-center items-baseline gap-2 md:gap-4 px-4 z-10">
+
+                {/* Part 1: Mask and Text */}
+                <div className="overflow-hidden">
+                    <div
+                        ref={part1Ref}
+                        className="font-medium text-white tracking-tight will-change-transform"
+                        // Sized slightly smaller than part 2
+                        style={{ fontSize: 'clamp(1.5rem, 3vw, 3.5rem)' }}
+                    >
+                        We don't follow the Tech Standard,
+                    </div>
                 </div>
+
+                {/* Part 2: Mask and Text (Uppercase, bolder, slightly bigger) */}
+                <div className="overflow-hidden">
+                    <div
+                        ref={part2Ref}
+                        className="uppercase font-bold text-white tracking-tight will-change-transform"
+                        // Sized slightly larger than part 1
+                        style={{ fontSize: 'clamp(1.8rem, 3.5vw, 4.2rem)' }}
+                    >
+                        because we are the
+                    </div>
+                </div>
+
             </div>
 
-            {/* The Setup for Phase 2 & 3: The massive sliding text */}
+            {/* Part 3: The massive sliding text */}
             <div
-                ref={hugeTextRef}
+                ref={part3Ref}
                 className="inline-block text-black/70 whitespace-nowrap will-change-transform absolute top-1/2 -translate-y-1/2 left-0"
             >
-                WE CODE IT.
+                STANDARD.
             </div>
         </div>
     );

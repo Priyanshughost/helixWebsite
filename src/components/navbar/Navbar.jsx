@@ -81,6 +81,9 @@ function Navbar({ loading }) {
       duration: 0.32,
       ease: 'power3.inOut',
     }, '-=0.08')
+    scrollTl.to(navRef.current, {
+      pointerEvents: "none"
+    })
 
     let lastScroll = 0
 
@@ -112,7 +115,7 @@ function Navbar({ loading }) {
   return (
     <nav
       ref={navRef}
-      className="fixed top-6 w-full z-110 overflow-hidden pointer-events-none"
+      className="fixed top-6 w-full z-110 overflow-hidden"
     >
 
       <div
@@ -152,7 +155,7 @@ function Navbar({ loading }) {
         </div>
 
         {/* NAV LINKS */}
-        <div className="flex items-center gap-7 text-sm font-medium tracking-[-0.02em]">
+        <div className="flex items-center gap-4 text-sm font-medium tracking-[-0.02em]">
 
           {navLinks.map((link, index) => (
 
