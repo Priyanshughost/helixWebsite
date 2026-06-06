@@ -14,24 +14,24 @@ import TeamsV2 from '../sections/TeamsV2';
 function Home() {
   const { loading } = useOutletContext();
 
-  // 1. Initialize state (default to false or true based on your preference for initial load)
-  const [isDesktop, setIsDesktop] = useState(true);
+  // // 1. Initialize state (default to false or true based on your preference for initial load)
+  // const [isDesktop, setIsDesktop] = useState(true);
 
-  // 2. Run effect once on mount to handle window sizing
-  useEffect(() => {
-    // Target the Tailwind 'md' breakpoint (768px)
-    const media = window.matchMedia('(min-width: 768px)');
+  // // 2. Run effect once on mount to handle window sizing
+  // useEffect(() => {
+  //   // Target the Tailwind 'md' breakpoint (768px)
+  //   const media = window.matchMedia('(min-width: 768px)');
 
-    // Set the exact initial value immediately
-    setIsDesktop(media.matches);
+  //   // Set the exact initial value immediately
+  //   setIsDesktop(media.matches);
 
-    // Update state if the user resizes their browser window
-    const listener = (e) => setIsDesktop(e.matches);
-    media.addEventListener('change', listener);
+  //   // Update state if the user resizes their browser window
+  //   const listener = (e) => setIsDesktop(e.matches);
+  //   media.addEventListener('change', listener);
 
-    // Cleanup listener when component unmounts
-    return () => media.removeEventListener('change', listener);
-  }, []); // Empty dependency array ensures this only binds once
+  //   // Cleanup listener when component unmounts
+  //   return () => media.removeEventListener('change', listener);
+  // }, []); // Empty dependency array ensures this only binds once
 
   return (
     <>
