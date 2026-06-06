@@ -41,12 +41,12 @@ function Home() {
       <About />
 
       <Fader />
-      {isDesktop && (
-        <>
+      {/* {isDesktop && (
+        <> */}
           <ImageGallery items={collection} />
           <Fader2 />
-        </>
-      )}
+        {/* </>
+      )} */}
 
       <EventSection />
       <TeamsV2 />
