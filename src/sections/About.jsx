@@ -189,14 +189,20 @@ const AboutSection = () => {
                                     <span> Facilitate collaborative projects and activities that emphasize the importance of teamwork, communication, and shared goals</span>
                                 </div>
                             </li>
+                            <li className="overflow-hidden">
+                                <div className="principle-mask-item flex gap-4 md:gap-6">
+                                    <span className="text-gray-500">(04)</span>
+                                    <span>Equip students with the necessary technical skills, teamwork abilities, and industry insights to excel in their future careers within the rapidly evolving technology landscape</span>
+                                </div>
+                            </li>
                         </ul>
 
                         <div className="overflow-hidden">
                             <p className="principle-mask-item text-sm sm:text-base md:text-lg text-black leading-snug max-w-105 block">
-                                These three principles have earned us
-                                numerous awards. While we don't chase
-                                accolades, they are proof of our dedication
-                                to impact, quality, and innovation.
+                                These five core principles define the vision of Helix — a tech-driven community focused on collaboration, innovation, and growth. 
+                                Beyond achievements, Helix represents our commitment to hands-on
+                                learning, creative problem-solving, teamwork, and empowering students 
+                                to become future-ready leaders in the evolving world of technology
                             </p>
                         </div>
                     </div>
