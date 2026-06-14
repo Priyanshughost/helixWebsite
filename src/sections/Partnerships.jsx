@@ -6,9 +6,9 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger);
 
 const partnerships = [
-    { name: "DevFest Ranchi 2025", role: "Community Partner", date: "Oct 11, 2025", desc: "Helix proudly participated as a Community Partner at GP Birla Auditorium, BIT Mesra, contributing actively to the success of the event. Aadarsh Shaheb Singh and Prayog Priyanshu served as Training & Development Lead and Community Lead respectively." },
-    { name: "Martinovation", role: "Community Partner", date: "Nov 3-7, 2025", desc: "Served as a Community Partner for the flagship hackathon of UMU TechFest organized by Usha Martin University, assisting with sponsor outreach and strategic guidance." },
-    { name: "RanchiHacks 2026", role: "Community Partner", date: "Jan 17-18, 2026", desc: "Helix played a key role in planning, promotion, and execution support for this national-level hackathon organized by GDG Ranchi." }
+    { name: "DevFest Ranchi 2025", role: "Community Partner", date: "Oct 11, 2025", desc: "Helix proudly participated as a Community Partner at GP Birla Auditorium, BIT Mesra, contributing actively to the success of the event. Aadarsh Shaheb Singh and Prayog Priyanshu served as Training & Development Lead and Community Lead respectively.", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop" },
+    { name: "Martinovation", role: "Community Partner", date: "Nov 3-7, 2025", desc: "Served as a Community Partner for the flagship hackathon of UMU TechFest organized by Usha Martin University, assisting with sponsor outreach and strategic guidance.", image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop" },
+    { name: "RanchiHacks 2026", role: "Community Partner", date: "Jan 17-18, 2026", desc: "Helix played a key role in planning, promotion, and execution support for this national-level hackathon organized by GDG Ranchi.", image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop" }
 ];
 
 function Partnerships() {
@@ -17,21 +17,18 @@ function Partnerships() {
     useGSAP(() => {
         const cards = gsap.utils.toArray('.partner-card');
 
-        // 1. Heading — 3D tilt entrance
-        gsap.fromTo('.partner-heading',
+        // 1. Heading — Smooth entrance from bottom
+        gsap.fromTo('.partner-heading-text',
             {
-                rotationX: -60,
-                yPercent: 60,
+                yPercent: 100,
                 opacity: 0,
-                transformPerspective: 1200,
-                transformOrigin: 'center bottom'
             },
             {
-                rotationX: 0,
                 yPercent: 0,
                 opacity: 1,
-                duration: 1.8,
-                ease: 'expo.out',
+                duration: 1.2,
+                stagger: 0.1,
+                ease: 'power4.out',
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: 'top 80%',
@@ -40,58 +37,27 @@ function Partnerships() {
             }
         );
 
-        // 2. Each card — 3D flip entrance, direction-aware
+        // 2. Each card — Smooth pop-in from right
         cards.forEach((card, i) => {
-            gsap.set(card, {
-                transformPerspective: 1500,
-                transformOrigin: 'center bottom',
-            });
-
-            const enterFrom = { rotationX: -60, rotationY: (i % 2 === 0 ? -15 : 15), y: 200, scale: 0.8, opacity: 0, z: -300 };
-            const enterBackFrom = { rotationX: 60, rotationY: (i % 2 === 0 ? 15 : -15), y: -200, scale: 0.8, opacity: 0, z: -300 };
-            const enterTo = { rotationX: 0, rotationY: 0, y: 0, scale: 1, opacity: 1, z: 0, duration: 1.4, ease: 'expo.out' };
-
-            gsap.set(card, enterFrom);
-
-            ScrollTrigger.create({
-                trigger: card,
-                start: 'top 95%',
-                end: 'bottom 5%',
-                onEnter: () => {
-                    gsap.set(card, { transformOrigin: 'center bottom' });
-                    gsap.fromTo(card, enterFrom, { ...enterTo, delay: i * 0.12 });
-                },
-                onLeave: () => {
-                    gsap.to(card, { opacity: 0, y: -60, scale: 0.95, duration: 0.4, ease: 'power2.in' });
-                },
-                onEnterBack: () => {
-                    gsap.set(card, { transformOrigin: 'center top' });
-                    gsap.fromTo(card, enterBackFrom, { ...enterTo, delay: i * 0.12 });
-                },
-                onLeaveBack: () => {
-                    gsap.to(card, { opacity: 0, y: 60, scale: 0.95, duration: 0.4, ease: 'power2.in' });
-                },
-            });
-
-            // 3. Continuous 3D tilt scrub while scrolling
             gsap.fromTo(card,
-                { rotationX: 4, rotationY: (i % 2 === 0 ? 3 : -3) },
+                { x: 100, opacity: 0, scale: 0.95 },
                 {
-                    rotationX: -4,
-                    rotationY: (i % 2 === 0 ? -3 : 3),
-                    ease: 'none',
-                    force3D: true,
+                    x: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.2,
+                    delay: i * 0.15,
+                    ease: 'power3.out',
                     scrollTrigger: {
                         trigger: card,
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: true,
+                        start: 'top 90%',
+                        toggleActions: 'play reverse play reverse',
                     }
                 }
             );
         });
 
-        // 4. Index badges — bounce in
+        // 3. Index badges — bounce in
         const badges = gsap.utils.toArray('.partner-badge');
         badges.forEach((badge) => {
             gsap.fromTo(badge,
@@ -113,45 +79,133 @@ function Partnerships() {
 
     }, { scope: sectionRef });
 
+    // Interactive 3D Mouse Hover Effect
+    const handleMouseMove = (e, index) => {
+        const card = document.getElementById(`partner-card-${index}`);
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Calculate rotation based on mouse position
+        const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        gsap.to(card, {
+            duration: 0.5,
+            rotateX: rotateX,
+            rotateY: rotateY,
+            transformPerspective: 1000,
+            ease: 'power2.out',
+            overwrite: 'auto'
+        });
+
+        // Internal Image Parallax
+        const img = card.querySelector('.partner-card-img');
+        if (img) {
+            gsap.to(img, {
+                x: (x - centerX) * -0.05, // Moves slightly opposite to mouse
+                y: (y - centerY) * -0.05,
+                duration: 0.5,
+                ease: 'power2.out',
+                overwrite: 'auto'
+            });
+        }
+    };
+
+    const handleMouseLeave = (index) => {
+        const card = document.getElementById(`partner-card-${index}`);
+        if (!card) return;
+
+        // Reset Card Rotation
+        gsap.to(card, {
+            duration: 1,
+            rotateX: 0,
+            rotateY: 0,
+            ease: 'elastic.out(1, 0.3)',
+            overwrite: 'auto'
+        });
+
+        // Reset Image Position
+        const img = card.querySelector('.partner-card-img');
+        if (img) {
+            gsap.to(img, {
+                x: 0,
+                y: 0,
+                duration: 1,
+                ease: 'elastic.out(1, 0.3)',
+                overwrite: 'auto'
+            });
+        }
+    };
+
     return (
         <section
             ref={sectionRef}
-            className="w-full bg-white py-28 md:py-40 px-6 md:px-12 lg:px-20 overflow-hidden"
+            className="w-full bg-black py-28 md:py-40 px-6 md:px-12 lg:px-20 overflow-hidden relative"
             style={{ perspective: '1500px' }}
         >
-            <div className="max-w-7xl mx-auto">
-                <div className="partner-heading mb-20 md:mb-28">
-                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-black mb-4">
-                        Community<br />Partnerships
+            {/* Ambient Background Light */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] md:w-[40vw] h-[80vw] md:h-[40vw] bg-[#eeff00]/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto relative z-10">
+                <div className="mb-20 md:mb-28">
+                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-white mb-4">
+                        <div className="overflow-hidden">
+                            <div className="partner-heading-text inline-block">Community</div>
+                        </div>
+                        <div className="overflow-hidden">
+                            <div className="partner-heading-text inline-block text-[#eeff00]">Partnerships</div>
+                        </div>
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-500 max-w-2xl font-light">
-                        Building ecosystems beyond the campus boundaries.
-                    </p>
+                    <div className="overflow-hidden">
+                        <p className="partner-heading-text text-lg md:text-xl text-gray-400 max-w-2xl font-light">
+                            Building ecosystems beyond the campus boundaries.
+                        </p>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                     {partnerships.map((p, i) => (
                         <div
                             key={i}
-                            className="partner-card relative bg-[#f4f4f4] rounded-2xl overflow-hidden will-change-transform group hover:shadow-2xl transition-shadow duration-500"
-                            style={{ transformStyle: 'preserve-3d' }}
+                            id={`partner-card-${i}`}
+                            className="partner-card relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden will-change-transform group cursor-pointer"
+                            style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
+                            onMouseMove={(e) => handleMouseMove(e, i)}
+                            onMouseLeave={() => handleMouseLeave(i)}
                         >
                             {/* Big index number */}
-                            <div className="partner-badge absolute top-6 right-6 w-14 h-14 rounded-full bg-black text-[#eeff00] flex items-center justify-center text-xl font-bold z-10 select-none"
+                            <div className="partner-badge absolute top-6 right-6 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[#eeff00] flex items-center justify-center text-lg md:text-xl font-bold z-20 select-none"
                                 style={{ transformOrigin: 'center center' }}
                             >
                                 {String(i + 1).padStart(2, '0')}
                             </div>
 
-                            <div className="p-10 pt-14 flex flex-col h-full min-h-[340px]">
-                                <div className="text-xs font-medium tracking-widest uppercase text-gray-400 mb-6">{p.date}</div>
-                                <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-black mb-3 group-hover:text-gray-700 transition-colors">{p.name}</h3>
-                                <h4 className="text-sm font-semibold tracking-widest uppercase text-black/50 mb-8">{p.role}</h4>
-                                <p className="text-gray-600 leading-relaxed mt-auto text-base">{p.desc}</p>
+                            {/* Background Image for Parallax */}
+                            <div className="absolute inset-0 w-[110%] h-[110%] -left-[5%] -top-[5%] z-0 pointer-events-none overflow-hidden">
+                                <div className="absolute inset-0 bg-black/70 group-hover:bg-black/50 transition-colors duration-500 z-10" />
+                                <img
+                                    src={p.image}
+                                    alt={p.name}
+                                    className="partner-card-img w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                                />
                             </div>
 
-                            {/* Bottom accent bar */}
-                            <div className="h-1 w-full bg-gradient-to-r from-black via-gray-400 to-transparent group-hover:from-[#eeff00] group-hover:via-[#eeff00]/40 transition-all duration-700" />
+                            {/* Card Content */}
+                            <div className="relative z-20 p-8 md:p-10 pt-16 md:pt-20 flex flex-col h-full min-h-[350px] md:min-h-[400px] pointer-events-none">
+                                <div className="text-xs font-medium tracking-widest uppercase text-[#eeff00] mb-4 md:mb-6">{p.date}</div>
+                                <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white mb-2 md:mb-3 group-hover:translate-x-2 transition-transform duration-500">{p.name}</h3>
+                                <h4 className="text-xs md:text-sm font-semibold tracking-widest uppercase text-white/50 mb-6 md:mb-8">{p.role}</h4>
+                                <p className="text-gray-300 leading-relaxed mt-auto text-sm md:text-base font-light group-hover:translate-x-2 transition-transform duration-500 delay-75">{p.desc}</p>
+                            </div>
+
+                            {/* Hover corner accent */}
+                            <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#eeff00]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                         </div>
                     ))}
                 </div>
