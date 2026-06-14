@@ -37,20 +37,33 @@ function Partnerships() {
             }
         );
 
-        // 2. Each card — Smooth pop-in from right
+        // 2. Each card — 3D unfold from below on scroll
         cards.forEach((card, i) => {
+            gsap.set(card, {
+                transformPerspective: 1500,
+                transformOrigin: 'center bottom',
+            });
+
             gsap.fromTo(card,
-                { x: 100, opacity: 0, scale: 0.95 },
+                { 
+                    rotationX: -60,
+                    y: 150,
+                    opacity: 0, 
+                    scale: 0.9,
+                    z: -200
+                },
                 {
-                    x: 0,
+                    rotationX: 0,
+                    y: 0,
                     opacity: 1,
                     scale: 1,
-                    duration: 1.2,
-                    delay: i * 0.15,
-                    ease: 'power3.out',
+                    z: 0,
+                    duration: 1.4,
+                    delay: i * 0.1,
+                    ease: 'expo.out',
                     scrollTrigger: {
                         trigger: card,
-                        start: 'top 90%',
+                        start: 'top 95%',
                         toggleActions: 'play reverse play reverse',
                     }
                 }
@@ -78,70 +91,6 @@ function Partnerships() {
         });
 
     }, { scope: sectionRef });
-
-    // Interactive 3D Mouse Hover Effect
-    const handleMouseMove = (e, index) => {
-        const card = document.getElementById(`partner-card-${index}`);
-        if (!card) return;
-
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        // Calculate rotation based on mouse position
-        const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
-        const rotateY = ((x - centerX) / centerX) * 10;
-
-        gsap.to(card, {
-            duration: 0.5,
-            rotateX: rotateX,
-            rotateY: rotateY,
-            transformPerspective: 1000,
-            ease: 'power2.out',
-            overwrite: 'auto'
-        });
-
-        // Internal Image Parallax
-        const img = card.querySelector('.partner-card-img');
-        if (img) {
-            gsap.to(img, {
-                x: (x - centerX) * -0.05, // Moves slightly opposite to mouse
-                y: (y - centerY) * -0.05,
-                duration: 0.5,
-                ease: 'power2.out',
-                overwrite: 'auto'
-            });
-        }
-    };
-
-    const handleMouseLeave = (index) => {
-        const card = document.getElementById(`partner-card-${index}`);
-        if (!card) return;
-
-        // Reset Card Rotation
-        gsap.to(card, {
-            duration: 1,
-            rotateX: 0,
-            rotateY: 0,
-            ease: 'elastic.out(1, 0.3)',
-            overwrite: 'auto'
-        });
-
-        // Reset Image Position
-        const img = card.querySelector('.partner-card-img');
-        if (img) {
-            gsap.to(img, {
-                x: 0,
-                y: 0,
-                duration: 1,
-                ease: 'elastic.out(1, 0.3)',
-                overwrite: 'auto'
-            });
-        }
-    };
 
     return (
         <section
@@ -174,10 +123,8 @@ function Partnerships() {
                         <div
                             key={i}
                             id={`partner-card-${i}`}
-                            className="partner-card relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden will-change-transform group cursor-pointer"
+                            className="partner-card relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden will-change-transform"
                             style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
-                            onMouseMove={(e) => handleMouseMove(e, i)}
-                            onMouseLeave={() => handleMouseLeave(i)}
                         >
                             {/* Big index number */}
                             <div className="partner-badge absolute top-6 right-6 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[#eeff00] flex items-center justify-center text-lg md:text-xl font-bold z-20 select-none"
@@ -186,26 +133,23 @@ function Partnerships() {
                                 {String(i + 1).padStart(2, '0')}
                             </div>
 
-                            {/* Background Image for Parallax */}
-                            <div className="absolute inset-0 w-[110%] h-[110%] -left-[5%] -top-[5%] z-0 pointer-events-none overflow-hidden">
-                                <div className="absolute inset-0 bg-black/70 group-hover:bg-black/50 transition-colors duration-500 z-10" />
+                            {/* Background Image */}
+                            <div className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden">
+                                <div className="absolute inset-0 bg-black/70 z-10" />
                                 <img
                                     src={p.image}
                                     alt={p.name}
-                                    className="partner-card-img w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                                    className="partner-card-img w-full h-full object-cover opacity-80 transition-all duration-700"
                                 />
                             </div>
 
                             {/* Card Content */}
                             <div className="relative z-20 p-8 md:p-10 pt-16 md:pt-20 flex flex-col h-full min-h-[350px] md:min-h-[400px] pointer-events-none">
                                 <div className="text-xs font-medium tracking-widest uppercase text-[#eeff00] mb-4 md:mb-6">{p.date}</div>
-                                <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white mb-2 md:mb-3 group-hover:translate-x-2 transition-transform duration-500">{p.name}</h3>
+                                <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white mb-2 md:mb-3">{p.name}</h3>
                                 <h4 className="text-xs md:text-sm font-semibold tracking-widest uppercase text-white/50 mb-6 md:mb-8">{p.role}</h4>
-                                <p className="text-gray-300 leading-relaxed mt-auto text-sm md:text-base font-light group-hover:translate-x-2 transition-transform duration-500 delay-75">{p.desc}</p>
+                                <p className="text-gray-300 leading-relaxed mt-auto text-sm md:text-base font-light">{p.desc}</p>
                             </div>
-
-                            {/* Hover corner accent */}
-                            <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#eeff00]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                         </div>
                     ))}
                 </div>
