@@ -157,7 +157,7 @@ const AboutSection = () => {
                     <div className="md:col-span-5 lg:col-span-6">
                         <div className="overflow-hidden">
                             <h3 className="principle-mask-item text-base sm:text-lg md:text-xl leading-tight font-normal block">
-                                We operate on<br />
+                                HELIX operate on<br />
                                 simple principles
                             </h3>
                         </div>
@@ -168,19 +168,25 @@ const AboutSection = () => {
                             <li className="overflow-hidden">
                                 <div className="principle-mask-item flex gap-4 md:gap-6">
                                     <span className="text-gray-500">(01)</span>
-                                    <span>Put people first</span>
+                                    <span>Foster a collaborative and inclusive environment where students with an interest in technology and AI can connect, learn from each other, and grow together</span>
                                 </div>
                             </li>
                             <li className="overflow-hidden">
                                 <div className="principle-mask-item flex gap-4 md:gap-6">
                                     <span className="text-gray-500">(02)</span>
-                                    <span>Pursue excellence</span>
+                                    <span>Provide hands-on experiences through workshops, projects, and activities that transform theoretical knowledge into practical skills across various tech domains.</span>
                                 </div>
                             </li>
                             <li className="overflow-hidden">
                                 <div className="principle-mask-item flex gap-4 md:gap-6">
                                     <span className="text-gray-500">(03)</span>
-                                    <span>Embrace challenges</span>
+                                    <span>Encourage creative problem-solving and the development of innovative solutions by providing platforms for experimentation and project implementation</span>
+                                </div>
+                            </li>
+                            <li className="overflow-hidden">
+                                <div className="principle-mask-item flex gap-4 md:gap-6">
+                                    <span className="text-gray-500">(04)</span>
+                                    <span> Facilitate collaborative projects and activities that emphasize the importance of teamwork, communication, and shared goals</span>
                                 </div>
                             </li>
                         </ul>
