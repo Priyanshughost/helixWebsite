@@ -144,7 +144,7 @@ const AboutSection = () => {
                             aria-hidden="true"
                         >
                             Bluid a collaborative tech ecosystem where students connect , learn , innovate , and grow through hands-on
-                            projects , AI-Driven solutions , Teamwork , and industry-focused skills to become future-ready
+                            projects , AI-Driven solutions , Teamwork and industry-focused skills to become future-ready
                             technology leaders.
                         </h2>
                     </div>
