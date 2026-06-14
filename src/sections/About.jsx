@@ -133,10 +133,9 @@ const AboutSection = () => {
                     <div ref={descriptionContainerRef} className="relative w-full">
                         {/* Note: You can remove 'border border-red-600' when you're done debugging */}
                         <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-normal text-black/20">
-                            We are a collective of seasoned creatives,
-                            strategists, growth marketers, and technologists,
-                            dedicated to transforming ambitious visions into
-                            category leaders.
+                            bluid a collaborative tech ecosystem where students connect , learn , innovate , and grow through hands-on 
+                            projects , AI-Driven solutions , Teamwork and industry-focused skills to become future-ready
+                            technology leaders.
                         </h2>
                         <h2
                             ref={revealTextRef}
