@@ -118,7 +118,7 @@ function Hero({ loading }) {
           ref={headingRef}
           className=" text-[10vw] sm:text-5xl w-full md:w-[60%] lg:text-7xl font-normal md:font-light tracking-tight leading-[0.95]"
         >
-          The Official YearBook of Helix | 2025 - 2026
+          The Future of Tech Starts Here — Helix, RVSCET
         </div>
       </div>
 
