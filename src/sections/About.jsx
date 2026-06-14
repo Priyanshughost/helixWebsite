@@ -143,7 +143,7 @@ const AboutSection = () => {
                             style={{ clipPath: 'inset(-20% 100% -20% -20%)' }}
                             aria-hidden="true"
                         >
-                            Bluid a collaborative tech ecosystem where students connect , learn , innovate , grow through hands-on
+                            Bluid a collaborative tech ecosystem where students connect , learn , innovate , and grow through hands-on
                             projects , AI-Driven solutions , Teamwork , and industry-focused skills to become future-ready
                             technology leaders.
                         </h2>
