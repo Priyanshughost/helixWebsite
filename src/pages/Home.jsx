@@ -10,6 +10,9 @@ import EventSection from '../sections/Events/EventSection';
 import Fader from '../sections/Fader';
 import Fader2 from '../sections/Fader2';
 import TeamsV2 from '../sections/TeamsV2';
+import HallOfFame from '../sections/HallOfFame';
+import Testimonials from '../sections/Testimonials';
+import Partnerships from '../sections/Partnerships';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -49,7 +52,13 @@ function Home() {
       )} */}
 
       <EventSection />
+      
+      <HallOfFame />
+      <Partnerships />
+      
       <TeamsV2 />
+      
+      <Testimonials />
     </>
   );
 }

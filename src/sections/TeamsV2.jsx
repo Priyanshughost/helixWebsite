@@ -8,21 +8,21 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const teamMembers = [
     {
-        id: 1,
+        id: 4,
         roleLabel: "President",
-        image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1287&auto=format&fit=crop",
-        quote: "\"We've streamlined the outdated and layered agency model to give you direct access to the best global talent. No wasted time, no empty promises. Just impactful results.\"",
-        name: "Guillaume Hamon",
-        title: "Founding Partner",
+        image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1287&auto=format&fit=crop",
+        quote: "\"When we initialized Helix exactly one year ago, it wasn't just another club, it was a movement. We wanted to build a 'Source Code' for innovation at RVSCET.\"",
+        name: "Aadarsh Shaheb Singh",
+        title: "President, Helix",
         social: { platform: "LinkedIn", url: "#" }
     },
     {
-        id: 2,
+        id: 5,
         roleLabel: "Vice President",
-        image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1287&auto=format&fit=crop",
-        quote: "\"Our partnership model ensures that every project is handled by specialists who treat your brand as their own.\"",
-        name: "Jane Doe",
-        title: "Design Partner",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1287&auto=format&fit=crop",
+        quote: "\"Technology evolves every second, and at Helix, our mission is to ensure that our students stay ahead of the curve. Helix is your sandbox. Experiment, fail, learn, and innovate.\"",
+        name: "Prayog Priyanshu",
+        title: "Vice President, Helix",
         social: { platform: "LinkedIn", url: "#" }
     }
 ];

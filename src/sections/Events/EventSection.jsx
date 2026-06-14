@@ -234,6 +234,11 @@ function EventSection() {
                                             opacity-25
                                         "
                                     />
+                                    
+                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
+                                        <h3 className="text-white text-lg md:text-xl font-bold">{event.title}</h3>
+                                        {event.date && <p className="text-gray-300 text-sm md:text-base mt-2">{event.date}</p>}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -132,20 +132,20 @@ const AboutSection = () => {
                     {/* Inner wrapper is strictly for layout overlay (relative positioning without padding) */}
                     <div ref={descriptionContainerRef} className="relative w-full">
                         {/* Note: You can remove 'border border-red-600' when you're done debugging */}
-                        <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] tracking-tight font-normal text-black/20">
-                            Bluid a collaborative tech ecosystem where students connect , learn , innovate , and grow through hands-on 
-                            projects , AI-Driven solutions , Teamwork and industry-focused skills to become future-ready
-                            technology leaders.
+                        <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] leading-[1.05] tracking-tight font-normal text-black/20">
+                            Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET, established on January 9th, 2025. 
+                            Welcoming students from all backgrounds and levels of experience, Helix cultivates a supportive community where members can delve into a diverse range of cutting-edge fields. 
+                            From web development and cybersecurity to advancements in AI and robotics, Helix offers a multitude of pathways for technological growth and discovery.
                         </h2>
                         <h2
                             ref={revealTextRef}
-                            className="absolute top-0 left-0 w-full text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] leading-[1.05] font-normal tracking-tight text-black"
+                            className="absolute top-0 left-0 w-full text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] leading-[1.05] font-normal tracking-tight text-black"
                             style={{ clipPath: 'inset(-20% 100% -20% -20%)' }}
                             aria-hidden="true"
                         >
-                            Bluid a collaborative tech ecosystem where students connect , learn , innovate , and grow through hands-on
-                            projects , AI-Driven solutions , Teamwork and industry-focused skills to become future-ready
-                            technology leaders.
+                            Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET, established on January 9th, 2025. 
+                            Welcoming students from all backgrounds and levels of experience, Helix cultivates a supportive community where members can delve into a diverse range of cutting-edge fields. 
+                            From web development and cybersecurity to advancements in AI and robotics, Helix offers a multitude of pathways for technological growth and discovery.
                         </h2>
                     </div>
                 </div>

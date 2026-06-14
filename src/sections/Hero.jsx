@@ -118,16 +118,14 @@ function Hero({ loading }) {
           ref={headingRef}
           className=" text-[10vw] sm:text-5xl w-full md:w-[60%] lg:text-7xl font-normal md:font-light tracking-tight leading-[0.95]"
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          The Official YearBook of Helix | 2025 - 2026
         </div>
       </div>
 
       {/* Right side */}
       <div className="w-full justify-end flex overflow-hidden">
         <div ref={paragraphRef} className="leading-none w-full md:w-1/3 text-left text-md sm:text-lg text-zinc-400 lg:pb-2 h-full">
-          Eum rem deserunt eius commodi sit praesentium fugit atque tempora,
-          placeat magni, doloremque blanditiis quasi, magnam nulla veniam vero et
-          molestiae nisi.
+          Welcome to the genesis of our tech revolution. Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET.
         </div>
       </div>
 

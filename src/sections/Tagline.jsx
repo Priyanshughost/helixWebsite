@@ -13,7 +13,7 @@ const Tagline = () => {
     const headlineRef = useRef(null);
 
     const headlineText =
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab similique assumenda excepturi minima odit in velit eum vitae nesciunt! Voluptatem eum amet aut rerum delectus fugiat deleniti tempora enim velit.";
+        "Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET, established on January 9th, 2025. We cultivate a supportive community where members delve into cutting-edge fields.";
 
     useGSAP(() => {
         // 1. Split the text into words and characters
@@ -80,18 +80,16 @@ const Tagline = () => {
 
                     {/* Left Column */}
                     <div className="text-xl md:text-2xl tracking-tight">
-                        <p>Tomorrow’s brands, today.</p>
+                        <p>The Source Code for Innovation.</p>
                     </div>
 
                     {/* Right Column */}
                     <div className="clip-container flex flex-col gap-8 text-lg md:text-xl tracking-tight md:max-w-md">
                         <p className="clip-text">
-                            Since 2013, we have been recognized globally for helping founders
-                            build market-defining brands.
+                            From web development and cybersecurity to artificial intelligence and robotics, Helix offers pathways for massive technological growth.
                         </p>
                         <p className="clip-text">
-                            We partner with five clients a year to give each one the focus and
-                            care they deserve.
+                            Join us to nurture your skills and ignite your passion within an engaging and collaborative environment.
                         </p>
                         <div className="clip-text">
                             <a
