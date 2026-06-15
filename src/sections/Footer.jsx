@@ -170,16 +170,19 @@ function Footer() {
                                         Gmail
                                     </span>
                                 </a>
-                                {/* Instagram */}
                                 <a
                                     href="https://instagram.com/YOUR_INSTAGRAM"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#e1306c]"
+                                    className="flex flex-col items-center text-white hover:text-[#E1306C]"
                                     >
-                                    <span className="text-2xl">
-                                        ◎
-                                    </span>
+                                    <svg 
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4A4.5 4.5 0 1 1 7.5 12a4.5 4.5 0 0 1 4.5-4.5zm0 1.5A3 3 0 1 0 15 12a3 3 0 0 0-3-3zm5.25-2.25a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1z"/>
+                                    </svg>
                                     <span className="text-xs mt-1">
                                         Instagram
                                     </span>
