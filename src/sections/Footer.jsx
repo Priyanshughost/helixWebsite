@@ -155,7 +155,10 @@ function Footer() {
 
                         <div className="reveal-elem mb-16 text-lg text-gray-300 leading-relaxed font-light">
                             <p className="text-gray-300 mb-4">
-                                Helix
+                                Join The Helix Network 🚀
+                            </p>
+                            p className="text-gray-300 mb-4">
+                                Feel free to reach out to  us
                             </p>
                             <div className="flex gap-10 items-center">
                                 {/* Gmail */}
@@ -299,21 +302,53 @@ function Footer() {
                                     </li>
                                 ))}
                             </ul>
-                            <ul className="flex flex-col gap-3">
-                                {["Instagram", "LinkedIn", "Twitter"].map((item, i) => (
-                                    <li key={i} className="reveal-link text-lg font-light">
-                                        <a href="#" className="flex items-center gap-1 group text-gray-300 hover:text-white transition-colors duration-300">
-                                            {item}
-                                            <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 text-[#e5d9c5]">&#8599;</span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
                         </div>
 
                         <div className="flex gap-[8vw] mt-auto md:pt-16 md:justify-end text-sm text-gray-500 font-light">
                             <div className="reveal-elem leading-relaxed">
-                                <p>Jamshedpur—IN<br />Jharkhand</p>
+                                 {/* Location */}
+                                <a
+                                    href="https://www.rvscollege.ac.in/"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-3 text-gray-300 hover:text-white transition">
+                                    {/* Location SVG */}
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
+                                    </svg>
+                                    <div>
+                                        <p className="text-sm font-medium"> • RVSCET, Jamshedpur
+                                        </p>
+                                        <p className="text-xs text-gray-400">
+                                            Visit Website
+                                        </p>
+                                    </div>
+                                </a>
+                                {/* RVSCET Email */}
+                                <a
+                                    href="mailto:info@rvscollege.ac.in"
+                                    className="flex items-center gap-3 mt-4 text-gray-300 hover:text-white transition"
+                                    >
+                                    {/* Mail SVG */}
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+                                    </svg>
+                                    <div>
+                                        <p className="text-sm font-medium">
+                                            RVSCET Email
+                                        </p>
+                                        <p className="text-xs text-gray-400">
+                                            info@rvscollege.ac.in
+                                        </p>
+                                    </div>
+                                </a>
                             </div>
                             <div className="reveal-elem leading-relaxed">
                                 <p>Privacy Policy<br />©2026—HELIX</p>
