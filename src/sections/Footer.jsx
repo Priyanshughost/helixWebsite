@@ -1,22 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 
-// Register the plugins outside the component to avoid registering them on every render
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 function Footer() {
     const footerRef = useRef(null);
     const textRef = useRef(null);
+    const headingRef = useRef(null);
 
     useGSAP(() => {
         const ctx = gsap.context(() => {
-
+            // Parallax reveal of the footer container
             gsap.fromTo(
                 footerRef.current,
-                { yPercent: -25 },
+                { yPercent: -30 },
                 {
                     yPercent: 0,
                     ease: "none",
@@ -29,18 +29,102 @@ function Footer() {
                 }
             );
 
+            // Dramatic SplitText Animation for Main Heading
+            const splitHeading = new SplitText(headingRef.current, { type: "chars, words" });
+
+            gsap.fromTo(splitHeading.chars,
+                { opacity: 0.1, y: 30, rotationX: -90 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    rotationX: 0,
+                    stagger: 0.05,
+                    transformOrigin: "0% 50% -50",
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: headingRef.current,
+                        start: "top 90%",
+                        end: "top 40%",
+                        scrub: 1,
+                    }
+                }
+            );
+
+            // Stagger reveal of general text blocks (excluding the heading now)
+            gsap.fromTo(".reveal-elem:not(.main-heading)",
+                { opacity: 0, y: 60 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    stagger: 0.1,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: footerRef.current,
+                        start: "top 85%",
+                    }
+                }
+            );
+
+            // Stagger reveal of list links with a slight horizontal slide
+            gsap.fromTo(".reveal-link",
+                { opacity: 0, x: -20 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    stagger: 0.05,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: footerRef.current,
+                        start: "top 75%",
+                    }
+                }
+            );
+
+            // Dramatic SplitText Giant Logo Animation
             const splitLogo = new SplitText(textRef.current, { type: "chars" });
 
-            gsap.from(splitLogo.chars, {
-                yPercent: -120,
-                duration: 1,
-                ease: "expo.out",
-                stagger: 0.08,
-                scrollTrigger: {
-                    trigger: footerRef.current,
-                    start: "top top",
-                    // markers: true,
+            gsap.fromTo(splitLogo.chars,
+                {
+                    yPercent: 130,
+                    rotationZ: 10,
+                    opacity: 0,
+                },
+                {
+                    yPercent: 0,
+                    rotationZ: 0,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "expo.out",
+                    stagger: 0.06,
+                    scrollTrigger: {
+                        trigger: textRef.current,
+                        start: "top 95%",
+                    }
                 }
+            );
+
+            // Interactive hover effect for giant text letters
+            splitLogo.chars.forEach((char) => {
+                char.addEventListener("mouseenter", () => {
+                    gsap.to(char, {
+                        yPercent: -20,
+                        color: "#e5d9c5",
+                        scale: 1.05,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+                char.addEventListener("mouseleave", () => {
+                    gsap.to(char, {
+                        yPercent: 0,
+                        color: "white",
+                        scale: 1,
+                        duration: 0.6,
+                        ease: "elastic.out(1, 0.4)"
+                    });
+                });
             });
 
         }, footerRef);
@@ -49,44 +133,50 @@ function Footer() {
     }, []);
 
     return (
-        <div className="bg-black text-white font-sans h-auto flex flex-col justify-end antialiased overflow-hidden">
+        <div className="bg-[#050505] text-white font-sans h-auto flex flex-col justify-end antialiased overflow-hidden relative">
+            {/* Subtle Gradient Background for Premium Look */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_var(--tw-gradient-stops))] from-[#1a1814] via-[#050505] to-[#050505] opacity-60 pointer-events-none"></div>
+
             <footer
                 ref={footerRef}
-                className="pt-[4vw] pb-0 flex flex-col gap-10 justify-between h-auto"
+                className="pt-[6vw] pb-0 flex flex-col gap-10 justify-between h-auto relative z-10"
             >
                 {/* Top Section */}
-                <div className="flex px-[2vw] w-full md:flex-nowrap justify-between flex-wrap gap-10">
+                <div className="flex px-[4vw] w-full md:flex-nowrap justify-between flex-wrap gap-12">
 
                     {/* Left Column */}
-                    <div className="flex flex-col justify-between w-full md:w-1/2">
-                        <h2 className="text-[clamp(2rem,3.5vw,4rem)] font-normal tracking-tight mb-15">
-                            We Build once<br /> <span className="text-[#e5d9c5]">And DOMINATE forever.</span>
+                    <div className="flex flex-col justify-between w-full md:w-1/2" style={{ perspective: "1000px" }}>
+                        <h2 ref={headingRef} className="reveal-elem main-heading text-[clamp(2.5rem,4vw,5rem)] font-light tracking-tight mb-16 leading-tight">
+                            Innovating Today<br />
+                            <span className="font-medium text-[#e5d9c5]">
+                                For a better Tomorrow.
+                            </span>
                         </h2>
 
-                        <div className="mb-15 text-base leading-snug">
+                        <div className="reveal-elem mb-16 text-lg text-gray-300 leading-relaxed font-light">
                             <p>
                                 New Business:<br />
-                                <a href="mailto:hello@example.com" className="transition-opacity duration-200 hover:opacity-70">
+                                <a href="mailto:hello@example.com" className="inline-block mt-1 text-white relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-[#e5d9c5] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
                                     hello@example.com
                                 </a>
                             </p>
                         </div>
 
-                        <div className="text-base">
-                            <p className="mb-3">Sign up for our newsletter (No spam)</p>
+                        <div className="reveal-elem text-base">
+                            <p className="mb-4 text-gray-400">Sign up for our newsletter (No spam)</p>
                             <form
-                                className="flex items-center border-b border-[#444] pb-2 max-w-88"
+                                className="flex items-center border-b border-gray-600 pb-3 max-w-md group"
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <input
                                     type="email"
-                                    placeholder="Email"
+                                    placeholder="Enter your email"
                                     required
-                                    className="bg-transparent border-none text-white text-base grow outline-none placeholder:text-[#555]"
+                                    className="bg-transparent border-none text-white text-lg grow outline-none placeholder:text-gray-500 transition-all duration-300 focus:placeholder-opacity-0"
                                 />
                                 <button
                                     type="submit"
-                                    className="bg-transparent border-none text-[#888] text-xl cursor-pointer pl-2.5 transition-opacity duration-200 hover:opacity-70"
+                                    className="bg-transparent border-none text-gray-400 text-2xl cursor-pointer pl-4 transition-all duration-300 group-hover:text-[#e5d9c5] group-hover:translate-x-2"
                                 >
                                     &#8594;
                                 </button>
@@ -95,38 +185,47 @@ function Footer() {
                     </div>
 
                     {/* Right Column */}
-                    <div className="flex flex-col justify-between w-full md:w-max gap-10 md:gap-0">
-                        <div className="flex gap-[8vw]">
-                            <ul className="flex flex-col">
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">Home</a></li>
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">Work</a></li>
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">About</a></li>
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">Services</a></li>
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">Contact</a></li>
+                    <div className="flex flex-col justify-between w-full md:w-max gap-12 md:gap-0 mt-8 md:mt-0">
+                        <div className="flex gap-[8vw] md:justify-end">
+                            <ul className="flex flex-col gap-3">
+                                {["Home", "Work", "About", "Services", "Contact"].map((item, i) => (
+                                    <li key={i} className="reveal-link text-lg font-light">
+                                        <a href="#" className="relative overflow-hidden inline-block group text-gray-300 hover:text-white transition-colors duration-300">
+                                            <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">{item}</span>
+                                            <span className="inline-block absolute top-0 left-0 transition-transform duration-300 translate-y-full group-hover:translate-y-0 text-[#e5d9c5]">{item}</span>
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
-                            <ul className="flex flex-col">
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">Instagram &#8599;</a></li>
-                                <li className="mb-1.5 text-base"><a href="#" className="transition-opacity duration-200 hover:opacity-70">LinkedIn &#8599;</a></li>
+                            <ul className="flex flex-col gap-3">
+                                {["Instagram", "LinkedIn", "Twitter"].map((item, i) => (
+                                    <li key={i} className="reveal-link text-lg font-light">
+                                        <a href="#" className="flex items-center gap-1 group text-gray-300 hover:text-white transition-colors duration-300">
+                                            {item}
+                                            <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 text-[#e5d9c5]">&#8599;</span>
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
-                        <div className="flex gap-[8vw] mt-auto md:pt-15">
-                            <div className="text-base leading-snug">
-                                <p>San Diego—USA<br />Paris—France</p>
+                        <div className="flex gap-[8vw] mt-auto md:pt-16 md:justify-end text-sm text-gray-500 font-light">
+                            <div className="reveal-elem leading-relaxed">
+                                <p>Jamshedpur—IN<br />Jharkhand</p>
                             </div>
-                            <div className="text-base leading-snug">
-                                <p>Terms of use<br />©13—26</p>
+                            <div className="reveal-elem leading-relaxed">
+                                <p>Privacy Policy<br />©2026—HELIX</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Bottom Giant Logo Section */}
-                {/* overflow-hidden here is crucial so the text "hides" beneath the bounding box before sliding up */}
-                <div className="w-full overflow-hidden flex justify-center items-end m-0 p-0">
+                <div className="w-full overflow-hidden flex justify-center items-end mt-[4vw] pointer-events-auto">
                     <h1
                         ref={textRef}
-                        className="text-[20vw] text-white font-extrabold tracking-widest leading-none m-0"
+                        className="text-[18vw] text-white font-black tracking-tighter leading-[0.8] m-0 select-none cursor-default"
+                        style={{ textShadow: "0 20px 40px rgba(0,0,0,0.5)" }}
                     >
                         RVSCET
                     </h1>

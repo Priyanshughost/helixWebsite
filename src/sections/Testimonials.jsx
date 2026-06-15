@@ -45,61 +45,147 @@ function Testimonials() {
             }
         });
 
-        // Horizontal Scroll Animation
-        const getScrollAmount = () => {
-            let scrollWidth = scrollContainerRef.current.scrollWidth;
-            return -(scrollWidth - window.innerWidth);
+        // Infinite Marquee Animation
+        const track = scrollContainerRef.current;
+        let trackWidth = track.scrollWidth / 2;
+        
+        const onResize = () => {
+            trackWidth = track.scrollWidth / 2;
+        };
+        window.addEventListener('resize', onResize);
+
+        const marquee = gsap.to(track, {
+            xPercent: -50,
+            duration: 40, // Speed of the marquee
+            ease: "none",
+            repeat: -1,
+        });
+
+        // Manual Drag & Interactivity Logic
+        let isDragging = false;
+        let isHovering = false;
+        let startX = 0;
+        let startProgress = 0;
+
+        const updatePlayState = () => {
+            if (isDragging) {
+                gsap.to(marquee, { timeScale: 0, duration: 0.1 });
+            } else if (isHovering) {
+                gsap.to(marquee, { timeScale: 0, duration: 0.5 });
+            } else {
+                gsap.to(marquee, { timeScale: 1, duration: 0.5 });
+            }
         };
 
-        const tween = gsap.to(scrollContainerRef.current, {
-            x: getScrollAmount,
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                pin: true,
-                scrub: 1,
-                start: "top top",
-                end: () => `+=${Math.abs(getScrollAmount())}`,
-                invalidateOnRefresh: true,
-            }
-        });
+        const onPointerDown = (e) => {
+            isDragging = true;
+            startX = e.clientX || (e.touches && e.touches[0].clientX);
+            startProgress = marquee.progress();
+            updatePlayState();
+        };
 
-        // Progress bar animation linked to the same scroll trigger
-        gsap.to('.progress-bar', {
-            width: '100%',
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                scrub: 1,
-                start: "top top",
-                end: () => `+=${Math.abs(getScrollAmount())}`,
-            }
-        });
+        const onPointerMove = (e) => {
+            if (!isDragging) return;
+            const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+            const deltaX = currentX - startX;
+            // Calculate progress equivalent. Negative deltaX means forward progress.
+            const deltaProgress = -(deltaX / trackWidth);
+            marquee.progress(gsap.utils.wrap(0, 1, startProgress + deltaProgress));
+        };
+
+        const onPointerUp = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            updatePlayState();
+        };
+
+        const onMouseEnter = () => { isHovering = true; updatePlayState(); };
+        const onMouseLeave = () => { isHovering = false; updatePlayState(); };
+
+        // Attach listeners
+        track.addEventListener('mousedown', onPointerDown);
+        track.addEventListener('touchstart', onPointerDown, { passive: true });
+        
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('touchmove', onPointerMove, { passive: true });
+        
+        window.addEventListener('mouseup', onPointerUp);
+        window.addEventListener('touchend', onPointerUp);
+
+        track.addEventListener('mouseenter', onMouseEnter);
+        track.addEventListener('mouseleave', onMouseLeave);
 
         return () => {
-            tween.kill();
+            window.removeEventListener('resize', onResize);
+            track.removeEventListener('mousedown', onPointerDown);
+            track.removeEventListener('touchstart', onPointerDown);
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerUp);
+            window.removeEventListener('touchend', onPointerUp);
+            track.removeEventListener('mouseenter', onMouseEnter);
+            track.removeEventListener('mouseleave', onMouseLeave);
+            marquee.kill();
         };
     }, { scope: sectionRef });
 
+    const renderTestimonials = () => (
+        <div className="flex gap-6 md:gap-8 pr-6 md:pr-8 w-max">
+            {testimonials.map((t, i) => {
+                const getInitials = (name) => name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                const gradient = colors[i % colors.length];
+
+                return (
+                    <div
+                        key={i}
+                        className="testimonial-card w-[85vw] sm:w-[400px] md:w-[450px] h-[380px] md:h-[420px] shrink-0 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2rem] flex flex-col justify-between hover:bg-zinc-800/80 hover:border-white/30 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(255,255,255,0.05)] transition-all duration-500 group relative overflow-hidden shadow-2xl"
+                    >
+                        {/* Glow Effect on hover */}
+                        <div className="absolute -inset-px bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none"></div>
+
+                        {/* Giant quote mark decoration */}
+                        <div className="absolute -top-6 right-4 text-[180px] font-serif text-white/[0.03] group-hover:text-white/[0.08] group-hover:-translate-y-2 transition-all duration-700 select-none pointer-events-none leading-none">
+                            "
+                        </div>
+
+                        <p className="text-zinc-300 text-lg md:text-xl leading-relaxed relative z-10 font-light tracking-wide group-hover:text-white transition-colors duration-300 pointer-events-none">
+                            "{t.quote}"
+                        </p>
+
+                        <div className="flex items-center gap-5 mt-8 relative z-10 pointer-events-none">
+                            <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-semibold text-lg shadow-inner ring-4 ring-black/20 group-hover:scale-110 transition-transform duration-500`}>
+                                {getInitials(t.name)}
+                            </div>
+                            <div>
+                                <h4 className="font-medium text-white text-lg tracking-wide group-hover:text-[#e5d9c5] transition-colors duration-300">{t.name}</h4>
+                                <p className="text-xs text-zinc-400 mt-1.5 tracking-[0.2em] font-semibold uppercase">{t.role}</p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     return (
-        <section ref={sectionRef} className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col justify-center font-sans">
+        <section ref={sectionRef} className="relative w-full min-h-screen py-32 bg-[#050505] text-white overflow-hidden flex flex-col justify-center font-sans">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/40 via-[#050505] to-[#050505] pointer-events-none"></div>
 
-            <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-16 w-full shrink-0 relative z-10">
+            <div className="px-6 md:px-12 lg:px-20 mb-12 md:mb-20 w-full shrink-0 relative z-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="max-w-3xl">
-                        <div className="header-elem inline-block px-3 py-1 mb-6 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-medium tracking-widest uppercase text-zinc-300">
+                        <div className="header-elem inline-block px-4 py-1.5 mb-6 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-semibold tracking-widest uppercase text-zinc-300">
                             Testimonials
                         </div>
-                        <h2 className="header-elem text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight mb-6 leading-tight">
-                            Student <span className="text-zinc-500 italic">Voices</span>
+                        <h2 className="header-elem text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-6 leading-tight">
+                            Student <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-400 to-zinc-600 italic">Voices</span>
                         </h2>
                         <p className="header-elem text-lg md:text-xl text-zinc-400 font-light max-w-2xl leading-relaxed">
                             Discover what our members have to say about their journey, learning experiences, and growth within the Helix community.
                         </p>
                     </div>
                     <div className="header-elem hidden lg:flex items-center gap-3 text-zinc-500 mb-2">
-                        <span className="uppercase tracking-widest text-xs font-semibold">Scroll to explore</span>
+                        <span className="uppercase tracking-widest text-xs font-semibold">Hover to pause • Drag to explore</span>
                         <div className="w-12 h-[1px] bg-zinc-700 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-full bg-white animate-[slideRight_2s_ease-in-out_infinite]"></div>
                         </div>
@@ -107,47 +193,20 @@ function Testimonials() {
                 </div>
             </div>
 
-            <div className="relative w-full flex items-center pl-6 md:pl-12 lg:pl-20 z-10">
-                <div ref={scrollContainerRef} className="flex gap-6 md:gap-8 flex-nowrap pb-10 pr-6 md:pr-12 lg:pr-20 w-max">
-                    {testimonials.map((t, i) => {
-                        const getInitials = (name) => name.split(' ').map(n => n[0]).join('').substring(0, 2);
-                        const gradient = colors[i % colors.length];
-
-                        return (
-                            <div
-                                key={i}
-                                className="testimonial-card w-[85vw] sm:w-[400px] md:w-[450px] h-[380px] md:h-[420px] shrink-0 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2rem] flex flex-col justify-between hover:bg-zinc-800/50 hover:border-white/20 transition-all duration-500 group relative overflow-hidden shadow-2xl"
-                            >
-                                {/* Glow Effect on hover */}
-                                <div className="absolute -inset-px bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none"></div>
-
-                                {/* Giant quote mark decoration */}
-                                <div className="absolute -top-6 right-4 text-[180px] font-serif text-white/[0.03] group-hover:text-white/[0.06] transition-colors duration-700 select-none pointer-events-none leading-none">
-                                    "
-                                </div>
-
-                                <p className="text-zinc-300 text-lg md:text-xl leading-relaxed relative z-10 font-light tracking-wide">
-                                    "{t.quote}"
-                                </p>
-
-                                <div className="flex items-center gap-5 mt-8 relative z-10">
-                                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-semibold text-lg shadow-inner ring-4 ring-black/20`}>
-                                        {getInitials(t.name)}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-medium text-white text-lg tracking-wide">{t.name}</h4>
-                                        <p className="text-xs text-zinc-400 mt-1.5 tracking-[0.2em] font-semibold uppercase">{t.role}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+            <div className="relative w-full z-10 overflow-hidden group">
+                {/* Left/Right Fades for Marquee effect */}
+                <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none"></div>
+                
+                {/* Marquee Track */}
+                <div 
+                    ref={scrollContainerRef} 
+                    className="flex w-max pb-10 touch-pan-y cursor-grab active:cursor-grabbing"
+                    style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                >
+                    {renderTestimonials()}
+                    {renderTestimonials()}
                 </div>
-            </div>
-
-            {/* Global Progress Bar */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-zinc-900">
-                <div className="progress-bar h-full bg-gradient-to-r from-zinc-500 to-white w-0"></div>
             </div>
 
             <style jsx>{`
