@@ -159,32 +159,53 @@ function Footer() {
                             </p>
                             <div className="flex gap-10 items-center">
                                 {/* Gmail */}
-                                <a
-                                    href="mailto:hello@example.com"
-                                    className="flex flex-col items-center text-white hover:text-[#e5d9c5]"
-                                    >
-                                    <span className="text-2xl"> 
-                                        ✉
-                                    </span>
-                                    <span className="text-xs mt-1">
-                                        Gmail
-                                    </span>
-                                </a>
+                               <a
+                                   href="mailto:hello@example.com"
+                                   className="flex flex-col items-center text-white hover:text-[#EA4335]">
+                                   <svg
+                                       className="w-6 h-6"
+                                       fill="currentColor"
+                                       viewBox="0 0 24 24"
+                                       >
+                                       <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+                                   </svg>
+                                   <span className="text-xs mt-1">
+                                    Gmail
+                                   </span>
+                               </a>
+                                {/* Instagram */}
                                 <a
                                     href="https://instagram.com/YOUR_INSTAGRAM"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#E1306C]"
-                                    >
-                                    <svg 
+                                    className="flex flex-col items-center text-white hover:text-[#E1306C]">
+                                    <svg
                                         className="w-6 h-6"
                                         fill="currentColor"
                                         viewBox="0 0 24 24"
                                         >
-                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4A4.5 4.5 0 1 1 7.5 12a4.5 4.5 0 0 1 4.5-4.5zm0 1.5A3 3 0 1 0 15 12a3 3 0 0 0-3-3zm5.25-2.25a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1z"/>
+                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.7a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/>
                                     </svg>
                                     <span className="text-xs mt-1">
                                         Instagram
+                                    </span>
+                                </a>
+                                {/* Facebook */}
+                                <a
+                                    href="https://facebook.com/YOUR_FACEBOOK"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex flex-col items-center text-white hover:text-[#1877F2]"
+                                    >
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.1v8h3.4z"/>
+                                    </svg>
+                                    <span className="text-xs mt-1">
+                                        Facebook
                                     </span>
                                 </a>
                                 {/* LinkedIn */}
@@ -192,11 +213,15 @@ function Footer() {
                                     href="https://linkedin.com/in/YOUR_LINKEDIN"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#0a66c2]"
+                                    className="flex flex-col items-center text-white hover:text-[#0A66C2]"
                                     >
-                                    <span className="text-2xl font-bold">
-                                        in
-                                    </span>
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M6.5 8.5H3V21h3.5V8.5zM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3zM21 13.7c0-3.8-2-5.5-4.7-5.5-2.1 0-3 .9-3.5 1.6V8.5H9.5V21H13v-6.2c0-1.6.3-3.1 2.2-3.1 1.8 0 1.8 1.8 1.8 3.2V21H21v-7.3z"/>
+                                    </svg>
                                     <span className="text-xs mt-1">
                                         LinkedIn
                                     </span>
@@ -208,9 +233,13 @@ function Footer() {
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#5865F2]"
                                     >
-                                    <span className="text-2xl">
-                                        🎮
-                                    </span>
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M19.5 5.5a16 16 0 0 0-4-1.2l-.5 1a14 14 0 0 0-6 0l-.5-1a16 16 0 0 0-4 1.2C2.7 9 2 12.3 2 15.5c1.5 1.1 3 1.8 4.5 2.2l1.1-1.5c-.6-.2-1.1-.5-1.6-.8l.4-.3c3 1.4 6.2 1.4 9.1 0l.4.3c-.5.3-1 .6-1.6.8l1.1 1.5c1.5-.4 3-1.1 4.5-2.2 0-3.2-.7-6.5-2.5-10z"/>
+                                    </svg>
                                     <span className="text-xs mt-1">
                                         Discord
                                     </span>
@@ -222,9 +251,13 @@ function Footer() {
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#25D366]"
                                     >
-                                    <span className="text-2xl">
-                                        ☎
-                                    </span>
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.8c-.1.1-.3.2-.5.1a6.6 6.6 0 0 1-2-1.2 7.2 7.2 0 0 1-1.4-1.8c-.1-.2 0-.4.1-.5l.5-.6c.1-.2.1-.3.1-.5l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.4c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.2 2.9 1.1 2.9.7 3.4.7.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3z"/>
+                                    </svg>
                                     <span className="text-xs mt-1">
                                         WhatsApp
                                     </span>
