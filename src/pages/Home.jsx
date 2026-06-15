@@ -13,6 +13,7 @@ import TeamsV2 from '../sections/TeamsV2';
 import HallOfFame from '../sections/HallOfFame';
 import Testimonials from '../sections/Testimonials';
 import Partnerships from '../sections/Partnerships';
+// import RecentEvent from '../sections/RecentEvent';
 
 function Home() {
   const { loading } = useOutletContext();
@@ -42,6 +43,7 @@ function Home() {
       <Reel />
       <Tagline />
       <About />
+      {/* <RecentEvent /> */}
 
       <Fader />
       {/* {isDesktop && (

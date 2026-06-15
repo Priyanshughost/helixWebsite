@@ -82,48 +82,55 @@ function Footer() {
                 }
             );
 
-            // Dramatic SplitText Giant Logo Animation
-            const splitLogo = new SplitText(textRef.current, { type: "chars" });
-
-            gsap.fromTo(splitLogo.chars,
-                {
-                    yPercent: 130,
-                    rotationZ: 10,
-                    opacity: 0,
-                },
-                {
-                    yPercent: 0,
-                    rotationZ: 0,
-                    opacity: 1,
-                    duration: 1.5,
-                    ease: "expo.out",
-                    stagger: 0.06,
-                    scrollTrigger: {
-                        trigger: textRef.current,
-                        start: "top 95%",
-                    }
-                }
-            );
-
-            // Interactive hover effect for giant text letters
-            splitLogo.chars.forEach((char) => {
-                char.addEventListener("mouseenter", () => {
-                    gsap.to(char, {
-                        yPercent: -20,
-                        color: "#e5d9c5",
-                        scale: 1.05,
-                        duration: 0.3,
-                        ease: "power2.out"
-                    });
-                });
-                char.addEventListener("mouseleave", () => {
-                    gsap.to(char, {
+            // Sliced 3D Glass Animation Setup
+            gsap.set(textRef.current, { perspective: 1500, transformStyle: "preserve-3d" });
+            const layers = gsap.utils.toArray('.glass-layer', textRef.current);
+            const splits = layers.map(layer => new SplitText(layer, { type: "chars" }));
+            
+            // Initial states & Entrance Animation
+            splits.forEach((split, i) => {
+                const isFront = i === 2;
+                const isMiddle = i === 1;
+                const baseZ = isFront ? 0 : (isMiddle ? -40 : -80);
+                
+                gsap.fromTo(split.chars,
+                    {
+                        yPercent: 100,
+                        rotationX: 90,
+                        opacity: 0,
+                        z: baseZ - 200,
+                    },
+                    {
                         yPercent: 0,
-                        color: "white",
-                        scale: 1,
-                        duration: 0.6,
-                        ease: "elastic.out(1, 0.4)"
-                    });
+                        rotationX: 0,
+                        opacity: 1,
+                        z: baseZ,
+                        duration: 1.8,
+                        ease: "power4.out",
+                        stagger: 0.08,
+                        scrollTrigger: {
+                            trigger: textRef.current,
+                            start: "top 95%",
+                        }
+                    }
+                );
+            });
+
+            // Hover: Sliced Glass Spread Effect
+            const frontChars = splits[2].chars; // Index 2 is the front layer in our JSX structure
+            frontChars.forEach((char, index) => {
+                char.addEventListener("mouseenter", () => {
+                    // Hover effect spreads the layers in Z-space and Y-space
+                    gsap.to(char, { yPercent: -10, z: 80, scale: 1.02, color: "#e5d9c5", textShadow: "0px 30px 40px rgba(229, 217, 197, 0.4)", duration: 0.4, ease: "back.out(2)", overwrite: "auto" });
+                    gsap.to(splits[1].chars[index], { yPercent: -5, z: -20, scale: 1, color: "rgba(255,255,255,0.5)", duration: 0.4, ease: "back.out(2)", overwrite: "auto" });
+                    gsap.to(splits[0].chars[index], { yPercent: 0, z: -100, scale: 0.98, color: "rgba(255,255,255,0.15)", duration: 0.4, ease: "back.out(2)", overwrite: "auto" });
+                });
+                
+                char.addEventListener("mouseleave", () => {
+                    // Reset to resting sliced glass state
+                    gsap.to(char, { yPercent: 0, z: 0, scale: 1, color: "white", textShadow: "0 20px 40px rgba(0,0,0,0.5)", duration: 0.6, ease: "power2.out", overwrite: "auto" });
+                    gsap.to(splits[1].chars[index], { yPercent: 0, z: -40, scale: 1, color: "rgba(255,255,255,0.2)", duration: 0.6, ease: "power2.out", overwrite: "auto" });
+                    gsap.to(splits[0].chars[index], { yPercent: 0, z: -80, scale: 1, color: "rgba(255,255,255,0.05)", duration: 0.6, ease: "power2.out", overwrite: "auto" });
                 });
             });
 
@@ -142,135 +149,21 @@ function Footer() {
                 className="pt-[6vw] pb-0 flex flex-col gap-10 justify-between h-auto relative z-10"
             >
                 {/* Top Section */}
-                <div className="flex px-[4vw] w-full md:flex-nowrap justify-between flex-wrap gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 px-[4vw] w-full">
 
-                    {/* Left Column */}
-                    <div className="flex flex-col justify-between w-full md:w-1/2" style={{ perspective: "1000px" }}>
-                        <h2 ref={headingRef} className="reveal-elem main-heading text-[clamp(2.5rem,4vw,5rem)] font-light tracking-tight mb-16 leading-tight">
+                    {/* Column 1: Brand & Newsletter */}
+                    <div className="flex flex-col gap-12 lg:pr-8" style={{ perspective: "1000px" }}>
+                        <h2 ref={headingRef} className="reveal-elem main-heading text-[clamp(2.5rem,4vw,5rem)] font-light tracking-tight leading-tight">
                             Team HELIX <br />
                             <span className="font-medium text-[#e5d9c5]">
                                 Ready To Innovate.
                             </span>
                         </h2>
 
-                        <div className="reveal-elem mb-16 text-lg text-gray-300 leading-relaxed font-light">
-                            <p className="text-gray-300 mb-4">
-                                Join The Helix Network 🚀
-                            </p>
-                            <p className="text-gray-300 mb-4">
-                                Feel free to reach out to  us
-                            </p>
-                            <div className="flex gap-10 items-center">
-                                {/* Gmail */}
-                               <a
-                                   href="mailto:hello@example.com"
-                                   className="flex flex-col items-center text-white hover:text-[#EA4335]">
-                                   <svg
-                                       className="w-6 h-6"
-                                       fill="currentColor"
-                                       viewBox="0 0 24 24"
-                                       >
-                                       <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
-                                   </svg>
-                                   <span className="text-xs mt-1">
-                                    Gmail
-                                   </span>
-                               </a>
-                                {/* Instagram */}
-                                <a
-                                    href="https://www.instagram.com/helix.rvscet?igsh=c2hpenlyNWtzZTZ1"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#E1306C]">
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.7a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/>
-                                    </svg>
-                                    <span className="text-xs mt-1">
-                                        Instagram
-                                    </span>
-                                </a>
-                                {/* Facebook */}
-                                <a
-                                    href="https://www.facebook.com/helix.rvscet"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#1877F2]"
-                                    >
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.1v8h3.4z"/>
-                                    </svg>
-                                    <span className="text-xs mt-1">
-                                        Facebook
-                                    </span>
-                                </a>
-                                {/* LinkedIn */}
-                                <a
-                                    href="https://www.linkedin.com/company/helixrvscet/"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#0A66C2]"
-                                    >
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M6.5 8.5H3V21h3.5V8.5zM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3zM21 13.7c0-3.8-2-5.5-4.7-5.5-2.1 0-3 .9-3.5 1.6V8.5H9.5V21H13v-6.2c0-1.6.3-3.1 2.2-3.1 1.8 0 1.8 1.8 1.8 3.2V21H21v-7.3z"/>
-                                    </svg>
-                                    <span className="text-xs mt-1">
-                                        LinkedIn
-                                    </span>
-                                </a>
-                                {/* Discord */}
-                                <a
-                                    href="https://discord.gg/mJTjbsTwV"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#5865F2]"
-                                    >
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M19.5 5.5a16 16 0 0 0-4-1.2l-.5 1a14 14 0 0 0-6 0l-.5-1a16 16 0 0 0-4 1.2C2.7 9 2 12.3 2 15.5c1.5 1.1 3 1.8 4.5 2.2l1.1-1.5c-.6-.2-1.1-.5-1.6-.8l.4-.3c3 1.4 6.2 1.4 9.1 0l.4.3c-.5.3-1 .6-1.6.8l1.1 1.5c1.5-.4 3-1.1 4.5-2.2 0-3.2-.7-6.5-2.5-10z"/>
-                                    </svg>
-                                    <span className="text-xs mt-1">
-                                        Discord
-                                    </span>
-                                </a>
-                                {/* YouTube */}
-                                <a
-                                    href="www.youtube.com/@helix.rvscet"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#FF0000]">
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.5V8.5L16 12l-6.4 3.5z"/>
-                                    </svg>
-                                    <span className="text-xs mt-1">
-                                        YouTube
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="reveal-elem text-base">
+                        <div className="reveal-elem text-base mt-auto">
                             <p className="mb-4 text-gray-400">Sign up for our newsletter (No spam)</p>
                             <form
-                                className="flex items-center border-b border-gray-600 pb-3 max-w-md group"
+                                className="flex items-center border-b border-gray-600 pb-3 w-full group"
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <input
@@ -289,80 +182,123 @@ function Footer() {
                         </div>
                     </div>
 
-                    {/* Right Column */}
-                    <div className="flex flex-col justify-between w-full md:w-max gap-12 md:gap-0 mt-8 md:mt-0">
-                        <div className="flex gap-[8vw] md:justify-end">
-                            <ul className="flex flex-col gap-3">
-                                {["Home", "Work", "About", "Services", "Contact"].map((item, i) => (
-                                    <li key={i} className="reveal-link text-lg font-light">
-                                        <a href="#" className="relative overflow-hidden inline-block group text-gray-300 hover:text-white transition-colors duration-300">
-                                            <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">{item}</span>
-                                            <span className="inline-block absolute top-0 left-0 transition-transform duration-300 translate-y-full group-hover:translate-y-0 text-[#e5d9c5]">{item}</span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                    {/* Column 2: Quick Links */}
+                    <div className="flex flex-col md:items-center lg:items-start lg:pl-[6vw]">
+                        <h3 className="reveal-elem text-xl text-gray-500 mb-8 font-medium">Quick Links</h3>
+                        <ul className="flex flex-col gap-5">
+                            {["Home", "Work", "About", "Services", "Contact"].map((item, i) => (
+                                <li key={i} className="reveal-link text-lg font-light">
+                                    <a href="#" className="relative overflow-hidden inline-block group text-gray-300 hover:text-white transition-colors duration-300">
+                                        <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">{item}</span>
+                                        <span className="inline-block absolute top-0 left-0 transition-transform duration-300 translate-y-full group-hover:translate-y-0 text-[#e5d9c5]">{item}</span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-                        <div className="flex gap-[8vw] mt-auto md:pt-16 md:justify-end text-sm text-gray-500 font-light">
-                            <div className="reveal-elem leading-relaxed">
-                                 {/* Location */}
+                    {/* Column 3: Contact & Socials */}
+                    <div className="flex flex-col gap-16 lg:items-end">
+                        
+                        {/* Contact Info */}
+                        <div className="flex flex-col gap-6 lg:items-end text-sm text-gray-500 font-light w-full">
+                            <h3 className="reveal-elem text-xl text-gray-500 mb-2 font-medium lg:text-right">Contact Us</h3>
+                            <div className="reveal-elem flex flex-col gap-6 w-full lg:items-end">
+                                {/* Location */}
                                 <a
                                     href="https://www.rvscollege.ac.in/"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex items-center gap-3 text-gray-300 hover:text-white transition">
-                                    {/* Location SVG */}
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
-                                    </svg>
-                                    <div>
-                                        <p className="text-sm font-medium"> • RVSCET, Jamshedpur
-                                        </p>
-                                        <p className="text-xs text-gray-400">
-                                            Visit Website
-                                        </p>
+                                    className="flex items-center lg:flex-row-reverse gap-4 text-gray-300 hover:text-white transition w-max">
+                                    <div className="p-3 rounded-full bg-white/5 shrink-0">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
+                                        </svg>
+                                    </div>
+                                    <div className="lg:text-right">
+                                        <p className="text-sm font-medium">RVSCET, Jamshedpur</p>
+                                        <p className="text-xs text-gray-400">Visit Website</p>
                                     </div>
                                 </a>
-                                {/* RVSCET Email */}
+                                {/* Email */}
                                 <a
                                     href="mailto:info@rvscollege.ac.in"
-                                    className="flex items-center gap-3 mt-4 text-gray-300 hover:text-white transition"
-                                    >
-                                    {/* Mail SVG */}
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
-                                    </svg>
-                                    <div>
-                                        <p className="text-sm font-medium">
-                                            RVSCET Email
-                                        </p>
-                                        <p className="text-xs text-gray-400">
-                                            info@rvscollege.ac.in
-                                        </p>
+                                    className="flex items-center lg:flex-row-reverse gap-4 text-gray-300 hover:text-white transition w-max"
+                                >
+                                    <div className="p-3 rounded-full bg-white/5 shrink-0">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                                        </svg>
+                                    </div>
+                                    <div className="lg:text-right">
+                                        <p className="text-sm font-medium">RVSCET Email</p>
+                                        <p className="text-xs text-gray-400">info@rvscollege.ac.in</p>
                                     </div>
                                 </a>
                             </div>
-                            <div className="reveal-elem leading-relaxed">
-                                <p>© 2026 HELIX <br />• RVSCET</p>
+                        </div>
+
+                        {/* Social Icons */}
+                        <div className="reveal-elem text-lg text-gray-300 font-light w-full lg:flex lg:flex-col lg:items-end">
+                            <p className="text-gray-400 mb-6 lg:text-right">Join The Helix Network 🚀</p>
+                            <div className="flex flex-wrap gap-4 md:gap-5 items-center lg:justify-end">
+                                <a href="mailto:hello@example.com" title="Gmail" className="text-white hover:text-[#EA4335] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" /></svg>
+                                    </div>
+                                </a>
+                                <a href="https://www.instagram.com/helix.rvscet?igsh=c2hpenlyNWtzZTZ1" target="_blank" rel="noreferrer" title="Instagram" className="text-white hover:text-[#E1306C] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.7a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z" /></svg>
+                                    </div>
+                                </a>
+                                <a href="https://www.facebook.com/helix.rvscet" target="_blank" rel="noreferrer" title="Facebook" className="text-white hover:text-[#1877F2] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.1v8h3.4z" /></svg>
+                                    </div>
+                                </a>
+                                <a href="https://www.linkedin.com/company/helixrvscet/" target="_blank" rel="noreferrer" title="LinkedIn" className="text-white hover:text-[#0A66C2] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6.5 8.5H3V21h3.5V8.5zM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3zM21 13.7c0-3.8-2-5.5-4.7-5.5-2.1 0-3 .9-3.5 1.6V8.5H9.5V21H13v-6.2c0-1.6.3-3.1 2.2-3.1 1.8 0 1.8 1.8 1.8 3.2V21H21v-7.3z" /></svg>
+                                    </div>
+                                </a>
+                                <a href="https://discord.gg/mJTjbsTwV" target="_blank" rel="noreferrer" title="Discord" className="text-white hover:text-[#5865F2] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.5 5.5a16 16 0 0 0-4-1.2l-.5 1a14 14 0 0 0-6 0l-.5-1a16 16 0 0 0-4 1.2C2.7 9 2 12.3 2 15.5c1.5 1.1 3 1.8 4.5 2.2l1.1-1.5c-.6-.2-1.1-.5-1.6-.8l.4-.3c3 1.4 6.2 1.4 9.1 0l.4.3c-.5.3-1 .6-1.6.8l1.1 1.5c1.5-.4 3-1.1 4.5-2.2 0-3.2-.7-6.5-2.5-10z" /></svg>
+                                    </div>
+                                </a>
+                                <a href="www.youtube.com/@helix.rvscet" target="_blank" rel="noreferrer" title="YouTube" className="text-white hover:text-[#FF0000] transition-colors hover:scale-110">
+                                    <div className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.5V8.5L16 12l-6.4 3.5z" /></svg>
+                                    </div>
+                                </a>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
-                {/* Bottom Giant Logo Section */}
-                <div className="w-full overflow-hidden flex justify-center items-end mt-[4vw] pointer-events-auto">
-                    <h1
-                        ref={textRef}
-                        className="text-[18vw] text-white font-black tracking-tighter leading-[0.8] m-0 select-none cursor-default"
-                        style={{ textShadow: "0 20px 40px rgba(0,0,0,0.5)" }}
-                    >
+                {/* Bottom Divider & Copyright */}
+                <div className="flex px-[4vw] w-full justify-between items-center mt-16 mb-4 text-sm text-gray-500 font-light border-t border-white/10 pt-8 relative z-20">
+                    <p>© 2026 HELIX</p>
+                    <p>RVSCET</p>
+                </div>
+
+                {/* Bottom Giant Logo Section: Sliced 3D Glass */}
+                <div 
+                    ref={textRef} 
+                    className="w-full flex justify-center items-end mt-[4vw] pb-[2vw] pointer-events-auto relative group" 
+                >
+                    {/* Layer 3 (Back) */}
+                    <h1 className="glass-layer text-[18vw] text-white/5 font-black tracking-tighter leading-[0.8] m-0 select-none absolute bottom-[2vw] left-0 w-full text-center pointer-events-none">
+                        RVSCET
+                    </h1>
+                    {/* Layer 2 (Middle) */}
+                    <h1 className="glass-layer text-[18vw] text-white/20 font-black tracking-tighter leading-[0.8] m-0 select-none absolute bottom-[2vw] left-0 w-full text-center pointer-events-none">
+                        RVSCET
+                    </h1>
+                    {/* Layer 1 (Front) */}
+                    <h1 className="glass-layer text-[18vw] text-white font-black tracking-tighter leading-[0.8] m-0 select-none cursor-default relative z-10 w-full text-center pointer-events-auto" style={{ textShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
                         RVSCET
                     </h1>
                 </div>
