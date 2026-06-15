@@ -147,19 +147,86 @@ function Footer() {
                     {/* Left Column */}
                     <div className="flex flex-col justify-between w-full md:w-1/2" style={{ perspective: "1000px" }}>
                         <h2 ref={headingRef} className="reveal-elem main-heading text-[clamp(2.5rem,4vw,5rem)] font-light tracking-tight mb-16 leading-tight">
-                            Innovating Today<br />
+                            Team HELIX <br />
                             <span className="font-medium text-[#e5d9c5]">
-                                For a better Tomorrow.
+                                Ready To Innovate.
                             </span>
                         </h2>
 
                         <div className="reveal-elem mb-16 text-lg text-gray-300 leading-relaxed font-light">
-                            <p>
-                                New Business:<br />
-                                <a href="mailto:hello@example.com" className="inline-block mt-1 text-white relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-[#e5d9c5] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
-                                    hello@example.com
-                                </a>
+                            <p className="text-gray-300 mb-4">
+                                Helix
                             </p>
+                            <div className="flex gap-10 items-center">
+                                {/* Gmail */}
+                                <a
+                                    href="mailto:hello@example.com"
+                                    className="flex flex-col items-center text-white hover:text-[#e5d9c5]"
+                                    >
+                                    <span className="text-2xl"> 
+                                        ✉
+                                    </span>
+                                    <span className="text-xs mt-1">
+                                        Gmail
+                                    </span>
+                                </a>
+                                {/* Instagram */}
+                                <a
+                                    href="https://instagram.com/YOUR_INSTAGRAM"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex flex-col items-center text-white hover:text-[#e1306c]"
+                                    >
+                                    <span className="text-2xl">
+                                        ◎
+                                    </span>
+                                    <span className="text-xs mt-1">
+                                        Instagram
+                                    </span>
+                                </a>
+                                {/* LinkedIn */}
+                                <a
+                                    href="https://linkedin.com/in/YOUR_LINKEDIN"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex flex-col items-center text-white hover:text-[#0a66c2]"
+                                    >
+                                    <span className="text-2xl font-bold">
+                                        in
+                                    </span>
+                                    <span className="text-xs mt-1">
+                                        LinkedIn
+                                    </span>
+                                </a>
+                                {/* Discord */}
+                                <a
+                                    href="https://discord.gg/YOUR_DISCORD"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex flex-col items-center text-white hover:text-[#5865F2]"
+                                    >
+                                    <span className="text-2xl">
+                                        🎮
+                                    </span>
+                                    <span className="text-xs mt-1">
+                                        Discord
+                                    </span>
+                                </a>
+                                {/* WhatsApp */}
+                                <a
+                                    href="https://wa.me/YOUR_NUMBER"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex flex-col items-center text-white hover:text-[#25D366]"
+                                    >
+                                    <span className="text-2xl">
+                                        ☎
+                                    </span>
+                                    <span className="text-xs mt-1">
+                                        WhatsApp
+                                    </span>
+                                </a>
+                            </div>
                         </div>
 
                         <div className="reveal-elem text-base">
