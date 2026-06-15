@@ -175,7 +175,7 @@ function Footer() {
                                </a>
                                 {/* Instagram */}
                                 <a
-                                    href="https://instagram.com/YOUR_INSTAGRAM"
+                                    href="https://www.instagram.com/helix.rvscet?igsh=c2hpenlyNWtzZTZ1"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#E1306C]">
@@ -192,7 +192,7 @@ function Footer() {
                                 </a>
                                 {/* Facebook */}
                                 <a
-                                    href="https://facebook.com/YOUR_FACEBOOK"
+                                    href="https://www.facebook.com/helix.rvscet"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#1877F2]"
@@ -210,7 +210,7 @@ function Footer() {
                                 </a>
                                 {/* LinkedIn */}
                                 <a
-                                    href="https://linkedin.com/in/YOUR_LINKEDIN"
+                                    href="https://www.linkedin.com/company/helixrvscet/"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#0A66C2]"
@@ -228,7 +228,7 @@ function Footer() {
                                 </a>
                                 {/* Discord */}
                                 <a
-                                    href="https://discord.gg/YOUR_DISCORD"
+                                    href="https://discord.gg/mJTjbsTwV"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex flex-col items-center text-white hover:text-[#5865F2]"
@@ -244,22 +244,21 @@ function Footer() {
                                         Discord
                                     </span>
                                 </a>
-                                {/* WhatsApp */}
+                                {/* YouTube */}
                                 <a
-                                    href="https://wa.me/YOUR_NUMBER"
+                                    href="www.youtube.com/@helix.rvscet"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex flex-col items-center text-white hover:text-[#25D366]"
-                                    >
+                                    className="flex flex-col items-center text-white hover:text-[#FF0000]">
                                     <svg
                                         className="w-6 h-6"
                                         fill="currentColor"
                                         viewBox="0 0 24 24"
                                         >
-                                        <path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.8c-.1.1-.3.2-.5.1a6.6 6.6 0 0 1-2-1.2 7.2 7.2 0 0 1-1.4-1.8c-.1-.2 0-.4.1-.5l.5-.6c.1-.2.1-.3.1-.5l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.4c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.2 2.9 1.1 2.9.7 3.4.7.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3z"/>
+                                        <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.5V8.5L16 12l-6.4 3.5z"/>
                                     </svg>
                                     <span className="text-xs mt-1">
-                                        WhatsApp
+                                        YouTube
                                     </span>
                                 </a>
                             </div>
