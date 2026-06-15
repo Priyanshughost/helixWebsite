@@ -16,48 +16,146 @@ const testimonials = [
     { name: "Archit Kumar", role: "B.TECH CSE • 4TH YEAR", quote: "Orchestrating our flagship national event, HackQubit, and collaborating with GDG Ranchi for RanchiHacks gave me invaluable professional exposure." },
 ];
 
+const colors = [
+    'from-pink-500 to-rose-500',
+    'from-purple-500 to-indigo-500',
+    'from-blue-500 to-cyan-500',
+    'from-emerald-500 to-teal-500',
+    'from-amber-500 to-orange-500',
+    'from-fuchsia-500 to-pink-500',
+    'from-violet-500 to-purple-500',
+    'from-cyan-500 to-blue-500'
+];
+
 function Testimonials() {
     const sectionRef = useRef(null);
+    const scrollContainerRef = useRef(null);
 
     useGSAP(() => {
-        const cards = gsap.utils.toArray('.testimonial-card');
-
-        gsap.fromTo(cards,
-            { y: 50, opacity: 0 },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%'
-                }
+        // Entrance animation for header
+        gsap.from('.header-elem', {
+            y: 40,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 80%",
             }
-        );
+        });
+
+        // Horizontal Scroll Animation
+        const getScrollAmount = () => {
+            let scrollWidth = scrollContainerRef.current.scrollWidth;
+            return -(scrollWidth - window.innerWidth);
+        };
+
+        const tween = gsap.to(scrollContainerRef.current, {
+            x: getScrollAmount,
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                pin: true,
+                scrub: 1,
+                start: "top top",
+                end: () => `+=${Math.abs(getScrollAmount())}`,
+                invalidateOnRefresh: true,
+            }
+        });
+
+        // Progress bar animation linked to the same scroll trigger
+        gsap.to('.progress-bar', {
+            width: '100%',
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                scrub: 1,
+                start: "top top",
+                end: () => `+=${Math.abs(getScrollAmount())}`,
+            }
+        });
+
+        return () => {
+            tween.kill();
+        };
     }, { scope: sectionRef });
 
     return (
-        <section ref={sectionRef} className="w-full bg-[#f4f4f4] py-24 md:py-32 px-6 md:px-12 lg:px-20">
-            <div className="max-w-7xl mx-auto">
-                <div className="mb-16">
-                    <h2 className="text-4xl md:text-6xl font-normal tracking-tight text-black mb-4">Student Voices</h2>
-                    <p className="text-lg md:text-xl text-gray-500 max-w-2xl">Discover what our members have to say about their journey, learning experiences, and growth within the Helix community.</p>
-                </div>
+        <section ref={sectionRef} className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col justify-center font-sans">
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/40 via-[#050505] to-[#050505] pointer-events-none"></div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {testimonials.map((t, i) => (
-                        <div key={i} className="testimonial-card bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow">
-                            <p className="text-gray-700 text-lg mb-8 leading-relaxed">"{t.quote}"</p>
-                            <div>
-                                <h4 className="font-semibold text-black text-lg">{t.name}</h4>
-                                <p className="text-xs text-gray-400 mt-1 tracking-wider">{t.role}</p>
-                            </div>
+            <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-16 w-full shrink-0 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="max-w-3xl">
+                        <div className="header-elem inline-block px-3 py-1 mb-6 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-medium tracking-widest uppercase text-zinc-300">
+                            Testimonials
                         </div>
-                    ))}
+                        <h2 className="header-elem text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight mb-6 leading-tight">
+                            Student <span className="text-zinc-500 italic">Voices</span>
+                        </h2>
+                        <p className="header-elem text-lg md:text-xl text-zinc-400 font-light max-w-2xl leading-relaxed">
+                            Discover what our members have to say about their journey, learning experiences, and growth within the Helix community.
+                        </p>
+                    </div>
+                    <div className="header-elem hidden lg:flex items-center gap-3 text-zinc-500 mb-2">
+                        <span className="uppercase tracking-widest text-xs font-semibold">Scroll to explore</span>
+                        <div className="w-12 h-[1px] bg-zinc-700 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-full bg-white animate-[slideRight_2s_ease-in-out_infinite]"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div className="relative w-full flex items-center pl-6 md:pl-12 lg:pl-20 z-10">
+                <div ref={scrollContainerRef} className="flex gap-6 md:gap-8 flex-nowrap pb-10 pr-6 md:pr-12 lg:pr-20 w-max">
+                    {testimonials.map((t, i) => {
+                        const getInitials = (name) => name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                        const gradient = colors[i % colors.length];
+
+                        return (
+                            <div
+                                key={i}
+                                className="testimonial-card w-[85vw] sm:w-[400px] md:w-[450px] h-[380px] md:h-[420px] shrink-0 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2rem] flex flex-col justify-between hover:bg-zinc-800/50 hover:border-white/20 transition-all duration-500 group relative overflow-hidden shadow-2xl"
+                            >
+                                {/* Glow Effect on hover */}
+                                <div className="absolute -inset-px bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none"></div>
+
+                                {/* Giant quote mark decoration */}
+                                <div className="absolute -top-6 right-4 text-[180px] font-serif text-white/[0.03] group-hover:text-white/[0.06] transition-colors duration-700 select-none pointer-events-none leading-none">
+                                    "
+                                </div>
+
+                                <p className="text-zinc-300 text-lg md:text-xl leading-relaxed relative z-10 font-light tracking-wide">
+                                    "{t.quote}"
+                                </p>
+
+                                <div className="flex items-center gap-5 mt-8 relative z-10">
+                                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-semibold text-lg shadow-inner ring-4 ring-black/20`}>
+                                        {getInitials(t.name)}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-medium text-white text-lg tracking-wide">{t.name}</h4>
+                                        <p className="text-xs text-zinc-400 mt-1.5 tracking-[0.2em] font-semibold uppercase">{t.role}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Global Progress Bar */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-zinc-900">
+                <div className="progress-bar h-full bg-gradient-to-r from-zinc-500 to-white w-0"></div>
+            </div>
+
+            <style jsx>{`
+                @keyframes slideRight {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
+            `}</style>
         </section>
     );
 }
