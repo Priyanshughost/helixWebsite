@@ -222,7 +222,7 @@ function Footer() {
                                 </a>
                                 {/* Email */}
                                 <a
-                                    href="mailto:info@rvscollege.ac.in"
+                                    href="info@rvscet.com"
                                     className="flex items-center lg:flex-row-reverse gap-4 text-gray-300 hover:text-white transition w-max"
                                 >
                                     <div className="p-3 rounded-full bg-white/5 shrink-0">
