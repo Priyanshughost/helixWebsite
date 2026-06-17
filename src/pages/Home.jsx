@@ -48,18 +48,18 @@ function Home() {
       <Fader />
       {/* {isDesktop && (
         <> */}
-          <ImageGallery items={collection} />
-          <Fader2 />
-        {/* </>
+      <ImageGallery items={collection} />
+      <Fader2 />
+      {/* </>
       )} */}
 
       <EventSection />
-      
+
       <HallOfFame />
       <Partnerships />
-      
+
       <TeamsV2 />
-      
+
       <Testimonials />
     </>
   );

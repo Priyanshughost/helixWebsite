@@ -164,7 +164,7 @@ function HallOfFame() {
         <section
             id="hall-of-fame"
             ref={sectionRef}
-            className="w-full bg-black text-white py-24 md:py-32 px-6 md:px-12 lg:px-20"
+            className="w-full bg-black text-white py-24 md:py-32 px-6 md:px-12 lg:px-20 overflow-hidden"
             style={{ perspective: '1500px' }}
         >
             <div className="max-w-7xl mx-auto">
