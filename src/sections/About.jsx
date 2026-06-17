@@ -15,8 +15,8 @@ const AboutSection = () => {
         return text.split(" ").map((word, wIdx) => (
             <span key={wIdx} className="inline-block mr-[0.2em] whitespace-nowrap">
                 {word.split("").map((char, cIdx) => (
-                    <span 
-                        key={cIdx} 
+                    <span
+                        key={cIdx}
                         className={`${charClass} inline-block transition-transform duration-300 select-none`}
                         style={{
                             color: 'rgba(127, 200, 255, 0.15)',
@@ -34,7 +34,7 @@ const AboutSection = () => {
         // Hero Glow Text Animation (LangSmith Style)
         const heading1Chars = gsap.utils.toArray('.glow-char-1');
         const heading2Chars = gsap.utils.toArray('.glow-char-2');
-        
+
         const tl1 = gsap.timeline({
             scrollTrigger: {
                 trigger: '.hero-container',
@@ -43,7 +43,7 @@ const AboutSection = () => {
                 scrub: 0.5,
             }
         });
-        
+
         heading1Chars.forEach((char, index) => {
             const start = index * 0.03;
             tl1.to(char, {
@@ -51,11 +51,11 @@ const AboutSection = () => {
                 textShadow: '0 0 15px rgba(238, 255, 0, 0.8), 0 0 5px rgba(238, 255, 0, 0.5)',
                 duration: 0.15,
             }, start)
-            .to(char, {
-                color: 'rgb(238, 255, 0)',
-                textShadow: 'none',
-                duration: 0.15,
-            }, start + 0.1);
+                .to(char, {
+                    color: 'rgb(238, 255, 0)',
+                    textShadow: 'none',
+                    duration: 0.15,
+                }, start + 0.1);
         });
 
         const tl2 = gsap.timeline({
@@ -74,11 +74,11 @@ const AboutSection = () => {
                 textShadow: '0 0 15px rgba(127, 200, 255, 0.8), 0 0 5px rgba(127, 200, 255, 0.5)',
                 duration: 0.15,
             }, start)
-            .to(char, {
-                color: 'rgb(127, 200, 255)',
-                textShadow: 'none',
-                duration: 0.15,
-            }, start + 0.1);
+                .to(char, {
+                    color: 'rgb(127, 200, 255)',
+                    textShadow: 'none',
+                    duration: 0.15,
+                }, start + 0.1);
         });
 
         // Paragraph Glow Animation
@@ -100,11 +100,11 @@ const AboutSection = () => {
                 textShadow: '0 0 12px rgba(127, 200, 255, 0.6), 0 0 4px rgba(127, 200, 255, 0.4)',
                 duration: 0.08,
             }, start)
-            .to(char, {
-                color: 'rgb(180, 220, 255)',
-                textShadow: 'none',
-                duration: 0.08,
-            }, start + 0.05);
+                .to(char, {
+                    color: 'rgb(180, 220, 255)',
+                    textShadow: 'none',
+                    duration: 0.08,
+                }, start + 0.05);
         });
 
         // Hover Effect on Characters
@@ -178,7 +178,7 @@ const AboutSection = () => {
 
         // Horizontal Scroll for Purpose
         const purposeItems = gsap.utils.toArray('.purpose-item', purposeContainerRef.current);
-        
+
         if (purposeContainerRef.current && purposeItems.length > 0) {
             // Animate each item horizontally by -100% * (number of items - 1)
             // This is the most reliable GSAP horizontal scroll pattern
@@ -228,58 +228,180 @@ const AboutSection = () => {
             {/* VISION & MISSION SECTION */}
             <div className="py-32 px-6 md:px-20 relative z-10">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12" style={{ perspective: '1200px' }}>
-                    <div className="vm-card bg-[#111] border border-white/10 rounded-[2.5rem] p-12 md:p-16 hover:border-[#eeff00]/50 transition-colors duration-500 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#eeff00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <h3 className="text-[#eeff00] text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4">
-                            <span className="w-8 h-[1px] bg-[#eeff00]"></span>
-                            Our Vision
-                        </h3>
-                        <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300">
-                            To develop a <span className="text-white font-medium">tech-driven community</span> that empowers students to become industry leaders.
-                        </p>
+                    <div className="vm-card relative rounded-[2.5rem] p-[4px] overflow-hidden group">
+                        {/* Spinning Gradient Border */}
+                        <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_50%,#eeff00_100%)] opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                        {/* Inner Card Background */}
+                        <div className="relative h-full w-full bg-[#111] rounded-[calc(2.5rem-4px)] p-12 md:p-16 z-10 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#eeff00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <h3 className="text-[#eeff00] text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4 relative z-20">
+                                <span className="w-8 h-[1px] bg-[#eeff00]"></span>
+                                Our Vision
+                            </h3>
+                            <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300 relative z-20">
+                                To develop a <span className="text-white font-medium">tech-driven community</span> that empowers students to become industry leaders.
+                            </p>
+                        </div>
                     </div>
-                    <div className="vm-card bg-[#111] border border-white/10 rounded-[2.5rem] p-12 md:p-16 hover:border-[#eeff00]/50 transition-colors duration-500 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <h3 className="text-blue-400 text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4">
-                            <span className="w-8 h-[1px] bg-blue-400"></span>
-                            Our Mission
-                        </h3>
-                        <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300">
-                            Provide <span className="text-white font-medium">hands-on learning</span> and foster innovation to prepare you for the tech world.
-                        </p>
+                    <div className="vm-card relative rounded-[2.5rem] p-[4px] overflow-hidden group">
+                        {/* Spinning Gradient Border */}
+                        <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_50%,#60a5fa_100%)] opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                        {/* Inner Card Background */}
+                        <div className="relative h-full w-full bg-[#111] rounded-[calc(2.5rem-4px)] p-12 md:p-16 z-10 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <h3 className="text-blue-400 text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4 relative z-20">
+                                <span className="w-8 h-[1px] bg-blue-400"></span>
+                                Our Mission
+                            </h3>
+                            <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300 relative z-20">
+                                Provide <span className="text-white font-medium">hands-on learning</span> and foster innovation to prepare you for the tech world.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* PURPOSE OF HELIX (HORIZONTAL SCROLL) */}
-            <div className="overflow-hidden bg-[#111] relative" ref={horizontalScrollRef}>
-                <div className="absolute top-20 left-6 md:left-20 z-10 w-full max-w-7xl pointer-events-none">
-                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white/10 uppercase">
-                        The Purpose
-                    </h2>
+            <div className="overflow-hidden bg-[#080808] relative" ref={horizontalScrollRef}>
+                {/* Persistent top header bar */}
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-20"></div>
+
+                {/* Floating Section Label */}
+                <div className="absolute top-8 left-6 md:left-20 z-20 flex items-center gap-5">
+                    <div className="w-4 h-4 rounded-full bg-[#eeff00] animate-pulse"></div>
+                    <span className="text-lg md:text-2xl font-bold uppercase tracking-[0.3em] text-white/60">The Purpose</span>
+                </div>
+
+                {/* Step Counter */}
+                <div className="absolute top-8 right-6 md:right-20 z-20">
+                    <span className="text-xs font-mono text-white/30 tracking-widest">SCROLL →</span>
+                </div>
+
+                {/* Background giant number watermark */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+                    <span className="text-[40vw] font-black text-white/[0.015] leading-none select-none tracking-tighter">∞</span>
                 </div>
 
                 <div className="purpose-container flex h-screen items-center" ref={purposeContainerRef} style={{ width: '400vw' }}>
                     {[
-                        { title: 'Expand Knowledge', text: 'Gain exposure to a wide array of technologies, including web development, cybersecurity, AI, robotics, and UX.', icon: '🧠' },
-                        { title: 'Develop Skills', text: 'Acquire hands-on experience through workshops and hackathons, building a strong portfolio of demonstrable skills.', icon: '💻' },
-                        { title: 'Solve Problems', text: 'Tackle real-world challenges through innovative projects and collaborative problem-solving activities.', icon: '🧩' },
-                        { title: 'Network & Grow', text: 'Connect with peers and interact with industry professionals through guest lectures, boosting employability.', icon: '🚀' },
+                        {
+                            title: 'Expand Knowledge',
+                            text: 'Gain exposure to a wide array of technologies, including web development, cybersecurity, AI, robotics, and UX.',
+                            icon: '🧠',
+                            num: '01',
+                            accent: '#eeff00',
+                            accentRgb: '238, 255, 0',
+                        },
+                        {
+                            title: 'Develop Skills',
+                            text: 'Acquire hands-on experience through workshops and hackathons, building a strong portfolio of demonstrable skills.',
+                            icon: '💻',
+                            num: '02',
+                            accent: '#60a5fa',
+                            accentRgb: '96, 165, 250',
+                        },
+                        {
+                            title: 'Solve Problems',
+                            text: 'Tackle real-world challenges through innovative projects and collaborative problem-solving activities.',
+                            icon: '🧩',
+                            num: '03',
+                            accent: '#c084fc',
+                            accentRgb: '192, 132, 252',
+                        },
+                        {
+                            title: 'Network & Grow',
+                            text: 'Connect with peers and interact with industry professionals through guest lectures, boosting employability.',
+                            icon: '🚀',
+                            num: '04',
+                            accent: '#34d399',
+                            accentRgb: '52, 211, 153',
+                        },
                     ].map((purpose, idx) => (
-                        <div key={idx} className="purpose-item w-screen h-full flex items-center justify-center px-6 md:px-20 pt-20">
-                            <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                                <div>
-                                    <div className="text-[6rem] md:text-[8rem] lg:text-[10rem] mb-8 leading-none opacity-80">{purpose.icon}</div>
-                                    <h3 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight">{purpose.title}</h3>
+                        <div key={idx} className="purpose-item w-screen h-full flex items-center justify-center px-6 md:px-20">
+                            <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 md:gap-16 items-center">
+                                {/* Left: Number + Title */}
+                                <div className="space-y-6">
+                                    {/* Big Number */}
+                                    <div className="flex items-baseline gap-4">
+                                        <span
+                                            className="text-[8rem] md:text-[12rem] font-black leading-none tracking-tighter"
+                                            style={{ color: purpose.accent, opacity: 0.15 }}
+                                        >
+                                            {purpose.num}
+                                        </span>
+                                    </div>
+                                    {/* Icon */}
+                                    <div className="text-6xl md:text-7xl">{purpose.icon}</div>
+                                    {/* Title */}
+                                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-none">
+                                        {purpose.title}
+                                    </h3>
+                                    {/* Colored Line */}
+                                    <div className="h-1 w-20 rounded-full" style={{ backgroundColor: purpose.accent }}></div>
                                 </div>
-                                <div className="bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#eeff00] to-transparent"></div>
-                                    <p className="text-2xl md:text-4xl text-gray-300 font-light leading-relaxed">{purpose.text}</p>
+
+                                {/* Right: Card with spinning border */}
+                                <div className="relative rounded-[2rem] p-[3px] overflow-hidden group/card">
+                                    {/* Spinning border */}
+                                    <div
+                                        className="absolute inset-[-100%] animate-[spin_5s_linear_infinite] opacity-30 group-hover/card:opacity-100 transition-opacity duration-700"
+                                        style={{
+                                            background: `conic-gradient(from 90deg at 50% 50%, transparent 50%, ${purpose.accent} 100%)`
+                                        }}
+                                    ></div>
+
+                                    {/* Inner card */}
+                                    <div className="relative z-10 bg-[#0c0c0c] rounded-[calc(2rem-3px)] p-10 md:p-14 overflow-hidden backdrop-blur-xl">
+                                        {/* Top accent line */}
+                                        <div
+                                            className="absolute top-0 left-0 w-full h-[2px]"
+                                            style={{
+                                                background: `linear-gradient(to right, ${purpose.accent}, transparent)`
+                                            }}
+                                        ></div>
+
+                                        {/* Glow */}
+                                        <div
+                                            className="absolute -top-20 -right-20 w-40 h-40 rounded-full blur-[80px] opacity-0 group-hover/card:opacity-20 transition-opacity duration-700"
+                                            style={{ backgroundColor: purpose.accent }}
+                                        ></div>
+
+                                        {/* Step label */}
+                                        <div className="flex items-center gap-3 mb-8">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: purpose.accent }}></div>
+                                            <span className="text-xs font-mono uppercase tracking-[0.25em] text-white/40">
+                                                Step {purpose.num} of 04
+                                            </span>
+                                        </div>
+
+                                        <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 font-light leading-relaxed group-hover/card:text-white transition-colors duration-500">
+                                            {purpose.text}
+                                        </p>
+
+                                        {/* Bottom decorative dots */}
+                                        <div className="flex gap-2 mt-10">
+                                            {[0, 1, 2, 3].map(i => (
+                                                <div
+                                                    key={i}
+                                                    className="w-2 h-2 rounded-full transition-all duration-300"
+                                                    style={{
+                                                        backgroundColor: i === idx ? purpose.accent : 'rgba(255,255,255,0.1)',
+                                                        boxShadow: i === idx ? `0 0 10px ${purpose.accent}` : 'none'
+                                                    }}
+                                                ></div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
+
+                {/* Bottom progress line */}
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-20"></div>
             </div>
 
 
