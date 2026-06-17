@@ -45,92 +45,11 @@ function Testimonials() {
             }
         });
 
-        // Infinite Marquee Animation
-        const track = scrollContainerRef.current;
-        let trackWidth = track.scrollWidth / 2;
-        
-        const onResize = () => {
-            trackWidth = track.scrollWidth / 2;
-        };
-        window.addEventListener('resize', onResize);
-
-        const marquee = gsap.to(track, {
-            xPercent: -50,
-            duration: 40, // Speed of the marquee
-            ease: "none",
-            repeat: -1,
-        });
-
-        // Manual Drag & Interactivity Logic
-        let isDragging = false;
-        let isHovering = false;
-        let startX = 0;
-        let startProgress = 0;
-
-        const updatePlayState = () => {
-            if (isDragging) {
-                gsap.to(marquee, { timeScale: 0, duration: 0.1 });
-            } else if (isHovering) {
-                gsap.to(marquee, { timeScale: 0, duration: 0.5 });
-            } else {
-                gsap.to(marquee, { timeScale: 1, duration: 0.5 });
-            }
-        };
-
-        const onPointerDown = (e) => {
-            isDragging = true;
-            startX = e.clientX || (e.touches && e.touches[0].clientX);
-            startProgress = marquee.progress();
-            updatePlayState();
-        };
-
-        const onPointerMove = (e) => {
-            if (!isDragging) return;
-            const currentX = e.clientX || (e.touches && e.touches[0].clientX);
-            const deltaX = currentX - startX;
-            // Calculate progress equivalent. Negative deltaX means forward progress.
-            const deltaProgress = -(deltaX / trackWidth);
-            marquee.progress(gsap.utils.wrap(0, 1, startProgress + deltaProgress));
-        };
-
-        const onPointerUp = () => {
-            if (!isDragging) return;
-            isDragging = false;
-            updatePlayState();
-        };
-
-        const onMouseEnter = () => { isHovering = true; updatePlayState(); };
-        const onMouseLeave = () => { isHovering = false; updatePlayState(); };
-
-        // Attach listeners
-        track.addEventListener('mousedown', onPointerDown);
-        track.addEventListener('touchstart', onPointerDown, { passive: true });
-        
-        window.addEventListener('mousemove', onPointerMove);
-        window.addEventListener('touchmove', onPointerMove, { passive: true });
-        
-        window.addEventListener('mouseup', onPointerUp);
-        window.addEventListener('touchend', onPointerUp);
-
-        track.addEventListener('mouseenter', onMouseEnter);
-        track.addEventListener('mouseleave', onMouseLeave);
-
-        return () => {
-            window.removeEventListener('resize', onResize);
-            track.removeEventListener('mousedown', onPointerDown);
-            track.removeEventListener('touchstart', onPointerDown);
-            window.removeEventListener('mousemove', onPointerMove);
-            window.removeEventListener('touchmove', onPointerMove);
-            window.removeEventListener('mouseup', onPointerUp);
-            window.removeEventListener('touchend', onPointerUp);
-            track.removeEventListener('mouseenter', onMouseEnter);
-            track.removeEventListener('mouseleave', onMouseLeave);
-            marquee.kill();
-        };
+        // Native scroll handled by CSS
     }, { scope: sectionRef });
 
     const renderTestimonials = () => (
-        <div className="flex gap-6 md:gap-8 pr-6 md:pr-8 w-max">
+        <div className="flex gap-6 md:gap-8 px-6 md:px-12 lg:px-20 w-max">
             {testimonials.map((t, i) => {
                 const getInitials = (name) => name.split(' ').map(n => n[0]).join('').substring(0, 2);
                 const gradient = colors[i % colors.length];
@@ -138,7 +57,7 @@ function Testimonials() {
                 return (
                     <div
                         key={i}
-                        className="testimonial-card w-[85vw] sm:w-[400px] md:w-[450px] h-[380px] md:h-[420px] shrink-0 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2rem] flex flex-col justify-between hover:bg-zinc-800/80 hover:border-white/30 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(255,255,255,0.05)] transition-all duration-500 group relative overflow-hidden shadow-2xl"
+                        className="testimonial-card snap-center w-[85vw] sm:w-[400px] md:w-[450px] h-[380px] md:h-[420px] shrink-0 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2rem] flex flex-col justify-between hover:bg-zinc-800/80 hover:border-white/30 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(255,255,255,0.05)] transition-all duration-500 group relative overflow-hidden shadow-2xl"
                     >
                         {/* Glow Effect on hover */}
                         <div className="absolute -inset-px bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none"></div>
@@ -185,7 +104,7 @@ function Testimonials() {
                         </p>
                     </div>
                     <div className="header-elem hidden lg:flex items-center gap-3 text-zinc-500 mb-2">
-                        <span className="uppercase tracking-widest text-xs font-semibold">Hover to pause • Drag to explore</span>
+                        <span className="uppercase tracking-widest text-xs font-semibold">Scroll to explore</span>
                         <div className="w-12 h-[1px] bg-zinc-700 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-full bg-white animate-[slideRight_2s_ease-in-out_infinite]"></div>
                         </div>
@@ -198,13 +117,11 @@ function Testimonials() {
                 <div className="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none"></div>
                 <div className="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none"></div>
                 
-                {/* Marquee Track */}
+                {/* Scroll Track */}
                 <div 
                     ref={scrollContainerRef} 
-                    className="flex w-max pb-10 touch-pan-y cursor-grab active:cursor-grabbing"
-                    style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                    className="flex overflow-x-auto snap-x snap-mandatory pb-10 hide-scrollbar"
                 >
-                    {renderTestimonials()}
                     {renderTestimonials()}
                 </div>
             </div>

@@ -1,213 +1,288 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger);
 
 const AboutSection = () => {
+    // Refs
     const containerRef = useRef(null);
-    const headingTriggerRef = useRef(null);
-    const text1SpanRef = useRef(null);
-    const text2SpanRef = useRef(null);
-    const lineRef = useRef(null);
-    const split1Ref = useRef(null);
-    const split2Ref = useRef(null);
-    const descriptionContainerRef = useRef(null);
-    const revealTextRef = useRef(null);
-    const principlesTriggerRef = useRef(null);
+    const horizontalScrollRef = useRef(null);
+    const purposeContainerRef = useRef(null);
 
-    const { contextSafe } = useGSAP(() => {
-        const split1 = new SplitText(text1SpanRef.current, { type: 'chars' });
-        const split2 = new SplitText(text2SpanRef.current, { type: 'chars' });
+    const renderGlowingText = (text, charClass) => {
+        return text.split(" ").map((word, wIdx) => (
+            <span key={wIdx} className="inline-block mr-[0.2em] whitespace-nowrap">
+                {word.split("").map((char, cIdx) => (
+                    <span 
+                        key={cIdx} 
+                        className={`${charClass} inline-block transition-transform duration-300 select-none`}
+                        style={{
+                            color: 'rgba(127, 200, 255, 0.15)',
+                            textShadow: 'none',
+                        }}
+                    >
+                        {char}
+                    </span>
+                ))}
+            </span>
+        ));
+    };
 
-        split1Ref.current = split1;
-        split2Ref.current = split2;
-
-        gsap.set(split2.chars, { yPercent: 120 });
-        gsap.set(lineRef.current, { width: text1SpanRef.current.offsetWidth });
-
-        gsap.fromTo(split1.chars,
-            { yPercent: 120 },
-            {
-                yPercent: 0,
-                duration: 1,
-                stagger: 0.04,
-                ease: 'expo.out',
-                scrollTrigger: {
-                    trigger: headingTriggerRef.current,
-                    start: 'top 85%',
-                }
-            }
-        );
-
-        gsap.to(revealTextRef.current, {
-            clipPath: 'inset(-20% -20% -20% -20%)',
-            ease: 'none',
+    useGSAP(() => {
+        // Hero Glow Text Animation (LangSmith Style)
+        const heading1Chars = gsap.utils.toArray('.glow-char-1');
+        const heading2Chars = gsap.utils.toArray('.glow-char-2');
+        
+        const tl1 = gsap.timeline({
             scrollTrigger: {
-                trigger: descriptionContainerRef.current,
-                start: 'top 80%',
-                end: 'top 20%',
+                trigger: '.hero-container',
+                start: 'top 70%',
+                end: 'top 10%',
+                scrub: 0.5,
+            }
+        });
+        
+        heading1Chars.forEach((char, index) => {
+            const start = index * 0.03;
+            tl1.to(char, {
+                color: 'rgb(255, 255, 255)',
+                textShadow: '0 0 15px rgba(238, 255, 0, 0.8), 0 0 5px rgba(238, 255, 0, 0.5)',
+                duration: 0.15,
+            }, start)
+            .to(char, {
+                color: 'rgb(238, 255, 0)',
+                textShadow: 'none',
+                duration: 0.15,
+            }, start + 0.1);
+        });
+
+        const tl2 = gsap.timeline({
+            scrollTrigger: {
+                trigger: '.hero-container',
+                start: 'top 50%',
+                end: 'top -10%',
                 scrub: 0.5,
             }
         });
 
-        gsap.fromTo('.principle-mask-item',
-            { y: '100%' },
-            {
-                y: '0%',
-                duration: 1,
-                stagger: 0.15,
+        heading2Chars.forEach((char, index) => {
+            const start = index * 0.03;
+            tl2.to(char, {
+                color: 'rgb(255, 255, 255)',
+                textShadow: '0 0 15px rgba(127, 200, 255, 0.8), 0 0 5px rgba(127, 200, 255, 0.5)',
+                duration: 0.15,
+            }, start)
+            .to(char, {
+                color: 'rgb(127, 200, 255)',
+                textShadow: 'none',
+                duration: 0.15,
+            }, start + 0.1);
+        });
+
+        // Paragraph Glow Animation
+        const paraChars = gsap.utils.toArray('.glow-char-3');
+
+        const tl3 = gsap.timeline({
+            scrollTrigger: {
+                trigger: '.hero-container',
+                start: 'top 30%',
+                end: 'top -30%',
+                scrub: 0.5,
+            }
+        });
+
+        paraChars.forEach((char, index) => {
+            const start = index * 0.005;
+            tl3.to(char, {
+                color: 'rgb(255, 255, 255)',
+                textShadow: '0 0 12px rgba(127, 200, 255, 0.6), 0 0 4px rgba(127, 200, 255, 0.4)',
+                duration: 0.08,
+            }, start)
+            .to(char, {
+                color: 'rgb(180, 220, 255)',
+                textShadow: 'none',
+                duration: 0.08,
+            }, start + 0.05);
+        });
+
+        // Hover Effect on Characters
+        const allGlowChars = [...heading1Chars, ...heading2Chars, ...paraChars];
+        allGlowChars.forEach(char => {
+            char.addEventListener('mouseenter', () => {
+                gsap.to(char, {
+                    color: 'rgb(255, 255, 255)',
+                    textShadow: '0 0 18px rgba(127, 200, 255, 0.9), 0 0 8px rgba(127, 200, 255, 0.6)',
+                    scale: 1.05,
+                    duration: 0.2,
+                    overwrite: 'auto'
+                });
+            });
+            char.addEventListener('mouseleave', () => {
+                gsap.to(char, {
+                    color: 'rgb(127, 200, 255)',
+                    textShadow: 'none',
+                    scale: 1,
+                    duration: 0.4,
+                    overwrite: 'auto'
+                });
+            });
+        });
+
+        // Vision & Mission 3D Cards
+        const cards = gsap.utils.toArray('.vm-card');
+        cards.forEach((card, i) => {
+            gsap.from(card, {
+                y: 100,
+                opacity: 0,
+                rotationX: -15,
+                duration: 1.2,
                 ease: 'power3.out',
                 scrollTrigger: {
-                    trigger: principlesTriggerRef.current,
+                    trigger: card,
                     start: 'top 85%',
                 }
-            }
-        );
+            });
 
-        return () => {
-            if (split1Ref.current) split1Ref.current.revert();
-            if (split2Ref.current) split2Ref.current.revert();
-        };
+            // 3D Tilt Effect on Mouse Move
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                gsap.to(card, {
+                    rotationX: rotateX,
+                    rotationY: rotateY,
+                    transformPerspective: 1000,
+                    ease: 'power1.out',
+                    duration: 0.5
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    rotationX: 0,
+                    rotationY: 0,
+                    ease: 'power1.out',
+                    duration: 0.5
+                });
+            });
+        });
+
+        // Horizontal Scroll for Purpose
+        const purposeItems = gsap.utils.toArray('.purpose-item', purposeContainerRef.current);
+        
+        if (purposeContainerRef.current && purposeItems.length > 0) {
+            // Animate each item horizontally by -100% * (number of items - 1)
+            // This is the most reliable GSAP horizontal scroll pattern
+            gsap.to(purposeItems, {
+                xPercent: -100 * (purposeItems.length - 1),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: horizontalScrollRef.current,
+                    pin: true,
+                    scrub: 1,
+                    snap: 1 / (purposeItems.length - 1),
+                    end: () => "+=" + horizontalScrollRef.current.offsetWidth * (purposeItems.length - 1)
+                }
+            });
+        }
+
     }, { scope: containerRef });
 
-    const handleMouseEnter = contextSafe(() => {
-        if (!split1Ref.current || !split2Ref.current) return;
-
-        gsap.to(split1Ref.current.chars, { yPercent: -120, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
-        gsap.to(split2Ref.current.chars, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
-
-        if (text1SpanRef.current && text2SpanRef.current && lineRef.current) {
-            const targetScale = text2SpanRef.current.offsetWidth / text1SpanRef.current.offsetWidth;
-            gsap.to(lineRef.current, { scaleX: targetScale, duration: 0.6, ease: 'power3.inOut', overwrite: 'auto' });
-        }
-    });
-
-    const handleMouseLeave = contextSafe(() => {
-        if (!split1Ref.current || !split2Ref.current) return;
-
-        gsap.to(split1Ref.current.chars, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
-        gsap.to(split2Ref.current.chars, { yPercent: 120, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
-
-        if (lineRef.current) {
-            gsap.to(lineRef.current, { scaleX: 1, duration: 0.6, ease: 'power3.inOut', overwrite: 'auto' });
-        }
-    });
-
     return (
-        <div ref={containerRef} className="w-full min-h-screen bg-white text-black font-sans px-4 sm:px-6 md:px-12 lg:px-20 py-0 md:py-12 overflow-x-hidden">
+        <div ref={containerRef} className="w-full bg-[#0a0a0a] text-white font-sans overflow-x-hidden selection:bg-[#eeff00] selection:text-black">
+            {/* HERO SECTION */}
+            <div className="hero-container min-h-screen flex flex-col justify-center px-6 md:px-20 relative pt-24 md:pt-32">
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                    <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#eeff00]/5 blur-[150px]"></div>
+                    <div className="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-500/5 blur-[150px]"></div>
+                </div>
 
-            <div ref={headingTriggerRef} className="flex justify-start items-center mb-20 md:mb-28 lg:mb-38 pt-0 md:pt-0">
-                <div
-                    className="relative inline-flex flex-col items-center cursor-pointer"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                >
-                    <div className="relative overflow-hidden mb-3 md:mb-6 w-full flex justify-center">
-                        <h1 className="relative text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] block w-full text-left">
-                            <span ref={text1SpanRef} className="inline-block">Get to know us</span>
-                        </h1>
-
-                        <h1 className="absolute top-0 left-0 text-[12vw] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-normal tracking-tight whitespace-nowrap m-0 leading-[1.1] w-full text-left block">
-                            <span ref={text2SpanRef} className="inline-block">About Us</span>
+                <div className="z-10">
+                    <div className="mb-4">
+                        <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter leading-none cursor-default">
+                            {renderGlowingText("WHO WE ARE", "glow-char-1")}
                         </h1>
                     </div>
-
-                    <div
-                        ref={lineRef}
-                        className="absolute bottom-0 h-[1.5px] md:h-0.5 bg-black origin-left will-change-transform"
-                        style={{ left: 0, right: 0, margin: '0 auto' }}
-                    />
+                    <div className="mb-12">
+                        <h2 className="text-3xl md:text-5xl lg:text-7xl font-light tracking-tight cursor-default">
+                            {renderGlowingText("Established Jan 9th, 2025", "glow-char-2")}
+                        </h2>
+                    </div>
+                    <div className="max-w-5xl">
+                        <p className="text-xl md:text-3xl font-light leading-relaxed cursor-default">
+                            {renderGlowingText("Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET. Welcoming students from all backgrounds, we cultivate a supportive community where members delve into cutting-edge fields—from web development and cybersecurity to AI, robotics, and UX.", "glow-char-3")}
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <div className="max-w-400 mx-auto w-full">
-
-                {/* --- FIX APPLIED HERE --- */}
-                {/* Outer wrapper handles the spacing and padding safely */}
-                <div className="mb-16 md:mb-24 lg:mb-32 pr-0 lg:pr-10">
-
-                    {/* Inner wrapper is strictly for layout overlay (relative positioning without padding) */}
-                    <div ref={descriptionContainerRef} className="relative w-full">
-                        {/* Note: You can remove 'border border-red-600' when you're done debugging */}
-                        <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] leading-[1.05] tracking-tight font-normal text-black/20">
-                            Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET, established on January 9th, 2025. 
-                            Welcoming students from all backgrounds and levels of experience, Helix cultivates a supportive community where members can delve into a diverse range of cutting-edge fields. 
-                            From web development and cybersecurity to advancements in AI and robotics, Helix offers a multitude of pathways for technological growth and discovery.
-                        </h2>
-                        <h2
-                            ref={revealTextRef}
-                            className="absolute top-0 left-0 w-full text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] leading-[1.05] font-normal tracking-tight text-black"
-                            style={{ clipPath: 'inset(-20% 100% -20% -20%)' }}
-                            aria-hidden="true"
-                        >
-                            Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET, established on January 9th, 2025. 
-                            Welcoming students from all backgrounds and levels of experience, Helix cultivates a supportive community where members can delve into a diverse range of cutting-edge fields. 
-                            From web development and cybersecurity to advancements in AI and robotics, Helix offers a multitude of pathways for technological growth and discovery.
-                        </h2>
+            {/* VISION & MISSION SECTION */}
+            <div className="py-32 px-6 md:px-20 relative z-10">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12" style={{ perspective: '1200px' }}>
+                    <div className="vm-card bg-[#111] border border-white/10 rounded-[2.5rem] p-12 md:p-16 hover:border-[#eeff00]/50 transition-colors duration-500 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#eeff00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <h3 className="text-[#eeff00] text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4">
+                            <span className="w-8 h-[1px] bg-[#eeff00]"></span>
+                            Our Vision
+                        </h3>
+                        <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300">
+                            To develop a <span className="text-white font-medium">tech-driven community</span> that empowers students to become industry leaders.
+                        </p>
                     </div>
-                </div>
-                {/* ------------------------ */}
-
-                <hr className="border-t border-gray-300 mb-8 md:mb-12 w-full" />
-
-                <div ref={principlesTriggerRef} className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-4">
-                    <div className="md:col-span-5 lg:col-span-6">
-                        <div className="overflow-hidden">
-                            <h3 className="principle-mask-item text-base sm:text-lg md:text-xl leading-tight font-normal block">
-                                HELIX operate on<br />
-                                simple principles
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div className="md:col-span-7 lg:col-span-6 flex flex-col">
-                        <ul className="text-base sm:text-lg md:text-xl space-y-1 md:space-y-2 mb-12 md:mb-24">
-                            <li className="overflow-hidden">
-                                <div className="principle-mask-item flex gap-4 md:gap-6">
-                                    <span className="text-gray-500">(01)</span>
-                                    <span>Foster a collaborative and inclusive environment where students with an interest in technology and AI can connect, learn from each other, and grow together.</span>
-                                </div>
-                            </li>
-                            <li className="overflow-hidden">
-                                <div className="principle-mask-item flex gap-4 md:gap-6">
-                                    <span className="text-gray-500">(02)</span>
-                                    <span>Provide hands-on experiences through workshops, projects, and activities that transform theoretical knowledge into practical skills across various tech domains.</span>
-                                </div>
-                            </li>
-                            <li className="overflow-hidden">
-                                <div className="principle-mask-item flex gap-4 md:gap-6">
-                                    <span className="text-gray-500">(03)</span>
-                                    <span>Encourage creative problem-solving and the development of innovative solutions by providing platforms for experimentation and project implementation.</span>
-                                </div>
-                            </li>
-                            <li className="overflow-hidden">
-                                <div className="principle-mask-item flex gap-4 md:gap-6">
-                                    <span className="text-gray-500">(04)</span>
-                                    <span> Facilitate collaborative projects and activities that emphasize the importance of teamwork, communication, and shared goals.</span>
-                                </div>
-                            </li>
-                            <li className="overflow-hidden">
-                                <div className="principle-mask-item flex gap-4 md:gap-6">
-                                    <span className="text-gray-500">(05)</span>
-                                    <span>Equip students with the necessary technical skills, teamwork abilities, and industry insights to excel in their future careers within the rapidly evolving technology landscape.</span>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <div className="overflow-hidden">
-                            <p className="principle-mask-item text-sm sm:text-base md:text-lg text-black leading-snug max-w-105 block">
-                                These five  core principles  define  the vision of  Helix — a tech-driven community focused on collaboration, innovation, and growth. 
-                                Beyond achievements, Helix represents our commitment to hands-on
-                                learning, creative problem-solving, teamwork, and empowering students 
-                                to become future-ready leaders in the evolving world of technology.
-                            </p>
-                        </div>
+                    <div className="vm-card bg-[#111] border border-white/10 rounded-[2.5rem] p-12 md:p-16 hover:border-[#eeff00]/50 transition-colors duration-500 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <h3 className="text-blue-400 text-xl md:text-2xl font-mono mb-8 md:mb-12 uppercase tracking-widest flex items-center gap-4">
+                            <span className="w-8 h-[1px] bg-blue-400"></span>
+                            Our Mission
+                        </h3>
+                        <p className="text-3xl md:text-5xl font-light leading-tight text-gray-300">
+                            Provide <span className="text-white font-medium">hands-on learning</span> and foster innovation to prepare you for the tech world.
+                        </p>
                     </div>
                 </div>
             </div>
+
+            {/* PURPOSE OF HELIX (HORIZONTAL SCROLL) */}
+            <div className="overflow-hidden bg-[#111] relative" ref={horizontalScrollRef}>
+                <div className="absolute top-20 left-6 md:left-20 z-10 w-full max-w-7xl pointer-events-none">
+                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white/10 uppercase">
+                        The Purpose
+                    </h2>
+                </div>
+
+                <div className="purpose-container flex h-screen items-center" ref={purposeContainerRef} style={{ width: '400vw' }}>
+                    {[
+                        { title: 'Expand Knowledge', text: 'Gain exposure to a wide array of technologies, including web development, cybersecurity, AI, robotics, and UX.', icon: '🧠' },
+                        { title: 'Develop Skills', text: 'Acquire hands-on experience through workshops and hackathons, building a strong portfolio of demonstrable skills.', icon: '💻' },
+                        { title: 'Solve Problems', text: 'Tackle real-world challenges through innovative projects and collaborative problem-solving activities.', icon: '🧩' },
+                        { title: 'Network & Grow', text: 'Connect with peers and interact with industry professionals through guest lectures, boosting employability.', icon: '🚀' },
+                    ].map((purpose, idx) => (
+                        <div key={idx} className="purpose-item w-screen h-full flex items-center justify-center px-6 md:px-20 pt-20">
+                            <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <div className="text-[6rem] md:text-[8rem] lg:text-[10rem] mb-8 leading-none opacity-80">{purpose.icon}</div>
+                                    <h3 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight">{purpose.title}</h3>
+                                </div>
+                                <div className="bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#eeff00] to-transparent"></div>
+                                    <p className="text-2xl md:text-4xl text-gray-300 font-light leading-relaxed">{purpose.text}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+
         </div>
     );
 };
