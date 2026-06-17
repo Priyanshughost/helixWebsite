@@ -87,7 +87,7 @@ function Testimonials() {
     );
 
     return (
-        <section ref={sectionRef} className="relative w-full min-h-screen py-32 bg-[#050505] text-white overflow-hidden flex flex-col justify-center font-sans">
+        <section id="testimonials" ref={sectionRef} className="relative w-full min-h-screen py-32 bg-[#050505] text-white overflow-hidden flex flex-col justify-center font-sans">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/40 via-[#050505] to-[#050505] pointer-events-none"></div>
 
             <div className="px-6 md:px-12 lg:px-20 mb-12 md:mb-20 w-full shrink-0 relative z-10">

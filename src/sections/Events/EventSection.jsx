@@ -106,6 +106,7 @@ function EventSection() {
 
     return (
         <section
+            id="events"
             ref={sectionRef}
             className="
                 relative

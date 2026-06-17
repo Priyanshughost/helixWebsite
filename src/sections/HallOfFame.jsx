@@ -23,9 +23,9 @@ function HallOfFame() {
 
         // 1. Heading — dramatic 3D flip entrance
         gsap.fromTo('.fame-heading',
-            { 
-                rotationX: -90, 
-                yPercent: 80, 
+            {
+                rotationX: -90,
+                yPercent: 80,
                 opacity: 0,
                 transformPerspective: 1200,
                 transformOrigin: 'center bottom'
@@ -108,9 +108,9 @@ function HallOfFame() {
             if (leftCol && rightCol) {
                 gsap.fromTo(leftCol,
                     { yPercent: 20 },
-                    { 
-                        yPercent: -20, 
-                        ease: 'none', 
+                    {
+                        yPercent: -20,
+                        ease: 'none',
                         force3D: true,
                         scrollTrigger: {
                             trigger: item,
@@ -123,9 +123,9 @@ function HallOfFame() {
 
                 gsap.fromTo(rightCol,
                     { yPercent: -15 },
-                    { 
-                        yPercent: 15, 
-                        ease: 'none', 
+                    {
+                        yPercent: 15,
+                        ease: 'none',
                         force3D: true,
                         scrollTrigger: {
                             trigger: item,
@@ -161,8 +161,9 @@ function HallOfFame() {
     }, { scope: sectionRef });
 
     return (
-        <section 
-            ref={sectionRef} 
+        <section
+            id="hall-of-fame"
+            ref={sectionRef}
             className="w-full bg-black text-white py-24 md:py-32 px-6 md:px-12 lg:px-20"
             style={{ perspective: '1500px' }}
         >
@@ -178,8 +179,8 @@ function HallOfFame() {
 
                 <div className="space-y-16 md:space-y-20">
                     {achievements.map((item, i) => (
-                        <div 
-                            key={i} 
+                        <div
+                            key={i}
                             className="fame-item border-b border-white/10 pb-12 md:pb-16 flex flex-col md:flex-row md:items-start gap-6 md:gap-12 will-change-transform"
                             style={{ transformStyle: 'preserve-3d' }}
                         >

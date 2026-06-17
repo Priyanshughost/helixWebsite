@@ -174,6 +174,41 @@ const AboutSection = () => {
                     duration: 0.5
                 });
             });
+
+            // Inner elements of VM card
+            const q = gsap.utils.selector(card);
+            gsap.from(q('h3, p'), {
+                y: 30,
+                opacity: 0,
+                stagger: 0.2,
+                duration: 1,
+                ease: "power2.out",
+                delay: 0.4,
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%'
+                }
+            });
+        });
+
+        // Floating animation for background blobs
+        gsap.to('.hero-blob-1', {
+            x: -100,
+            y: 100,
+            scale: 1.2,
+            duration: 8,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+        gsap.to('.hero-blob-2', {
+            x: 100,
+            y: -100,
+            scale: 1.1,
+            duration: 10,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
         });
 
         // Horizontal Scroll for Purpose
@@ -182,7 +217,7 @@ const AboutSection = () => {
         if (purposeContainerRef.current && purposeItems.length > 0) {
             // Animate each item horizontally by -100% * (number of items - 1)
             // This is the most reliable GSAP horizontal scroll pattern
-            gsap.to(purposeItems, {
+            const horizontalTween = gsap.to(purposeItems, {
                 xPercent: -100 * (purposeItems.length - 1),
                 ease: "none",
                 scrollTrigger: {
@@ -193,17 +228,98 @@ const AboutSection = () => {
                     end: () => "+=" + horizontalScrollRef.current.offsetWidth * (purposeItems.length - 1)
                 }
             });
+
+            // Container Animations for inner elements
+            purposeItems.forEach((item, i) => {
+                const q = gsap.utils.selector(item);
+
+                const getTriggerConfig = (startRatio) => {
+                    if (i === 0) {
+                        return {
+                            trigger: item, // item itself for vertical scroll
+                            start: `top ${startRatio * 100}%`,
+                            toggleActions: "play none none reverse"
+                        };
+                    } else {
+                        return {
+                            trigger: item,
+                            containerAnimation: horizontalTween,
+                            start: `left ${startRatio * 100}%`,
+                            toggleActions: "play none none reverse"
+                        };
+                    }
+                };
+
+                // Animate big number (zoom in and fade with elastic bounce)
+                gsap.from(q('.purpose-number'), {
+                    scale: 0,
+                    opacity: 0,
+                    x: -100,
+                    rotation: -15,
+                    duration: 1.8,
+                    ease: "elastic.out(1, 0.5)",
+                    scrollTrigger: getTriggerConfig(0.85)
+                });
+
+                // Animate icon (spin and pop, then float)
+                gsap.from(q('.purpose-icon'), {
+                    scale: 0,
+                    rotation: 360,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "back.out(1.5)",
+                    scrollTrigger: getTriggerConfig(0.8),
+                    onComplete: () => {
+                        gsap.to(q('.purpose-icon'), {
+                            y: -15,
+                            duration: 2.5,
+                            ease: "sine.inOut",
+                            yoyo: true,
+                            repeat: -1
+                        });
+                    }
+                });
+
+                // Animate title and line (slide right and fade, more stagger)
+                gsap.from(q('.purpose-title, .purpose-line'), {
+                    x: -80,
+                    opacity: 0,
+                    stagger: 0.3,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: getTriggerConfig(0.75)
+                });
+
+                // Animate the right card (slide in from right)
+                gsap.from(q('.purpose-card'), {
+                    x: 100,
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: getTriggerConfig(0.7)
+                });
+
+                // Inner card elements animation
+                gsap.from(q('.purpose-step, .purpose-text, .purpose-dots'), {
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.25,
+                    duration: 1.2,
+                    ease: "power2.out",
+                    scrollTrigger: getTriggerConfig(0.65)
+                });
+            });
         }
 
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="w-full bg-[#0a0a0a] text-white font-sans overflow-x-hidden selection:bg-[#eeff00] selection:text-black">
+        <div id="about" ref={containerRef} className="w-full bg-[#0a0a0a] text-white font-sans overflow-x-hidden selection:bg-[#eeff00] selection:text-black">
             {/* HERO SECTION */}
             <div className="hero-container min-h-screen flex flex-col justify-center px-6 md:px-20 relative pt-24 md:pt-32">
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                    <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#eeff00]/5 blur-[150px]"></div>
-                    <div className="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-500/5 blur-[150px]"></div>
+                    <div className="hero-blob-1 absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#eeff00]/5 blur-[150px]"></div>
+                    <div className="hero-blob-2 absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-500/5 blur-[150px]"></div>
                 </div>
 
                 <div className="z-10">
@@ -326,24 +442,24 @@ const AboutSection = () => {
                                     {/* Big Number */}
                                     <div className="flex items-baseline gap-4">
                                         <span
-                                            className="text-[8rem] md:text-[12rem] font-black leading-none tracking-tighter"
+                                            className="purpose-number text-[8rem] md:text-[12rem] font-black leading-none tracking-tighter"
                                             style={{ color: purpose.accent, opacity: 0.15 }}
                                         >
                                             {purpose.num}
                                         </span>
                                     </div>
                                     {/* Icon */}
-                                    <div className="text-6xl md:text-7xl">{purpose.icon}</div>
+                                    <div className="purpose-icon text-6xl md:text-7xl">{purpose.icon}</div>
                                     {/* Title */}
-                                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-none">
+                                    <h3 className="purpose-title text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-none">
                                         {purpose.title}
                                     </h3>
                                     {/* Colored Line */}
-                                    <div className="h-1 w-20 rounded-full" style={{ backgroundColor: purpose.accent }}></div>
+                                    <div className="purpose-line h-1 w-20 rounded-full" style={{ backgroundColor: purpose.accent }}></div>
                                 </div>
 
                                 {/* Right: Card with spinning border */}
-                                <div className="relative rounded-[2rem] p-[3px] overflow-hidden group/card">
+                                <div className="purpose-card relative rounded-[2rem] p-[3px] overflow-hidden group/card">
                                     {/* Spinning border */}
                                     <div
                                         className="absolute inset-[-100%] animate-[spin_5s_linear_infinite] opacity-30 group-hover/card:opacity-100 transition-opacity duration-700"
@@ -369,19 +485,19 @@ const AboutSection = () => {
                                         ></div>
 
                                         {/* Step label */}
-                                        <div className="flex items-center gap-3 mb-8">
+                                        <div className="purpose-step flex items-center gap-3 mb-8">
                                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: purpose.accent }}></div>
                                             <span className="text-xs font-mono uppercase tracking-[0.25em] text-white/40">
                                                 Step {purpose.num} of 04
                                             </span>
                                         </div>
 
-                                        <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 font-light leading-relaxed group-hover/card:text-white transition-colors duration-500">
+                                        <p className="purpose-text text-2xl md:text-3xl lg:text-4xl text-gray-300 font-light leading-relaxed group-hover/card:text-white transition-colors duration-500">
                                             {purpose.text}
                                         </p>
 
                                         {/* Bottom decorative dots */}
-                                        <div className="flex gap-2 mt-10">
+                                        <div className="purpose-dots flex gap-2 mt-10">
                                             {[0, 1, 2, 3].map(i => (
                                                 <div
                                                     key={i}

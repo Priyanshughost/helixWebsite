@@ -94,6 +94,7 @@ function Partnerships() {
 
     return (
         <section
+            id="partnerships"
             ref={sectionRef}
             className="w-full bg-black py-28 md:py-40 px-6 md:px-12 lg:px-20 overflow-hidden relative"
             style={{ perspective: '1500px' }}

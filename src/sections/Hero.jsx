@@ -111,7 +111,7 @@ function Hero({ loading }) {
   });
 
   return (
-    <section ref={containerRef} className="w-full bg-white pt-26 lg:pt-28 pb-38 lg:pb-34 px-4 md:px-6 lg:px-10 flex flex-col gap-14 md:gap-0 mt-16 ">
+    <section id="home" ref={containerRef} className="w-full bg-white pt-26 lg:pt-28 pb-38 lg:pb-34 px-4 md:px-6 lg:px-10 flex flex-col gap-14 md:gap-0 mt-16 ">
       {/* Left side */}
       <div className="w-full flex justify-start">
         <div

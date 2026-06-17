@@ -528,7 +528,7 @@ function ImageGallery({ items = defaultCollection, config = defaultConfig }) {
     };
 
     return (
-        <div ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-screen overflow-hidden relative select-none bg-black">
+        <div id="gallery" ref={mainWrapperRef} onClick={handleDocumentClick} className="w-full h-screen overflow-hidden relative select-none bg-black">
             <div
                 ref={headingWrapperRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-opacity duration-300"
