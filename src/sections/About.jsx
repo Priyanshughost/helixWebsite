@@ -223,8 +223,7 @@ const AboutSection = () => {
                 scrollTrigger: {
                     trigger: horizontalScrollRef.current,
                     pin: true,
-                    scrub: 1,
-                    snap: 1 / (purposeItems.length - 1),
+                    scrub: true,
                     end: () => "+=" + horizontalScrollRef.current.offsetWidth * (purposeItems.length - 1)
                 }
             });

@@ -32,7 +32,7 @@ function MainLayout({ loading }) {
             options={{
                 lerp: isMobile ? 0.15 : 0.08,
                 smoothWheel: true,
-                smoothTouch: true,
+                smoothTouch: false,
                 syncTouch: false,
                 touchMultiplier: 1,
                 wheelMultiplier: 1.1
