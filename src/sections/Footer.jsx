@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -10,6 +10,29 @@ function Footer() {
     const footerRef = useRef(null);
     const textRef = useRef(null);
     const headingRef = useRef(null);
+    
+    // Newsletter State
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('idle'); // 'idle', 'loading', 'success', 'error'
+
+    const handleSubscribe = async (e) => {
+        e.preventDefault();
+        if (!email) return;
+
+        setStatus('loading');
+
+        // Note: For real backend, replace this setTimeout with a fetch call
+        // e.g., await fetch('https://formspree.io/f/your_id', { method: 'POST', body: JSON.stringify({ email }) })
+        setTimeout(() => {
+            setStatus('success');
+            setEmail('');
+            
+            // Reset status after 3 seconds
+            setTimeout(() => {
+                setStatus('idle');
+            }, 3000);
+        }, 1500);
+    };
 
     useGSAP(() => {
         const ctx = gsap.context(() => {
@@ -196,21 +219,38 @@ function Footer() {
                         <div className="reveal-elem text-base mt-auto">
                             <p className="mb-4 text-gray-400">Sign up for our newsletter (No spam)</p>
                             <form
-                                className="flex items-center border-b border-gray-600 pb-3 w-full group"
-                                onSubmit={(e) => e.preventDefault()}
+                                className="flex items-center border-b border-gray-600 pb-3 w-full group relative"
+                                onSubmit={handleSubscribe}
                             >
                                 <input
                                     type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
                                     required
-                                    className="bg-transparent border-none text-white text-lg grow outline-none placeholder:text-gray-500 transition-all duration-300 focus:placeholder-opacity-0"
+                                    disabled={status === 'loading' || status === 'success'}
+                                    className="bg-transparent border-none text-white text-lg grow outline-none placeholder:text-gray-500 transition-all duration-300 focus:placeholder-opacity-0 disabled:opacity-50"
                                 />
                                 <button
                                     type="submit"
-                                    className="bg-transparent border-none text-gray-400 text-2xl cursor-pointer pl-4 transition-all duration-300 group-hover:text-[#e5d9c5] group-hover:translate-x-2"
+                                    disabled={status === 'loading' || status === 'success'}
+                                    className="bg-transparent border-none text-gray-400 text-2xl cursor-pointer pl-4 transition-all duration-300 hover:text-[#e5d9c5] disabled:opacity-50"
                                 >
-                                    &#8594;
+                                    {status === 'loading' ? (
+                                        <span className="inline-block animate-spin text-sm">↻</span>
+                                    ) : status === 'success' ? (
+                                        <span className="text-green-500 text-xl">✓</span>
+                                    ) : (
+                                        <span className="group-hover:translate-x-2 inline-block transition-transform duration-300">&#8594;</span>
+                                    )}
                                 </button>
+                                
+                                {/* Status Message Popup */}
+                                {status === 'success' && (
+                                    <div className="absolute -bottom-8 left-0 text-green-400 text-sm font-medium animate-pulse">
+                                        Thanks for subscribing!
+                                    </div>
+                                )}
                             </form>
                         </div>
                     </div>
