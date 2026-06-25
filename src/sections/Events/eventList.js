@@ -1,3 +1,4 @@
+import hackHorizonWinner from "../../assets/hack-horizon-winner-2025.jpg";
 export const eventList = [
     { title: "Club Orientation", date: "Jan 27, 2025", img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=500&auto=format&fit=crop" },
     { title: "SDE Workshop", date: "Feb 19, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop" },
@@ -10,7 +11,7 @@ export const eventList = [
     { title: "Martinovation", date: "Nov 3-7, 2025", img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=500&auto=format&fit=crop" },
     { title: "RanchiHacks", date: "Jan 17-18, 2026", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=500&auto=format&fit=crop" },
     { title: "NPTEL Workshop", date: "Jan 22, 2026", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=500&auto=format&fit=crop" },
-    { title: "Hack Horizon", date: "Apr 11-12, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop"},
+    { title: "Hack Horizon", date: "Apr 11-12, 2025", img: hackHorizonWinner,},
     { title: "Eklavya Techfest", date: "Apr 23-24, 2025", img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=500&auto=format&fit=crop" },
     { title: "Hackatron 25", date: "May 11-12, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop" },
 ]
