@@ -1,5 +1,5 @@
 import hackHorizonWinner from "../../assets/hack-horizon-winner-2025.jpg";
-import ClubOrientation from "../../assets/ClubOrientation.jpg";
+import ClubOrientation from "../../assets/ClubOrientation1.jpg";
 export const eventList = [
     { title: "Club Orientation", date: "Jan 27, 2025", img: ClubOrientation,},
     { title: "SDE Workshop", date: "Feb 19, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop" },
