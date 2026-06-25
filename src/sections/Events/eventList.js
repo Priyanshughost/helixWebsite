@@ -1,4 +1,4 @@
-import hackHorizonWinner from "./images/hack horizon 2025.jpg";
+import hackHorizonWinner from "./images/hack-horizon-2025.jpg";
 export const eventList = [
     { title: "Club Orientation", date: "Jan 27, 2025", img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=500&auto=format&fit=crop" },
     { title: "SDE Workshop", date: "Feb 19, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop" },
