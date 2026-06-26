@@ -1,6 +1,7 @@
 import hackHorizonWinner from "../../assets/hack-horizon-winner-2025.jpg";
 import ClubOrientation from "../../assets/ClubOrientation1.jpg";
 import SdeWorkshop from "../../assets/SDEWorkshop.jpg";
+import SIH-Internal-Hackathon from "../../assets/SIH-Internal-Hackathon.jpg";
 export const eventList = [
     { title: "Club Orientation", date: "Jan 27, 2025", img: ClubOrientation,},
     { title: "SDE Workshop", date: "Feb 19, 2025", img: SdeWorkshop,},
