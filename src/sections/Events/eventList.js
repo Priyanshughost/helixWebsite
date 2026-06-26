@@ -1,8 +1,9 @@
 import hackHorizonWinner from "../../assets/hack-horizon-winner-2025.jpg";
 import ClubOrientation from "../../assets/ClubOrientation1.jpg";
+import SdeWorkshop from "../../assets/SDEWorkshop.jpg";
 export const eventList = [
     { title: "Club Orientation", date: "Jan 27, 2025", img: ClubOrientation,},
-    { title: "SDE Workshop", date: "Feb 19, 2025", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=500&auto=format&fit=crop" },
+    { title: "SDE Workshop", date: "Feb 19, 2025", img: SdeWorkshop,},
     { title: "Club Induction", date: "Aug 29, 2025", img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=500&auto=format&fit=crop" },
     { title: "DevSpark", date: "Sep 4, 2025", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500&auto=format&fit=crop" },
     { title: "SIH Internal Hackathon", date: "Sep 22, 2025", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=500&auto=format&fit=crop" },
