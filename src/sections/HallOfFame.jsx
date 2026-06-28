@@ -81,7 +81,7 @@ function HallOfFame() {
             <div className="flex flex-col lg:flex-row w-full max-w-[100vw] overflow-hidden">
                 
                 {/* LEFT PANEL: STICKY HERO DISPLAY */}
-                <div className="lg:w-1/2 lg:sticky lg:top-0 h-[45vh] lg:h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 bg-[#050505]">
+                <div className="lg:w-1/2 sticky lg:top-0 h-[45vh] lg:h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 bg-[#050505]">
                     
                     {/* Ambient Glow */}
                     <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20 z-0">
