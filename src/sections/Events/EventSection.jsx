@@ -122,14 +122,20 @@ function EventSection() {
             "
         >
             {/* CENTER TEXT */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
-                <h2 className="text-[2vw] tracking-[0.5em] uppercase font-light text-white/30 mb-2">
-                    Events Organized By
-                </h2>
-                <h1 className="text-[20vw] md:text-[25vw] font-black tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-b from-white/10 to-transparent leading-none">
-                    HELIX
-                </h1>
-            </div>
+            <div
+                className="absolute flex flex-col justify-start w-max items-start pointer-events-none"
+                style={{
+                    transform: "translate3d(0,0,0)",
+                    willChange: "transform",
+                }}
+            >
+                <h1 className="text-[3vw] tracking-wider uppercase text-center font-extralight text-white">
+                    Events Organized By
+                </h1>
+                <h1 className="text-[25vw] font-semibold tracking-widest uppercase text-center text-transparent bg-clip-text bg-linear-to-b from-white via-blue-500 via-20% to-black to-70% drop-shadow-2xl">
+                    HELIX
+                </h1>
+            </div>
 
             {/* PARALLAX WRAPPER */}
             {/* This takes the mouse tilt, leaving cylinderRef free for ScrollTrigger */}
