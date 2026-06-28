@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+"use client";
+
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -16,195 +18,148 @@ const achievements = [
 ];
 
 function HallOfFame() {
-    const sectionRef = useRef(null);
+    const containerRef = useRef(null);
+    const rightPanelRef = useRef(null);
+    const contentRef = useRef(null);
+    const itemRefs = useRef([]);
+    const [activeIndex, setActiveIndex] = useState(0);
 
+    // 1. Handle dynamic crossfading of the sticky content
     useGSAP(() => {
-        const items = gsap.utils.toArray('.fame-item');
-
-        // 1. Heading — dramatic 3D flip entrance
-        gsap.fromTo('.fame-heading',
-            {
-                rotationX: -90,
-                yPercent: 80,
-                opacity: 0,
-                transformPerspective: 1200,
-                transformOrigin: 'center bottom'
-            },
-            {
-                rotationX: 0,
-                yPercent: 0,
-                opacity: 1,
-                duration: 2,
-                ease: 'expo.out',
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play reverse play reverse',
-                }
-            }
+        if (!contentRef.current) return;
+        
+        // A premium, Apple-style blur reveal on content change
+        gsap.fromTo(contentRef.current,
+            { opacity: 0, y: 15, filter: 'blur(8px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' }
         );
+    }, { scope: containerRef, dependencies: [activeIndex] });
 
-        // 2. Each card — 3D unfold from below, like cards flipping up from a table
+    // 2. Map scroll positions to the active index
+    useGSAP(() => {
+        const items = itemRefs.current;
+        
         items.forEach((item, i) => {
-            // Initial hidden state
-            gsap.set(item, {
-                transformPerspective: 1500,
-                transformOrigin: 'center bottom',
-            });
-
-            // Entrance: direction-aware 3D flip
-            // Scroll DOWN → cards flip up from below
-            // Scroll UP   → cards flip down from above
-            const enterFrom = { rotationX: -70, y: 150, scale: 0.85, opacity: 0, z: -200 };
-            const enterBackFrom = { rotationX: 70, y: -150, scale: 0.85, opacity: 0, z: -200 };
-            const enterTo = { rotationX: 0, y: 0, scale: 1, opacity: 1, z: 0, duration: 1.6, ease: 'expo.out' };
-
-            // Start hidden
-            gsap.set(item, enterFrom);
-
+            if (!item) return;
+            
             ScrollTrigger.create({
                 trigger: item,
-                start: 'top 95%',
-                end: 'bottom 5%',
-                onEnter: () => {
-                    // Scrolling DOWN — flip up from below
-                    gsap.set(item, { transformOrigin: 'center bottom' });
-                    gsap.fromTo(item, enterFrom, { ...enterTo, delay: i * 0.05 });
-                },
-                onLeave: () => {
-                    gsap.to(item, { opacity: 0, y: -80, duration: 0.4, ease: 'power2.in' });
-                },
-                onEnterBack: () => {
-                    // Scrolling UP — flip down from above
-                    gsap.set(item, { transformOrigin: 'center top' });
-                    gsap.fromTo(item, enterBackFrom, { ...enterTo, delay: i * 0.05 });
-                },
-                onLeaveBack: () => {
-                    gsap.to(item, { opacity: 0, y: 80, duration: 0.4, ease: 'power2.in' });
-                },
+                start: 'center center+=10%', // Triggers slightly below center for better UX reading flow
+                end: 'center center-=10%',
+                onEnter: () => setActiveIndex(i),
+                onEnterBack: () => setActiveIndex(i),
             });
+        });
 
-            // 3. Continuous 3D scrub — subtle tilt as you scroll past
-            const leftCol = item.querySelector('.fame-left');
-            const rightCol = item.querySelector('.fame-right');
-
-            gsap.fromTo(item,
-                { rotationX: 3, y: 30 },
-                {
-                    rotationX: -3,
-                    y: -30,
-                    ease: 'none',
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: item,
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: true,
-                    }
-                }
-            );
-
-            // Parallax between left and right columns
-            if (leftCol && rightCol) {
-                gsap.fromTo(leftCol,
-                    { yPercent: 20 },
-                    {
-                        yPercent: -20,
-                        ease: 'none',
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: item,
-                            start: 'top bottom',
-                            end: 'bottom top',
-                            scrub: true,
-                        }
-                    }
-                );
-
-                gsap.fromTo(rightCol,
-                    { yPercent: -15 },
-                    {
-                        yPercent: 15,
-                        ease: 'none',
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: item,
-                            start: 'top bottom',
-                            end: 'bottom top',
-                            scrub: true,
-                        }
-                    }
-                );
+        // Optional: Progress bar animation
+        gsap.to('.progress-line', {
+            scaleY: 1,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: rightPanelRef.current,
+                start: 'top center',
+                end: 'bottom center',
+                scrub: true,
             }
         });
 
-        // 4. Counter numbers — each index number scales in
-        const counters = gsap.utils.toArray('.fame-counter');
-        counters.forEach((counter) => {
-            gsap.fromTo(counter,
-                { scale: 0, rotationZ: -15, opacity: 0 },
-                {
-                    scale: 1,
-                    rotationZ: 0,
-                    opacity: 1,
-                    duration: 1,
-                    ease: 'back.out(2)',
-                    scrollTrigger: {
-                        trigger: counter,
-                        start: 'top 90%',
-                        toggleActions: 'play reverse play reverse',
-                    }
-                }
-            );
-        });
+    }, { scope: containerRef });
 
-    }, { scope: sectionRef });
+    // Helper for manual clicking
+    const handleItemClick = (index) => {
+        if (itemRefs.current[index]) {
+            itemRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
 
     return (
-        <section
-            id="hall-of-fame"
-            ref={sectionRef}
-            className="w-full bg-black text-white py-24 md:py-32 px-6 md:px-12 lg:px-20 overflow-hidden"
-            style={{ perspective: '1500px' }}
+        <section 
+            id="hall-of-fame" 
+            ref={containerRef} 
+            className="relative w-full bg-[#050505] text-white selection:bg-[#eeff00] selection:text-black font-sans"
         >
-            <div className="max-w-7xl mx-auto">
-                <div className="fame-heading mb-24 md:mb-32">
-                    <h2 className="text-5xl md:text-8xl lg:text-9xl font-normal tracking-tight text-[#eeff00] mb-6">
-                        Hall of Fame
-                    </h2>
-                    <p className="text-lg md:text-2xl text-gray-400 max-w-2xl font-light">
-                        Celebrating the outstanding achievements of Helix members on the national stage.
-                    </p>
+            <div className="flex flex-col lg:flex-row w-full max-w-[100vw] overflow-hidden">
+                
+                {/* LEFT PANEL: STICKY HERO DISPLAY */}
+                <div className="lg:w-1/2 lg:sticky lg:top-0 h-[45vh] lg:h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 bg-[#050505]">
+                    
+                    {/* Ambient Glow */}
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20 z-0">
+                        <div className="absolute top-1/2 -left-1/4 w-[60vh] h-[60vh] -translate-y-1/2 rounded-full bg-[#eeff00] blur-[120px] transition-all duration-700 ease-in-out"></div>
+                    </div>
+
+                    <div ref={contentRef} className="relative z-10 will-change-transform">
+                        <div className="flex items-center gap-4 mb-6">
+                            <span className="w-8 h-[1px] bg-[#eeff00]"></span>
+                            <span className="text-[#eeff00] font-mono tracking-[0.2em] text-xs uppercase">
+                                Entry {String(activeIndex + 1).padStart(2, '0')}
+                            </span>
+                        </div>
+                        
+                        <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter mb-8 leading-[1.1]">
+                            {achievements[activeIndex].title}
+                        </h2>
+                        
+                        <div className="flex flex-wrap gap-3 text-xs md:text-sm font-mono text-gray-400 uppercase tracking-wider mb-8">
+                            <span className="border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.02] backdrop-blur-md">
+                                {achievements[activeIndex].org}
+                            </span>
+                            <span className="border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.02] backdrop-blur-md">
+                                {achievements[activeIndex].date}
+                            </span>
+                        </div>
+                        
+                        <p className="text-lg md:text-2xl text-gray-400 font-light leading-relaxed max-w-xl">
+                            {achievements[activeIndex].desc}
+                        </p>
+                    </div>
                 </div>
 
-                <div className="space-y-16 md:space-y-20">
-                    {achievements.map((item, i) => (
-                        <div
-                            key={i}
-                            className="fame-item border-b border-white/10 pb-12 md:pb-16 flex flex-col md:flex-row md:items-start gap-6 md:gap-12 will-change-transform"
-                            style={{ transformStyle: 'preserve-3d' }}
-                        >
-                            {/* Big index number */}
-                            <div className="fame-counter text-[#eeff00] text-6xl md:text-8xl font-bold leading-none md:w-24 shrink-0 tabular-nums select-none" style={{ transformOrigin: 'center center' }}>
-                                {String(i + 1).padStart(2, '0')}
-                            </div>
+                {/* RIGHT PANEL: SCROLLING INDEX */}
+                <div ref={rightPanelRef} className="lg:w-1/2 relative bg-[#0a0a0a]">
+                    {/* Center Progress Line */}
+                    <div className="absolute left-8 lg:left-24 top-0 bottom-0 w-[1px] bg-white/5 z-0 hidden lg:block">
+                        <div className="progress-line w-full h-full bg-[#eeff00] origin-top scale-y-0"></div>
+                    </div>
 
-                            {/* Left: Title + meta */}
-                            <div className="fame-left md:w-2/5 shrink-0">
-                                <h3 className="text-2xl md:text-4xl font-medium tracking-tight leading-tight mb-4">{item.title}</h3>
-                                <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-500 uppercase tracking-widest">
-                                    <span>{item.date}</span>
-                                    <span>{item.org}</span>
+                    {/* Generous padding ensures the first/last items can reach the center of the screen */}
+                    <div className="py-[10vh] lg:py-[50vh] px-8 md:px-16 lg:px-32 flex flex-col gap-12 lg:gap-32 relative z-10">
+                        <div className="lg:hidden text-[#eeff00] font-mono tracking-widest text-xs uppercase mb-8">
+                            Scroll to explore ↓
+                        </div>
+
+                        {achievements.map((item, i) => (
+                            <div 
+                                key={i} 
+                                ref={el => itemRefs.current[i] = el}
+                                onClick={() => handleItemClick(i)}
+                                className={`group flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-10 cursor-pointer transition-all duration-700 ease-out will-change-transform ${
+                                    activeIndex === i 
+                                        ? 'opacity-100 scale-100 pl-4 lg:pl-8' 
+                                        : 'opacity-30 hover:opacity-60 scale-95'
+                                }`}
+                            >
+                                {/* Hollow Number Styling */}
+                                <div 
+                                    className="text-5xl lg:text-7xl font-black tabular-nums transition-colors duration-500"
+                                    style={{ 
+                                        WebkitTextStroke: activeIndex === i ? '0px transparent' : '1px rgba(255,255,255,0.4)',
+                                        color: activeIndex === i ? '#eeff00' : 'transparent'
+                                    }}
+                                >
+                                    {String(i + 1).padStart(2, '0')}
+                                </div>
+                                
+                                <div>
+                                    <h3 className={`text-2xl lg:text-4xl font-medium tracking-tight transition-colors duration-500 ${activeIndex === i ? 'text-white' : 'text-gray-400'}`}>
+                                        {item.title}
+                                    </h3>
                                 </div>
                             </div>
-
-                            {/* Right: Description */}
-                            <div className="fame-right md:w-2/5">
-                                <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed">{item.desc}</p>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
+
             </div>
         </section>
     );
