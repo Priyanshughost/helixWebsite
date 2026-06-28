@@ -118,15 +118,12 @@ function EventSection() {
                 perspective-distant
             "
         >
-            {/* PARALLAX WRAPPER */}
-            {/* By placing the text inside this wrapper, it sits in the same 3D space as the cylinder */}
             <div
                 ref={parallaxWrapperRef}
                 className="relative flex items-center justify-center w-full h-full transform-3d will-change-transform"
                 style={{ transformStyle: "preserve-3d" }}
             >
-                {/* CENTER TEXT (Inside the cylinder) */}
-                {/* translateZ(0) keeps it in the middle while the cards are pushed outward by the radius */}
+                {/* CENTER TEXT */}
                 <div 
                     className="absolute flex flex-col items-center justify-center pointer-events-none transform-3d"
                     style={{ transform: "translateZ(0px)" }} 
@@ -150,24 +147,29 @@ function EventSection() {
                     {eventList.map((event, index) => (
                         <div
                             key={index}
-                            className="absolute inset-0 cylinder-card group will-change-transform"
+                            className="absolute inset-0 cylinder-card group will-change-transform cursor-pointer"
                             style={{
                                 transformStyle: "preserve-3d",
                                 contain: "layout paint style",
                             }}
                         >
+                            {/* FLIP WRAPPER 
+                                Added group-hover:[transform:rotateY(180deg)_scale(1.05)] to flip the entire block 
+                                Added duration-500 and ease-out for a smoother physical spin 
+                            */}
                             <div
                                 className="
                                     relative
                                     w-full
                                     h-full
                                     transform-3d
-                                    transition-transform
-                                    duration-300
-                                    group-hover:scale-[1.05]
+                                    transition-all
+                                    duration-500
+                                    ease-out
+                                    group-hover:[transform:rotateY(180deg)_scale(1.05)]
                                 "
                             >
-                                {/* FRONT */}
+                                {/* FRONT FACE */}
                                 <div
                                     className="
                                         absolute
@@ -191,15 +193,12 @@ function EventSection() {
                                             w-full
                                             h-full
                                             object-cover
-                                            opacity-60
-                                            group-hover:opacity-100
-                                            transition-opacity
-                                            duration-300
+                                            opacity-70
                                         "
                                     />
                                 </div>
 
-                                {/* BACK */}
+                                {/* BACK FACE */}
                                 <div
                                     className="
                                         absolute
@@ -208,15 +207,16 @@ function EventSection() {
                                         rounded-md
                                         bg-gray-900
                                         border
-                                        border-white/10
-                                        shadow-xl
+                                        border-blue-500/30
+                                        shadow-[0_0_20px_rgba(59,130,246,0.2)]
                                         backface-hidden
                                     "
                                     style={{
                                         transform: "rotateY(180deg)",
                                     }}
                                 >
-                                    <div className="absolute inset-0 bg-black/75 z-10 pointer-events-none" />
+                                    {/* A darker overlay on the back so the text pops */}
+                                    <div className="absolute inset-0 bg-[#0a0a0a]/90 z-10 pointer-events-none" />
                                     <img
                                         src={event.img}
                                         alt={event.title}
@@ -228,11 +228,15 @@ function EventSection() {
                                             h-full
                                             object-cover
                                             opacity-20
+                                            scale-110
+                                            blur-sm
                                         "
                                     />
-                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
-                                        <h3 className="text-white text-lg md:text-xl font-bold">{event.title}</h3>
-                                        {event.date && <p className="text-gray-300 text-sm md:text-base mt-2">{event.date}</p>}
+                                    {/* Text content revealed on flip */}
+                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center">
+                                        <div className="w-8 h-[2px] bg-blue-400 mb-4 rounded-full"></div>
+                                        <h3 className="text-white text-xl md:text-2xl font-bold tracking-tight">{event.title}</h3>
+                                        {event.date && <p className="text-blue-200/60 font-mono text-xs md:text-sm mt-3 tracking-widest">{event.date}</p>}
                                     </div>
                                 </div>
                             </div>
