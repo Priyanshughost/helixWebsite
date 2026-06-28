@@ -128,10 +128,10 @@ function EventSection() {
                     className="absolute flex flex-col items-center justify-center pointer-events-none transform-3d"
                     style={{ transform: "translateZ(0px)" }} 
                 >
-                    <p className="text-lg md:text-base tracking-[0.4em] uppercase text-center font-light text-blue-200/70 mb-2">
+                    <p className="text-sm md:text-lg tracking-[0.5em] uppercase text-center font-light text-blue-200/70 mb-2 md:mb-4">
                         Events Organized By
                     </p>
-                    <h1 className="text-6xl md:text-10xl lg:text-11xl font-black tracking-widest uppercase text-center text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-400 to-[#0a0a0a] drop-shadow-[0_0_40px_rgba(96,165,250,0.3)]">
+                    <h1 className="text-[clamp(5rem,18vw,16rem)] leading-none font-black tracking-widest uppercase text-center text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-400 to-[#0a0a0a] drop-shadow-[0_0_60px_rgba(96,165,250,0.4)]">
                         HELIX
                     </h1>
                 </div>
