@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -26,7 +28,6 @@ function HallOfFame() {
     useGSAP(() => {
         if (!contentRef.current) return;
         
-        // A premium, Apple-style blur reveal on content change
         gsap.fromTo(contentRef.current,
             { opacity: 0, y: 15, filter: 'blur(8px)' },
             { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' }
@@ -42,14 +43,13 @@ function HallOfFame() {
             
             ScrollTrigger.create({
                 trigger: item,
-                start: 'center center+=10%', // Triggers slightly below center for better UX reading flow
+                start: 'center center+=10%',
                 end: 'center center-=10%',
                 onEnter: () => setActiveIndex(i),
                 onEnterBack: () => setActiveIndex(i),
             });
         });
 
-        // Optional: Progress bar animation
         gsap.to('.progress-line', {
             scaleY: 1,
             ease: 'none',
@@ -63,7 +63,6 @@ function HallOfFame() {
 
     }, { scope: containerRef });
 
-    // Helper for manual clicking
     const handleItemClick = (index) => {
         if (itemRefs.current[index]) {
             itemRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -76,12 +75,13 @@ function HallOfFame() {
             ref={containerRef} 
             className="relative w-full bg-[#050505] text-white selection:bg-[#eeff00] selection:text-black font-sans"
         >
-            <div className="flex flex-col lg:flex-row w-full max-w-[100vw] overflow-hidden">
+            {/* BUG FIX: Removed overflow-hidden from this wrapper so the child can be sticky */}
+            <div className="flex flex-col lg:flex-row w-full max-w-full">
                 
                 {/* LEFT PANEL: STICKY HERO DISPLAY */}
-                <div className="lg:w-1/2 sticky lg:top-0 h-[45vh] lg:h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 bg-[#050505]">
+                <div className="relative lg:w-1/2 lg:sticky lg:top-0 h-[45vh] lg:h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 border-b lg:border-b-0 lg:border-r border-white/5 z-10 bg-[#050505]">
                     
-                    {/* Ambient Glow */}
+                    {/* Ambient Glow - contained properly so it doesn't overflow the page */}
                     <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20 z-0">
                         <div className="absolute top-1/2 -left-1/4 w-[60vh] h-[60vh] -translate-y-1/2 rounded-full bg-[#eeff00] blur-[120px] transition-all duration-700 ease-in-out"></div>
                     </div>
@@ -120,7 +120,6 @@ function HallOfFame() {
                         <div className="progress-line w-full h-full bg-[#eeff00] origin-top scale-y-0"></div>
                     </div>
 
-                    {/* Generous padding ensures the first/last items can reach the center of the screen */}
                     <div className="py-[10vh] lg:py-[50vh] px-8 md:px-16 lg:px-32 flex flex-col gap-12 lg:gap-32 relative z-10">
                         <div className="lg:hidden text-[#eeff00] font-mono tracking-widest text-xs uppercase mb-8">
                             Scroll to explore ↓
@@ -137,7 +136,6 @@ function HallOfFame() {
                                         : 'opacity-30 hover:opacity-60 scale-95'
                                 }`}
                             >
-                                {/* Hollow Number Styling */}
                                 <div 
                                     className="text-5xl lg:text-7xl font-black tabular-nums transition-colors duration-500"
                                     style={{ 
