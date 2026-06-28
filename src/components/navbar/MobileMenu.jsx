@@ -31,48 +31,7 @@ function MobileMenu({ lenisRef, loading }) {
 
         if (loading) return;
 
-        // 1. Create a SINGLE paused timeline (fixes the memory leak)
-        const scrollTl = gsap.timeline({
-            paused: true,
-            defaults: { transformOrigin: 'center center' }
-        });
-
-        // STEP 1 — text hides upward
-        scrollTl.to(textRef.current, {
-            yPercent: -120,
-            duration: 0.28,
-            ease: 'power2.inOut',
-        });
-
-        // STEP 2 — navbar collapses (autoAlpha handles hiding it from the DOM)
-        scrollTl.to(navInnerRef.current, {
-            scaleX: 0.75,
-            scaleY: 0.2,
-            autoAlpha: 0,
-            duration: 0.32,
-            ease: 'power3.inOut',
-        }, '-=0.08');
-
-        let lastScroll = 0
-
-        ScrollTrigger.create({
-            start: 0,
-            end: "max",
-            onUpdate: (self) => {
-                const current = self.scroll()
-
-                // 2. Play or Reverse the single timeline (no new timelines created)
-                if (current > lastScroll && current > 100) {
-                    // SCROLL DOWN -> Hide Nav
-                    scrollTl.play()
-                } else if (current < lastScroll) {
-                    // SCROLL UP -> Show Nav
-                    scrollTl.reverse()
-                }
-
-                lastScroll = current
-            },
-        })
+        // Navbar will remain fixed and stable while scrolling.
     }, {
         scope: navRef,
         dependencies: [loading]
