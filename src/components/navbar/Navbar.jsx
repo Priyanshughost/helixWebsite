@@ -61,33 +61,45 @@ function Navbar({ loading }) {
     // SCROLL NAVBAR LOGIC
     // -----------------------------------
 
+    // Create ONE single paused timeline
     const scrollTl = gsap.timeline({
       paused: true,
       defaults: { transformOrigin: 'center center' }
     })
 
-    scrollTl.to(navInnerRef.current, {
+    scrollTl.to(revealItemsRef.current, {
       yPercent: -120,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+
+    // Use autoAlpha to handle opacity and visibility without layout reflows
+    scrollTl.to(navInnerRef.current, {
+      scaleX: 0.75,
+      scaleY: 0.2,
       autoAlpha: 0,
       duration: 0.32,
       ease: 'power3.inOut',
-    })
-
+    }, '-=0.08')
     scrollTl.to(navRef.current, {
-      pointerEvents: 'none'
-    }, '<')
+      pointerEvents: "none"
+    })
 
     let lastScroll = 0
 
     ScrollTrigger.create({
       start: 0,
       end: 'max',
+
       onUpdate: (self) => {
         const current = self.scroll()
 
+        // SCROLL DOWN - Hide
         if (current > lastScroll && current > 100) {
           scrollTl.play()
-        } else if (current < lastScroll) {
+        }
+        // SCROLL UP - Show
+        else if (current < lastScroll) {
           scrollTl.reverse()
         }
 
