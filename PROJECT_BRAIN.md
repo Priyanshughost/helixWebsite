@@ -25,11 +25,6 @@
 - **@gsap/react**: 2.1.2 - React integration for GSAP
 - **Lenis**: 1.3.23 - Smooth scrolling library
 
-### 3D Graphics
-- **Three.js**: 0.184.0 - 3D graphics library
-- **@react-three/fiber**: 9.6.1 - React renderer for Three.js
-- **@react-three/drei**: 10.7.7 - Useful helpers for react-three-fiber
-
 ### Utilities
 - **html-to-image**: 1.11.13 - Image generation from DOM elements
 
@@ -209,8 +204,8 @@ helixWebsite/
 10. **NPTEL Awareness Workshop** - January 22nd, 2026
 
 ### Leadership Team
-- **President**: Aadarsh Shaheb Singh
-- **Vice President**: Prayog Priyanshu
+- **President**: Satish Verma
+- **Vice President**: Sumit Ghosh
 - **Founder & PI**: Prof. Deepak Kumar Tiwari
 
 ### Achievements
@@ -298,7 +293,7 @@ npm run preview  # Preview production build
 
 ## Deployment
 
-- **Platform**: Vercel (based on metadata)
+- **Platform**: Vercel
 - **Build Process**: Vite production build
 - **Environment**: Production-optimized configuration
 
@@ -326,10 +321,6 @@ Potential areas for expansion:
 ### String Pluck Effect
 - Guitar string-like animation effect
 - Audio integration with sound files
-
-### Image Gallery
-- Collection-based image management
-- Lazy loading and optimization
 
 ### Responsive Design
 - Mobile-first approach
