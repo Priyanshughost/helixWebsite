@@ -1,4 +1,5 @@
-# 🧬 Helix - Tech & AI Club Website
+<div align=center>
+<h1>Helix - Tech & AI Club Website</h1>
 
 > The official website of Helix, the vibrant Tech & AI club at RVS College of Engineering and Technology, Jamshedpur.
 
@@ -6,6 +7,8 @@
 ![Vite](https://img.shields.io/badge/Vite-8.0.12-646CFF?logo=vite)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.3.0-38B2AC?logo=tailwind-css)
 ![GSAP](https://img.shields.io/badge/GSAP-3.15.0-8A2BE2?logo=greensock)
+
+</div>
 
 ## 🌟 About
 
