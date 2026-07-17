@@ -158,8 +158,8 @@ helixWebsite/
 
 ## 👥 Leadership Team
 
-- **President**: Aadarsh Shaheb Singh
-- **Vice President**: Prayog Priyanshu
+- **President**: Satish Verma
+- **Vice President**: Sumit Ghosh
 - **Founder & PI**: Prof. Deepak Kumar Tiwari
 
 ## 🎯 Performance Optimizations
