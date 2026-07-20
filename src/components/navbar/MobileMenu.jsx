@@ -210,7 +210,7 @@ function MobileMenu({ lenisRef, loading }) {
             {/* MOBILE NAVBAR */}
             <nav ref={navRef} className="fixed top-2 w-full z-[105]">
                 
-                <div className="relative max-w-[95%] mx-auto rounded-3xl overflow-hidden shadow-sm">
+                <div className="relative max-w-[95%] mx-auto rounded-3xl overflow-hidden">
                     
                     {/* NAV BACKGROUND */}
                     <div

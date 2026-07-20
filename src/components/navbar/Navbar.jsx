@@ -170,7 +170,7 @@ function Navbar({ loading }) {
       ref={navRef}
       className="fixed top-6 w-full z-[110]"
     >
-      <div className="relative max-w-[96%] mx-auto rounded-3xl overflow-hidden shadow-sm">
+      <div className="relative max-w-[96%] mx-auto rounded-3xl overflow-hidden">
         
         {/* NAV BACKGROUND */}
         <div
