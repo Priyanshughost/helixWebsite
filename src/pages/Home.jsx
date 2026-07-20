@@ -20,19 +20,14 @@ function Home() {
   return (
     <>
       <Hero loading={loading} />
-      <Suspense fallback={<div className="w-full h-screen bg-black"></div>}>
-        <Reel />
-        <Tagline />
-
-        <Fader />
-        
-        <About />
-        <EventSection />
-        <HallOfFame />
-        <Partnerships />
-        <TeamsV2 />
-        <Testimonials />
-      </Suspense>
+      <Reel />
+      <Tagline />
+      <About />
+      <EventSection />
+      <HallOfFame />
+      <Partnerships />
+      <TeamsV2 />
+      <Testimonials />
     </>
   );
 }

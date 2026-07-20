@@ -126,7 +126,7 @@ function Testimonials() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @keyframes slideRight {
                     0% { transform: translateX(-100%); }
                     100% { transform: translateX(100%); }

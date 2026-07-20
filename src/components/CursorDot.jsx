@@ -144,13 +144,12 @@ function CursorDot() {
     return (
         <div
             ref={dotRef}
-            className="fixed top-0 left-0 pointer-events-none z-1000 overflow-hidden flex items-center justify-center will-change-transform"
+            className="fixed top-0 left-0 bg-black pointer-events-none z-1000 overflow-hidden flex items-center justify-center will-change-transform"
             style={{
                 transform: "translate(-50%, -50%)",
-                width: '12px',
-                height: '12px',
+                width: '15px',
+                height: '15px',
                 borderRadius: '50%',
-                backgroundColor: '#1d4ed8'
             }}
         >
             {cursorImage && (

@@ -133,7 +133,6 @@ export default function TeamSection() {
             const memberCards = gsap.utils.toArray('.team-member-card');
 
             memberCards.forEach((card) => {
-                // Using GSAP's native selector scoped to the card is highly optimized
                 const q = gsap.utils.selector(card);
                 const revealTargets = q('.text-reveal-target');
                 const imgWrapper = q('.image-reveal-wrapper');
@@ -143,7 +142,6 @@ export default function TeamSection() {
                 const cardStart = isMobile ? "top 85%" : "top 90%";
 
                 // 1. The Entrance Reveal (Runs Once)
-                // We moved the image scale down into this timeline so it doesn't fight the continuous scrub
                 const revealTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: card,
@@ -160,20 +158,18 @@ export default function TeamSection() {
                     .fromTo(imgTarget,
                         { scale: 1.5 },
                         { scale: 1, duration: 2.5, ease: "expo.out" },
-                        0 // Sync with wrapper clipPath
+                        0
                     )
                     .fromTo(revealTargets,
                         { y: '110%' },
                         { y: '0%', duration: 1, stagger: 0.15, ease: 'power4.out' },
-                        0.2 // Slight delay after image starts
+                        0.2
                     );
 
-
                 // 2. The Continuous Parallax (Scrubbed)
-                // We combine the image Y scrub and the text column Y scrub into ONE scroll listener
                 const scrubTl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: card, // Changed from imgWrapper to card for consistency
+                        trigger: card,
                         start: "top bottom",
                         end: "bottom top",
                         scrub: true,
@@ -182,7 +178,7 @@ export default function TeamSection() {
 
                 scrubTl.fromTo(imgTarget,
                     { yPercent: -15 },
-                    { yPercent: 15, ease: "none", force3D: true }, // force3D offloads this specifically to the GPU
+                    { yPercent: 15, ease: "none", force3D: true },
                     0
                 );
 
@@ -195,7 +191,7 @@ export default function TeamSection() {
 
             // --- TECH TEAM ANIMATIONS ---
 
-            // 1. Heading reveal (label, title, rule — same yPercent pattern)
+            // 1. Heading reveal
             const techHeadingTargets = [
                 techLabelRef.current,
                 techHeadingRef.current,
@@ -219,13 +215,14 @@ export default function TeamSection() {
                 }
             );
 
-            // 2. Per-card: clipPath entrance + text reveals + parallax scrub
+            // 2. Per-card animations
             const techCards = gsap.utils.toArray('.tech-card');
 
             techCards.forEach((card, i) => {
                 const q = gsap.utils.selector(card);
                 const placeholder = q('.tech-placeholder');
                 const textTargets = q('.tech-text-reveal');
+                const techImg = q('.tech-image'); // Target the actual image
 
                 // Entrance — staggered so cards cascade in
                 const entranceTl = gsap.timeline({
@@ -241,7 +238,7 @@ export default function TeamSection() {
                         placeholder,
                         {
                             clipPath: 'inset(20% 15% 0% 15% round 80px)',
-                            yPercent: 12,
+                            yPercent: 12, // Entry slide up (runs once)
                             scale: 1.08,
                         },
                         {
@@ -267,12 +264,13 @@ export default function TeamSection() {
                         0.25
                     );
 
-                // Continuous parallax scrub on the placeholder (matches core member image)
+                // FIX: Continuous parallax scrub is now applied to the inner image (techImg), 
+                // leaving the container strictly locked in place above the text!
                 gsap.fromTo(
-                    placeholder,
-                    { yPercent: -8 },
+                    techImg,
+                    { yPercent: -10 },
                     {
-                        yPercent: 8,
+                        yPercent: 10,
                         ease: 'none',
                         force3D: true,
                         scrollTrigger: {
@@ -300,7 +298,6 @@ export default function TeamSection() {
         gsap.to(split2Ref.current.chars, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: 'power3.inOut', overwrite: 'auto' });
 
         if (lineRef.current) {
-            // Uses the cached scale value, completely avoiding DOM reflows!
             gsap.to(lineRef.current, { scaleX: lineTargetScale.current, duration: 0.6, ease: 'power3.inOut', overwrite: 'auto' });
         }
     });
@@ -317,7 +314,7 @@ export default function TeamSection() {
     });
 
     return (
-        <section ref={containerRef} className="w-full bg-white pb-36 overflow-x-hidden">
+        <section id="team" ref={containerRef} className="w-full bg-white pb-36 overflow-x-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
 
                 <div ref={headingTriggerRef} className="flex justify-start items-center py-20 lg:py-28">
@@ -366,7 +363,6 @@ export default function TeamSection() {
                                     <img
                                         src={member.image}
                                         alt={member.name}
-                                        // Removed the explicit `will-change-transform` class; GSAP's `force3D` handles this much better dynamically
                                         className="team-image absolute top-[-15%] left-0 w-full h-[130%] object-cover object-center grayscale hover:grayscale-0 transition-colors duration-700"
                                     />
                                 </div>
@@ -420,7 +416,6 @@ export default function TeamSection() {
                 {/* ── Tech Team ── */}
                 <div ref={techSectionRef} className="mt-40">
 
-                    {/* Section heading — wrapped in overflow-hidden for text reveal */}
                     <div className="mb-16 overflow-hidden">
                         <div className="overflow-hidden">
                             <p ref={techLabelRef} className="text-sm tracking-[0.2em] uppercase text-gray-400 m-0">
@@ -443,18 +438,18 @@ export default function TeamSection() {
                                 key={member.id}
                                 className="tech-card group relative flex flex-col"
                             >
-                                {/* Photo / Placeholder — animated like the core-member image */}
+                                {/* Photo Container */}
                                 <div className="tech-placeholder w-full aspect-[3/4] bg-[#f4f4f4] overflow-hidden mb-5 relative">
                                     {member.image ? (
-                                        /* Real photo — same treatment as core member images */
+                                        /* Added tech-image class, set height to 120% and offset top by -10% so the image has room to move inside the wrapper */
                                         <img
                                             src={member.image}
                                             alt={member.name}
-                                            className="absolute inset-0 w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-[filter] duration-700"
+                                            className="tech-image absolute w-full h-[120%] -top-[10%] object-cover object-top grayscale group-hover:grayscale-0 transition-[filter] duration-700"
                                         />
                                     ) : (
-                                        /* Letter placeholder shown until a photo is added */
-                                        <div className="absolute inset-0 flex items-end p-5">
+                                        /* Same treatment applied to placeholder */
+                                        <div className="tech-image absolute w-full h-[120%] -top-[10%] flex items-end p-5">
                                             <span className="text-7xl font-light text-gray-200 leading-none select-none">
                                                 {member.name.charAt(0)}
                                             </span>
@@ -464,7 +459,7 @@ export default function TeamSection() {
                                     <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500" />
                                 </div>
 
-                                {/* Info — each line wrapped for yPercent reveal */}
+                                {/* Text section stays completely static now */}
                                 <div className="overflow-hidden pb-1">
                                     <p className="tech-text-reveal m-0 text-xs tracking-[0.15em] uppercase text-gray-400 mb-2">
                                         {member.roleLabel}
