@@ -13,11 +13,11 @@ const AccessibleGlowText = ({ text, as: Tag = "p", className = "", triggerRef })
 
     useGSAP(() => {
         if (!textRef.current || !triggerRef.current) return;
-        
+
         const words = gsap.utils.toArray('.glow-word', textRef.current);
-        
+
         // Staggering words instead of characters saves massive DOM overhead
-        gsap.fromTo(words, 
+        gsap.fromTo(words,
             { color: 'rgba(255,255,255,0.2)', textShadow: 'none' },
             {
                 color: 'rgb(255,255,255)',
@@ -52,7 +52,7 @@ const AccessibleGlowText = ({ text, as: Tag = "p", className = "", triggerRef })
 const VisionMissionCard = ({ title, description, accentColor, accentGradient }) => {
     const cardRef = useRef(null);
     const innerRef = useRef(null);
-    
+
     // quickTo is highly optimized for mouse tracking without triggering re-renders
     const xTo = useRef(null);
     const yTo = useRef(null);
@@ -75,11 +75,11 @@ const VisionMissionCard = ({ title, description, accentColor, accentGradient }) 
 
     const handleMouseMove = (e) => {
         if (!cardRef.current || !xTo.current || !yTo.current) return;
-        
+
         const rect = cardRef.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
@@ -95,7 +95,7 @@ const VisionMissionCard = ({ title, description, accentColor, accentGradient }) 
     };
 
     return (
-        <div 
+        <div
             ref={cardRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -104,7 +104,7 @@ const VisionMissionCard = ({ title, description, accentColor, accentGradient }) 
         >
             {/* Elegant static border that reveals on hover, replacing expensive infinite spins */}
             <div className={`absolute inset-0 bg-gradient-to-br ${accentGradient} opacity-20 group-hover:opacity-100 transition-opacity duration-700`}></div>
-            
+
             <div ref={innerRef} className="relative h-full w-full bg-[#0c0c0c]/90 backdrop-blur-xl rounded-[calc(2.5rem-2px)] p-10 md:p-14 z-10 will-change-transform border border-white/5">
                 <h3 className={`text-[${accentColor}] text-xl md:text-2xl font-mono mb-8 uppercase tracking-widest flex items-center gap-4`}>
                     <span className="w-8 h-[1px]" style={{ backgroundColor: accentColor }}></span>
@@ -128,10 +128,10 @@ const AboutSection = () => {
     const scrollContentRef = useRef(null);
 
     const purposeData = [
-        { title: 'Expand Knowledge', text: 'Gain exposure to web development, cybersecurity, AI, robotics, and UX.', icon: '🧠', num: '01', accent: '#eeff00' },
+        { title: 'Expand Knowledge', text: 'Gain exposure to web development, cybersecurity, AI, robotics, and UX.', icon: '', num: '01', accent: '#eeff00' },
         { title: 'Develop Skills', text: 'Acquire hands-on experience through targeted workshops and hackathons.', icon: '💻', num: '02', accent: '#60a5fa' },
-        { title: 'Solve Problems', text: 'Tackle real-world challenges through collaborative problem-solving.', icon: '🧩', num: '03', accent: '#c084fc' },
-        { title: 'Network & Grow', text: 'Connect with peers and interact with industry professionals.', icon: '🚀', num: '04', accent: '#34d399' },
+        { title: 'Solve Problems', text: 'Tackle real-world challenges through collaborative problem-solving.', icon: '', num: '03', accent: '#c084fc' },
+        { title: 'Network & Grow', text: 'Connect with peers and interact with industry professionals.', icon: '', num: '04', accent: '#34d399' },
     ];
 
     useGSAP(() => {
@@ -150,7 +150,7 @@ const AboutSection = () => {
         // Horizontal Scroll Setup
         if (scrollWrapperRef.current && scrollContentRef.current) {
             const sections = gsap.utils.toArray('.purpose-panel');
-            
+
             gsap.to(sections, {
                 xPercent: -100 * (sections.length - 1),
                 ease: "none",
@@ -171,7 +171,7 @@ const AboutSection = () => {
 
     return (
         <section id="about" ref={containerRef} className="w-full bg-[#050505] text-white font-sans overflow-hidden selection:bg-[#eeff00] selection:text-black">
-            
+
             {/* HERO SECTION */}
             <div ref={heroRef} className="relative min-h-screen flex flex-col justify-center px-6 md:px-20 pt-24 z-10">
                 {/* Optimized Ambient Background */}
@@ -181,23 +181,23 @@ const AboutSection = () => {
                 </div>
 
                 <div className="z-10 max-w-7xl">
-                    <AccessibleGlowText 
-                        as="h1" 
-                        text="WHO WE ARE" 
+                    <AccessibleGlowText
+                        as="h1"
+                        text="WHO WE ARE"
                         triggerRef={heroRef}
-                        className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter leading-none" 
+                        className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter leading-none"
                     />
-                    <AccessibleGlowText 
-                        as="h2" 
-                        text="Established Jan 9th, 2025" 
+                    <AccessibleGlowText
+                        as="h2"
+                        text="Established Jan 9th, 2025"
                         triggerRef={heroRef}
-                        className="text-2xl md:text-4xl lg:text-5xl font-light tracking-tight mt-6 text-gray-400" 
+                        className="text-2xl md:text-4xl lg:text-5xl font-light tracking-tight mt-6 text-gray-400"
                     />
-                    <AccessibleGlowText 
-                        as="p" 
-                        text="Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET. Welcoming students from all backgrounds, we cultivate a supportive community where members delve into cutting-edge fields." 
+                    <AccessibleGlowText
+                        as="p"
+                        text="Dive into the realm of innovation with Helix, the vibrant Tech and AI club at RVSCET. Welcoming students from all backgrounds, we cultivate a supportive community where members delve into cutting-edge fields."
                         triggerRef={heroRef}
-                        className="text-xl md:text-3xl font-light leading-relaxed mt-12 max-w-4xl text-gray-500" 
+                        className="text-xl md:text-3xl font-light leading-relaxed mt-12 max-w-4xl text-gray-500"
                     />
                 </div>
             </div>
@@ -205,13 +205,13 @@ const AboutSection = () => {
             {/* VISION & MISSION SECTION */}
             <div className="py-32 px-6 md:px-20 relative z-10 border-t border-white/5 bg-gradient-to-b from-[#050505] to-[#0a0a0a]">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                    <VisionMissionCard 
+                    <VisionMissionCard
                         title="Our Vision"
                         description={<>To develop a <span className="text-white font-medium">tech-driven community</span> that empowers students to become industry leaders.</>}
                         accentColor="#eeff00"
                         accentGradient="from-transparent via-[#eeff00] to-transparent"
                     />
-                    <VisionMissionCard 
+                    <VisionMissionCard
                         title="Our Mission"
                         description={<>Provide <span className="text-white font-medium">hands-on learning</span> and foster innovation to prepare you for the tech world.</>}
                         accentColor="#60a5fa"
@@ -222,21 +222,21 @@ const AboutSection = () => {
 
             {/* HORIZONTAL PURPOSE SCROLL */}
             <div ref={scrollWrapperRef} className="h-screen w-full bg-[#0a0a0a] relative flex items-center overflow-hidden border-t border-white/5">
-                
+
                 {/* Fixed HUD UI */}
                 <div className="absolute top-10 left-6 md:left-20 z-50 flex items-center gap-4">
                     <div className="w-3 h-3 rounded-full bg-[#eeff00] animate-pulse"></div>
                     <span className="text-sm md:text-base font-mono uppercase tracking-[0.2em] text-white/50">The Purpose</span>
                 </div>
-                
+
                 <div ref={scrollContentRef} className="flex h-full will-change-transform" style={{ width: `${purposeData.length * 100}vw` }}>
                     {purposeData.map((purpose, idx) => (
                         <div key={idx} className="purpose-panel w-screen h-full flex items-center justify-center px-6 md:px-20 relative">
                             {/* Giant Watermark Number */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-30">
-                                <span 
-                                    className="text-[50vw] font-black leading-none select-none tracking-tighter" 
-                                    style={{ 
+                                <span
+                                    className="text-[50vw] font-black leading-none select-none tracking-tighter"
+                                    style={{
                                         WebkitTextStroke: `2px ${purpose.accent}20`,
                                         color: 'transparent'
                                     }}>
@@ -246,7 +246,7 @@ const AboutSection = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl w-full z-10 items-center">
                                 <div>
-                                    <span className="text-6xl md:text-8xl mb-6 block">{purpose.icon}</span>
+
                                     <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">{purpose.title}</h3>
                                     <div className="h-1 w-24 rounded-full mb-8" style={{ backgroundColor: purpose.accent }}></div>
                                 </div>
@@ -265,7 +265,7 @@ const AboutSection = () => {
                     ))}
                 </div>
             </div>
-            
+
         </section>
     );
 };

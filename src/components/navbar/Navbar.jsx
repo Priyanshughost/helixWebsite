@@ -107,9 +107,9 @@ function Navbar({ loading }) {
       },
     })
 
-  }, { 
+  }, {
     scope: navRef,
-    dependencies: [loading] 
+    dependencies: [loading]
   })
 
   return (
@@ -210,7 +210,7 @@ function Navbar({ loading }) {
               tracking-[-0.02em]
             "
           >
-            Sign Up
+            Join Helix
             <span>↗</span>
           </button>
         </div>

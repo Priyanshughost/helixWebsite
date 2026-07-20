@@ -3,12 +3,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useCursor } from "../context/CursorContext";
+import ClubInduction from "../assets/ClubInduction.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function Reel() {
     const { setCursorVariant, setCursorImage } = useCursor();
-    const reelImageUrl = "https://plus.unsplash.com/premium_photo-1666863909125-3a01f038e71f?q=80&w=786&auto=format&fit=crop";
+    const reelImageUrl = ClubInduction;
     const handleMouseEnter = () => {
         setCursorVariant('reel-hover'); // Tell the cursor to become a rectangle
         setCursorImage(reelImageUrl);   // Pass the image URL to the cursor
@@ -90,7 +91,7 @@ function Reel() {
             <img
                 loading="lazy"
                 ref={imageRef}
-                src="https://plus.unsplash.com/premium_photo-1666863909125-3a01f038e71f?q=80&w=786&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src={ClubInduction}
                 alt="Parallax Reel"
                 className="w-full h-[120%] object-cover absolute top-0 left-0 will-change-transform"
             />

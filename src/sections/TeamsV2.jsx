@@ -3,6 +3,20 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import vp from '../assets/sumitGhosh.jpeg';
+import president from '../assets/Satish.jpeg';
+import Aman from '../assets/Aman.jpeg'
+import Priyanshu from '../assets/Priyanshu.jpeg'
+import Abhijeet from '../assets/Abhijeet.jpeg'
+import Rohit from '../assets/rohit.png'
+
+// ── Tech Team Photos ──────────────────────────────────────────────
+// Uncomment each line and point it to the right file once you have the photos.
+// import priyanshu from '../assets/priyanshu.jpeg';
+// import aman      from '../assets/aman.jpeg';
+// import abhijeet  from '../assets/abhijeet.jpeg';
+// import rohit     from '../assets/rohit.jpeg';
+// ─────────────────────────────────────────────────────────────────
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -10,19 +24,50 @@ const teamMembers = [
     {
         id: 4,
         roleLabel: "President",
-        image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1287&auto=format&fit=crop",
+        image: president,
         quote: "\"When we initialized Helix exactly one year ago, it wasn't just another club, it was a movement. We wanted to build a 'Source Code' for innovation at RVSCET.\"",
-        name: "Aadarsh Shaheb Singh",
+        name: "Satish Verma",
         title: "President, Helix",
         social: { platform: "LinkedIn", url: "#" }
     },
     {
         id: 5,
         roleLabel: "Vice President",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1287&auto=format&fit=crop",
+        image: vp,
         quote: "\"Technology evolves every second, and at Helix, our mission is to ensure that our students stay ahead of the curve. Helix is your sandbox. Experiment, fail, learn, and innovate.\"",
-        name: "Prayog Priyanshu",
+        name: "Sumit Ghosh",
         title: "Vice President, Helix",
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/sumitgh0sh?utm_source=share_via&utm_content=profile&utm_medium=member_android" }
+    }
+];
+
+const techTeam = [
+    {
+        id: 1,
+        roleLabel: "Co-head, Tech",
+        name: "Priyanshu Ghosh",
+        image: Priyanshu, // replace null with: priyanshu  (after uncommenting the import above)
+        social: { platform: "LinkedIn", url: "#" }
+    },
+    {
+        id: 2,
+        roleLabel: "Tech Coordinator",
+        name: "Aman Kumar",
+        image: Aman, // replace null with: aman
+        social: { platform: "LinkedIn", url: "#" }
+    },
+    {
+        id: 3,
+        roleLabel: "Tech Coordinator",
+        name: "Abhijeet Ghosh",
+        image: Abhijeet, // replace null with: abhijeet
+        social: { platform: "LinkedIn", url: "#" }
+    },
+    {
+        id: 4,
+        roleLabel: "Tech Coordinator",
+        name: "Rohit Chandra",
+        image: Rohit, // replace null with: rohit
         social: { platform: "LinkedIn", url: "#" }
     }
 ];
@@ -36,6 +81,12 @@ export default function TeamSection() {
     const lineRef = useRef(null);
     const split1Ref = useRef(null);
     const split2Ref = useRef(null);
+
+    // Tech team section refs
+    const techSectionRef = useRef(null);
+    const techLabelRef = useRef(null);
+    const techHeadingRef = useRef(null);
+    const techRuleRef = useRef(null);
 
     // Cache the hover scale value so we don't trigger reflows on hover
     const lineTargetScale = useRef(1);
@@ -139,6 +190,98 @@ export default function TeamSection() {
                     { y: isMobile ? 20 : 50 },
                     { y: isMobile ? -20 : -50, ease: "none", force3D: true },
                     0
+                );
+            });
+
+            // --- TECH TEAM ANIMATIONS ---
+
+            // 1. Heading reveal (label, title, rule — same yPercent pattern)
+            const techHeadingTargets = [
+                techLabelRef.current,
+                techHeadingRef.current,
+                techRuleRef.current,
+            ].filter(Boolean);
+
+            gsap.fromTo(
+                techHeadingTargets,
+                { y: '110%', opacity: 0 },
+                {
+                    y: '0%',
+                    opacity: 1,
+                    duration: 1,
+                    stagger: 0.12,
+                    ease: 'power4.out',
+                    scrollTrigger: {
+                        trigger: techSectionRef.current,
+                        start: 'top 85%',
+                        once: true,
+                    }
+                }
+            );
+
+            // 2. Per-card: clipPath entrance + text reveals + parallax scrub
+            const techCards = gsap.utils.toArray('.tech-card');
+
+            techCards.forEach((card, i) => {
+                const q = gsap.utils.selector(card);
+                const placeholder = q('.tech-placeholder');
+                const textTargets = q('.tech-text-reveal');
+
+                // Entrance — staggered so cards cascade in
+                const entranceTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: techSectionRef.current,
+                        start: 'top 80%',
+                        once: true,
+                    }
+                });
+
+                entranceTl
+                    .fromTo(
+                        placeholder,
+                        {
+                            clipPath: 'inset(20% 15% 0% 15% round 80px)',
+                            yPercent: 12,
+                            scale: 1.08,
+                        },
+                        {
+                            clipPath: 'inset(0% 0% 0% 0% round 0px)',
+                            yPercent: 0,
+                            scale: 1,
+                            duration: 2,
+                            delay: i * 0.12,
+                            ease: 'expo.out',
+                        },
+                        0
+                    )
+                    .fromTo(
+                        textTargets,
+                        { y: '110%' },
+                        {
+                            y: '0%',
+                            duration: 0.9,
+                            stagger: 0.1,
+                            ease: 'power4.out',
+                            delay: i * 0.12,
+                        },
+                        0.25
+                    );
+
+                // Continuous parallax scrub on the placeholder (matches core member image)
+                gsap.fromTo(
+                    placeholder,
+                    { yPercent: -8 },
+                    {
+                        yPercent: 8,
+                        ease: 'none',
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true,
+                        }
+                    }
                 );
             });
         });
@@ -272,6 +415,82 @@ export default function TeamSection() {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                {/* ── Tech Team ── */}
+                <div ref={techSectionRef} className="mt-40">
+
+                    {/* Section heading — wrapped in overflow-hidden for text reveal */}
+                    <div className="mb-16 overflow-hidden">
+                        <div className="overflow-hidden">
+                            <p ref={techLabelRef} className="text-sm tracking-[0.2em] uppercase text-gray-400 m-0">
+                                Department
+                            </p>
+                        </div>
+                        <div className="overflow-hidden mt-3">
+                            <h3 ref={techHeadingRef} className="text-4xl md:text-5xl font-normal tracking-tight text-gray-900 m-0">
+                                Tech Team
+                            </h3>
+                        </div>
+                        <div className="overflow-hidden mt-4">
+                            <div ref={techRuleRef} className="h-px bg-black w-16" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                        {techTeam.map((member) => (
+                            <div
+                                key={member.id}
+                                className="tech-card group relative flex flex-col"
+                            >
+                                {/* Photo / Placeholder — animated like the core-member image */}
+                                <div className="tech-placeholder w-full aspect-[3/4] bg-[#f4f4f4] overflow-hidden mb-5 relative">
+                                    {member.image ? (
+                                        /* Real photo — same treatment as core member images */
+                                        <img
+                                            src={member.image}
+                                            alt={member.name}
+                                            className="absolute inset-0 w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-[filter] duration-700"
+                                        />
+                                    ) : (
+                                        /* Letter placeholder shown until a photo is added */
+                                        <div className="absolute inset-0 flex items-end p-5">
+                                            <span className="text-7xl font-light text-gray-200 leading-none select-none">
+                                                {member.name.charAt(0)}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {/* Hover overlay */}
+                                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500" />
+                                </div>
+
+                                {/* Info — each line wrapped for yPercent reveal */}
+                                <div className="overflow-hidden pb-1">
+                                    <p className="tech-text-reveal m-0 text-xs tracking-[0.15em] uppercase text-gray-400 mb-2">
+                                        {member.roleLabel}
+                                    </p>
+                                </div>
+                                <div className="overflow-hidden pb-1">
+                                    <h4 className="tech-text-reveal m-0 text-lg font-normal text-gray-900 leading-snug">
+                                        {member.name}
+                                    </h4>
+                                </div>
+                                <div className="overflow-hidden pt-3">
+                                    <a
+                                        href={member.social.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="tech-text-reveal inline-flex items-center gap-1 group/link text-sm text-gray-900 underline decoration-1 underline-offset-4 hover:text-gray-500 transition-colors"
+                                    >
+                                        {member.social.platform}
+                                        <span className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-300">
+                                            ↗
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
             </div>
