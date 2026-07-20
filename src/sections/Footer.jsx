@@ -258,7 +258,7 @@ function Footer() {
                     {/* Column 2: Quick Links */}
                     <div className="flex flex-col md:items-center lg:items-start lg:pl-[6vw]">
                         <h3 className="reveal-elem text-xl text-gray-500 mb-8 font-medium">Quick Links</h3>
-                        <ul className="flex flex-col gap-5">
+                        <ul className="flex flex-col gap-2">
                             {[
                                 { name: "Home", link: "#home" },
                                 { name: "About Us", link: "#about" },
@@ -282,9 +282,9 @@ function Footer() {
                     <div className="flex flex-col gap-16 lg:items-end">
 
                         {/* Contact Info */}
-                        <div className="flex flex-col gap-6 lg:items-end text-sm text-gray-500 font-light w-full">
+                        <div className="flex flex-col gap-4 lg:items-end text-sm text-gray-500 font-light w-full">
                             <h3 className="reveal-elem text-xl text-gray-500 mb-2 font-medium lg:text-right">Contact Us</h3>
-                            <div className="reveal-elem flex flex-col gap-6 w-full lg:items-end">
+                            <div className="reveal-elem flex flex-col gap-4 w-full lg:items-end">
                                 {/* Location */}
                                 <a
                                     href="https://www.rvscollege.ac.in/"
