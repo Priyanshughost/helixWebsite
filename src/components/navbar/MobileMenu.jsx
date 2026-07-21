@@ -120,7 +120,8 @@ function MobileMenu({ lenisRef, loading }) {
 
         scrollTl.set(navRef.current, { pointerEvents: "none" })
 
-        let lastScroll = 0
+        let lastScroll = 0;
+        let isNavHidden = false; // 1. Track the state
 
         ScrollTrigger.create({
             start: 0,
@@ -128,15 +129,32 @@ function MobileMenu({ lenisRef, loading }) {
             onUpdate: (self) => {
                 if (!isIntroComplete) return;
 
-                const current = self.scroll()
+                const current = self.scroll();
+                const delta = current - lastScroll;
 
-                if (current > lastScroll && current > 100) {
-                    scrollTl.play()
-                } else if (current < lastScroll) {
-                    scrollTl.reverse()
+                // 2. Always show the nav if we bounce back to the absolute top
+                if (current < 50 && isNavHidden) {
+                    scrollTl.reverse();
+                    isNavHidden = false;
+                    lastScroll = current;
+                    return;
                 }
 
-                lastScroll = current
+                // 3. Ignore tiny micro-scrolls (solves the smooth-scroll jitter)
+                if (Math.abs(delta) < 10) return; 
+
+                // 4. Only trigger if the state actually needs to change
+                if (delta > 0 && current > 100 && !isNavHidden) {
+                    // Scrolling DOWN (Hide)
+                    scrollTl.play();
+                    isNavHidden = true;
+                } else if (delta < 0 && isNavHidden) {
+                    // Scrolling UP (Show)
+                    scrollTl.reverse();
+                    isNavHidden = false;
+                }
+
+                lastScroll = current;
             },
         })
     }, {

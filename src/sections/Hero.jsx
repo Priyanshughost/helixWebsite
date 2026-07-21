@@ -137,7 +137,7 @@ function Hero({ loading }) {
     <section 
       id="home" 
       ref={containerRef} 
-      className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center bg-white px-4 md:px-8 lg:px-12 pt-32 mt-8 overflow-hidden"
+      className="relative w-full min-h-[100vh] flex flex-col items-center justify-center bg-white px-4 md:px-8 lg:px-12 pt-32 mt-8 overflow-hidden"
     >
       
       <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-0">

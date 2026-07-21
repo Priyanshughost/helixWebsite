@@ -15,21 +15,21 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 // ==========================================
 
 // UPWARD MOVEMENT (Intro Load)
-const pathBottomHidden  = "M 0 100 Q 50 100 100 100 L 100 100 Q 50 100 0 100 Z"
-const pathBottomCurveUp = "M 0 60 Q 50 -20 100 60 L 100 100 Q 50 100 0 100 Z" 
-const pathFilled        = "M 0 0 Q 50 0 100 0 L 100 100 Q 50 100 0 100 Z"
-const pathTopCurveUp    = "M 0 0 Q 50 0 100 0 L 100 60 Q 50 -20 0 60 Z" 
-const pathTopHidden     = "M 0 0 Q 50 0 100 0 L 100 0 Q 50 0 0 0 Z"
+const pathBottomHidden = "M 0 100 Q 50 100 100 100 L 100 100 Q 50 100 0 100 Z"
+const pathBottomCurveUp = "M 0 60 Q 50 -20 100 60 L 100 100 Q 50 100 0 100 Z"
+const pathFilled = "M 0 0 Q 50 0 100 0 L 100 100 Q 50 100 0 100 Z"
+const pathTopCurveUp = "M 0 0 Q 50 0 100 0 L 100 60 Q 50 -20 0 60 Z"
+const pathTopHidden = "M 0 0 Q 50 0 100 0 L 100 0 Q 50 0 0 0 Z"
 
 // DOWNWARD MOVEMENT (Scroll Hide)
-const pathTopCurveDown    = "M 0 0 Q 50 0 100 0 L 100 40 Q 50 120 0 40 Z" 
-const pathBottomCurveDown = "M 0 40 Q 50 120 100 40 L 100 100 Q 50 100 0 100 Z" 
+const pathTopCurveDown = "M 0 0 Q 50 0 100 0 L 100 40 Q 50 120 0 40 Z"
+const pathBottomCurveDown = "M 0 40 Q 50 120 100 40 L 100 100 Q 50 100 0 100 Z"
 
 function Navbar({ loading }) {
   const navRef = useRef(null)
   const navBgRef = useRef(null)
   const contentRef = useRef(null)
-  
+
   const blackWipeRef = useRef(null)
   const limeWipeRef = useRef(null)
 
@@ -40,9 +40,9 @@ function Navbar({ loading }) {
     gsap.set([limeWipeRef.current, blackWipeRef.current], {
       attr: { d: pathBottomHidden }
     })
-    
+
     gsap.set(contentRef.current, {
-      autoAlpha: 0 
+      autoAlpha: 0
     })
 
     if (loading) return;
@@ -67,7 +67,7 @@ function Navbar({ loading }) {
           { attr: { d: pathFilled }, duration: 0.3, ease: 'power2.out' }
         ]
       }, "in")
-      
+
       // 2. BLACK WIPE IN (Follows closely behind)
       .to(blackWipeRef.current, {
         keyframes: [
@@ -109,7 +109,7 @@ function Navbar({ loading }) {
           { attr: { d: pathFilled }, duration: 0.25, ease: 'power2.out' }
         ]
       }, "hide")
-      
+
       // 2. BLACK WIPE DOWN FROM TOP
       .to(blackWipeRef.current, {
         keyframes: [
@@ -139,24 +139,41 @@ function Navbar({ loading }) {
 
     scrollTl.set(navRef.current, { pointerEvents: "none" })
 
-    let lastScroll = 0
+    let lastScroll = 0;
+    let isNavHidden = false; // 1. Track the state
 
     ScrollTrigger.create({
       start: 0,
-      end: 'max',
+      end: "max",
       onUpdate: (self) => {
-        // Prevent scroll changes from hijacking the intro animation!
         if (!isIntroComplete) return;
 
-        const current = self.scroll()
+        const current = self.scroll();
+        const delta = current - lastScroll;
 
-        if (current > lastScroll && current > 100) {
-          scrollTl.play()
-        } else if (current < lastScroll) {
-          scrollTl.reverse() 
+        // 2. Always show the nav if we bounce back to the absolute top
+        if (current < 50 && isNavHidden) {
+          scrollTl.reverse();
+          isNavHidden = false;
+          lastScroll = current;
+          return;
         }
 
-        lastScroll = current
+        // 3. Ignore tiny micro-scrolls (solves the smooth-scroll jitter)
+        if (Math.abs(delta) < 10) return;
+
+        // 4. Only trigger if the state actually needs to change
+        if (delta > 0 && current > 100 && !isNavHidden) {
+          // Scrolling DOWN (Hide)
+          scrollTl.play();
+          isNavHidden = true;
+        } else if (delta < 0 && isNavHidden) {
+          // Scrolling UP (Show)
+          scrollTl.reverse();
+          isNavHidden = false;
+        }
+
+        lastScroll = current;
       },
     })
 
@@ -171,7 +188,7 @@ function Navbar({ loading }) {
       className="fixed top-6 w-full z-[110]"
     >
       <div className="relative max-w-[96%] mx-auto rounded-3xl overflow-hidden">
-        
+
         {/* NAV BACKGROUND */}
         <div
           ref={navBgRef}
@@ -184,26 +201,26 @@ function Navbar({ loading }) {
         />
 
         {/* FLUID MORPHING SVG OVERLAYS */}
-        <svg 
+        <svg
           className="absolute inset-0 w-full h-full pointer-events-none z-100"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          <path 
-            ref={limeWipeRef} 
+          <path
+            ref={limeWipeRef}
             d={pathBottomHidden}
-            fill="#a3e635" 
+            fill="#a3e635"
           />
-          <path 
-            ref={blackWipeRef} 
+          <path
+            ref={blackWipeRef}
             d={pathBottomHidden}
-            fill="#161616" 
+            fill="#161616"
           />
         </svg>
 
         {/* CONTENT CONTAINER */}
-        <div 
-          ref={contentRef} 
+        <div
+          ref={contentRef}
           className=" relative z-50 flex items-center justify-between px-8 py-3.5"
         >
           {/* LOGO */}
@@ -263,7 +280,7 @@ function Navbar({ loading }) {
             </button>
           </div>
         </div>
-        
+
       </div>
     </nav>
   )
