@@ -28,7 +28,7 @@ const teamMembers = [
         quote: "\"When we initialized Helix exactly one year ago, it wasn't just another club, it was a movement. We wanted to build a 'Source Code' for innovation at RVSCET.\"",
         name: "Satish Verma",
         title: "President, Helix",
-        social: { platform: "LinkedIn", url: "#" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/satish-verma-413476154/" }
     },
     {
         id: 5,
@@ -37,7 +37,7 @@ const teamMembers = [
         quote: "\"Technology evolves every second, and at Helix, our mission is to ensure that our students stay ahead of the curve. Helix is your sandbox. Experiment, fail, learn, and innovate.\"",
         name: "Sumit Ghosh",
         title: "Vice President, Helix",
-        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/sumitgh0sh?utm_source=share_via&utm_content=profile&utm_medium=member_android" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/sumitgh0sh/" }
     }
 ];
 
@@ -47,28 +47,28 @@ const techTeam = [
         roleLabel: "Co-head, Tech",
         name: "Priyanshu Ghosh",
         image: Priyanshu, // replace null with: priyanshu  (after uncommenting the import above)
-        social: { platform: "LinkedIn", url: "#" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/priyanshu-ghosh-111586242/" }
     },
     {
         id: 2,
         roleLabel: "Tech Coordinator",
         name: "Aman Kumar",
         image: Aman, // replace null with: aman
-        social: { platform: "LinkedIn", url: "#" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/aman-kumar-b94337363/" }
     },
     {
         id: 3,
         roleLabel: "Tech Coordinator",
         name: "Abhijeet Ghosh",
         image: Abhijeet, // replace null with: abhijeet
-        social: { platform: "LinkedIn", url: "#" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/abhijeet-ghosh-tech/" }
     },
     {
         id: 4,
         roleLabel: "Tech Coordinator",
         name: "Rohit Chandra",
         image: Rohit, // replace null with: rohit
-        social: { platform: "LinkedIn", url: "#" }
+        social: { platform: "LinkedIn", url: "https://www.linkedin.com/in/rohitchandra14/" }
     }
 ];
 
